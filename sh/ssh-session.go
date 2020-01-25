@@ -45,7 +45,11 @@ func (s sshSession) run(arg interface{}) sshResponse {
 
 	stdout, stderr, err := session.OutputStdoutStderr(command)
 	if err != nil {
-		return sshResponse{Err: err}
+		return sshResponse{
+			Stdout: stdout,
+			Stderr: stderr,
+			Err:    err,
+		}
 	}
 
 	return sshResponse{

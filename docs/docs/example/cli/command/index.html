@@ -6,9 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Command"><meta property="og:title" content="" />
 <meta property="og:description" content="执行命令 前提  已设置好配置项：系统配置、认证配置、主机配置  执行方式：普通用户 单条：
-$ xsh.exe -mode cmd -group alpha02 -cmd whoami[192.168.165.37 ] ---------------------------------------------------------abc[192.168.170.109 ] ---------------------------------------------------------abc多条：
+$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd whoami[192.168.165.37 ] ---------------------------------------------------------abc[192.168.170.109 ] ---------------------------------------------------------abc多条：
 $ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd &quot;whoami; date -u; pwd&quot;[192.168.165.37 ] ---------------------------------------------------------abcFri May 8 07:00:13 UTC 2020/home/abc[192.168.170.109 ] ---------------------------------------------------------abcFri May 8 07:00:22 UTC 2020/home/abc执行方式：从普通用户切换至其他用户 单条：
-$ xsh.exe -mode cmd -group alpha02 -su -cmd whoami[192.168.170.109 ] ---------------------------------------------------------rootWarn =&gt;[sudo] password for root:[192." />
+$ xsh-windows-amd64.exe -mode cmd -group alpha02 -su -cmd whoami[192.168.170.109 ] ---------------------------------------------------------rootWarn =&gt;[sudo] password for root:[192." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/cli/command/" />
 
@@ -173,7 +173,7 @@ https://github.com/alex-shpak/hugo-book
 </ul>
 <h2 id="执行方式普通用户">执行方式：普通用户</h2>
 <p>单条：</p>
-<pre><code>$ xsh.exe -mode cmd -group alpha02 -cmd whoami
+<pre><code>$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd whoami
 [192.168.165.37    ] ---------------------------------------------------------
 abc
 
@@ -195,7 +195,7 @@ Fri May  8 07:00:22 UTC 2020
 
 </code></pre><h2 id="执行方式从普通用户切换至其他用户">执行方式：从普通用户切换至其他用户</h2>
 <p>单条：</p>
-<pre><code>$ xsh.exe -mode cmd -group alpha02 -su -cmd whoami
+<pre><code>$ xsh-windows-amd64.exe -mode cmd -group alpha02 -su -cmd whoami
 [192.168.170.109   ] ---------------------------------------------------------
 root
 

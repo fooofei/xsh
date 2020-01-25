@@ -16,9 +16,9 @@
       
       <guid>https://xied5531.github.io/xsh/docs/example/cli/command/</guid>
       <description>执行命令 前提  已设置好配置项：系统配置、认证配置、主机配置  执行方式：普通用户 单条：
-$ xsh.exe -mode cmd -group alpha02 -cmd whoami[192.168.165.37 ] ---------------------------------------------------------abc[192.168.170.109 ] ---------------------------------------------------------abc多条：
+$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd whoami[192.168.165.37 ] ---------------------------------------------------------abc[192.168.170.109 ] ---------------------------------------------------------abc多条：
 $ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd &amp;quot;whoami; date -u; pwd&amp;quot;[192.168.165.37 ] ---------------------------------------------------------abcFri May 8 07:00:13 UTC 2020/home/abc[192.168.170.109 ] ---------------------------------------------------------abcFri May 8 07:00:22 UTC 2020/home/abc执行方式：从普通用户切换至其他用户 单条：
-$ xsh.exe -mode cmd -group alpha02 -su -cmd whoami[192.168.170.109 ] ---------------------------------------------------------rootWarn =&amp;gt;[sudo] password for root:[192.</description>
+$ xsh-windows-amd64.exe -mode cmd -group alpha02 -su -cmd whoami[192.168.170.109 ] ---------------------------------------------------------rootWarn =&amp;gt;[sudo] password for root:[192.</description>
     </item>
     
     <item>
@@ -39,7 +39,7 @@ $ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tm
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/example/cli/crypt/</guid>
-      <description>加解密 前提  已设置好配置项：系统配置、认证配置、主机配置 已设置系统配置项crypt  加密 $ xsh.exe -mode crypt -plain hellohello -&amp;gt; d436838303eab251c32d5622e92160ad40a4f64328解密 $ xsh.exe -mode crypt -cipher d436838303eab251c32d5622e92160ad40a4f64328d436838303eab251c32d5622e92160ad40a4f64328 -&amp;gt; hello</description>
+      <description>加解密 前提  已设置好配置项：系统配置、认证配置、主机配置 已设置系统配置项crypt  加密 $ xsh-windows-amd64.exe -mode crypt -plain hellohello -&amp;gt; d436838303eab251c32d5622e92160ad40a4f64328解密 $ xsh-windows-amd64.exe -mode crypt -cipher d436838303eab251c32d5622e92160ad40a4f64328d436838303eab251c32d5622e92160ad40a4f64328 -&amp;gt; hello</description>
     </item>
     
     <item>

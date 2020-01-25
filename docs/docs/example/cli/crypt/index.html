@@ -4,12 +4,12 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Faq"><meta property="og:title" content="" />
-<meta property="og:description" content="FAQ " />
+<meta name="description" content="Crypt"><meta property="og:title" content="" />
+<meta property="og:description" content="加解密 前提  已设置好配置项：系统配置、认证配置、主机配置 已设置系统配置项crypt  加密 $ xsh.exe -mode crypt -plain hellohello -&gt; d436838303eab251c32d5622e92160ad40a4f64328解密 $ xsh.exe -mode crypt -cipher d436838303eab251c32d5622e92160ad40a4f64328d436838303eab251c32d5622e92160ad40a4f64328 -&gt; hello" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://xied5531.github.io/xsh/docs/faq/" />
+<meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/cli/crypt/" />
 
-<title>Faq | xsh</title>
+<title>Crypt | xsh</title>
 <link rel="icon" href="/xsh/favicon.png" type="image/x-icon">
 
 
@@ -84,7 +84,7 @@ https://github.com/alex-shpak/hugo-book
 </li>
 <li>命令行操作
 <ul>
-<li><a href="/xsh/docs/example/cli/crypt/">加解密</a></li>
+<li><a href="/xsh/docs/example/cli/crypt/"class=active>加解密</a></li>
 <li><a href="/xsh/docs/example/cli/command/">执行命令</a></li>
 <li><a href="/xsh/docs/example/cli/copy/">上传下载</a></li>
 <li><a href="/xsh/docs/example/cli/task/">任务编排</a></li>
@@ -93,7 +93,7 @@ https://github.com/alex-shpak/hugo-book
 </li>
 </ul>
 </li>
-<li><a href="/xsh/docs/faq/"class=active>FAQ</a></li>
+<li><a href="/xsh/docs/faq/">FAQ</a></li>
 </ul>
 <br/>
 
@@ -137,7 +137,7 @@ https://github.com/alex-shpak/hugo-book
     <img src="/xsh/svg/menu.svg" class="book-icon" alt="Menu" />
   </label>
 
-  <strong>Faq</strong>
+  <strong>Crypt</strong>
 
   <label for="toc-control">
     <img src="/xsh/svg/toc.svg" class="book-icon" alt="Table of Contents" />
@@ -151,7 +151,13 @@ https://github.com/alex-shpak/hugo-book
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#加解密">加解密</a>
+      <ul>
+        <li><a href="#前提">前提</a></li>
+        <li><a href="#加密">加密</a></li>
+        <li><a href="#解密">解密</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
 
@@ -163,8 +169,21 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-<article class="markdown"><h1 id="faq">FAQ</h1>
-</article>
+<article class="markdown"><h1 id="加解密">加解密</h1>
+<h2 id="前提">前提</h2>
+<ul>
+<li>已设置好配置项：系统配置、认证配置、主机配置</li>
+<li>已设置系统配置项<code>crypt</code></li>
+</ul>
+<h2 id="加密">加密</h2>
+<pre><code>$ xsh.exe -mode crypt -plain hello
+hello -&gt; d436838303eab251c32d5622e92160ad40a4f64328
+
+</code></pre><h2 id="解密">解密</h2>
+<pre><code>$ xsh.exe -mode crypt -cipher d436838303eab251c32d5622e92160ad40a4f64328
+d436838303eab251c32d5622e92160ad40a4f64328 -&gt; hello
+
+</code></pre></article>
  
       
 
@@ -187,7 +206,13 @@ https://github.com/alex-shpak/hugo-book
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#加解密">加解密</a>
+      <ul>
+        <li><a href="#前提">前提</a></li>
+        <li><a href="#加密">加密</a></li>
+        <li><a href="#解密">解密</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
 

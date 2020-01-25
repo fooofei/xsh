@@ -11,7 +11,15 @@
   </url>
   
   <url>
-    <loc>https://xied5531.github.io/xsh/docs/example/cli/cmd/</loc>
+    <loc>https://xied5531.github.io/xsh/docs/example/cli/command/</loc>
+  </url>
+  
+  <url>
+    <loc>https://xied5531.github.io/xsh/docs/example/cli/copy/</loc>
+  </url>
+  
+  <url>
+    <loc>https://xied5531.github.io/xsh/docs/example/cli/crypt/</loc>
   </url>
   
   <url>
@@ -28,10 +36,6 @@
   
   <url>
     <loc>https://xied5531.github.io/xsh/docs/example/copy/</loc>
-  </url>
-  
-  <url>
-    <loc>https://xied5531.github.io/xsh/docs/example/crypt/</loc>
   </url>
   
   <url>

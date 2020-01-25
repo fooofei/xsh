@@ -5,12 +5,12 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Command"><meta property="og:title" content="" />
-<meta property="og:description" content="执行命令 前提  已设置好配置项：系统配置、认证配置、主机配置 已切换到目标主机组环境   以group=alpha02为例
- 执行方式：普通用户 切换上下文 命令：:do
-[alpha02:do]# :do[alpha02:do]#执行单条命令 [alpha02:do]# whoami..[192.168.170.109 ] ---------------------------------------------------------abc[192.168.165.37 ] ---------------------------------------------------------abc执行多条命令 [alpha02:do]# whoami;date;pwd..[192.168.165.37 ] ---------------------------------------------------------abcMon May 4 10:47:46 CST 2020/home/abc[192.168.170.109 ] ---------------------------------------------------------abcMon May 4 10:47:55 CST 2020/home/abc执行方式：从普通用户切换至其他用户 切换上下文 命令：:sudo
-[alpha02:do]# :sudo[alpha02:sudo]#执行单条命令 [alpha02:sudo]# whoami..[192.168.165.37 ] ---------------------------------------------------------rootWarn =&gt;[sudo] password for root:[192." />
+<meta property="og:description" content="执行命令 前提  已设置好配置项：系统配置、认证配置、主机配置  执行方式：普通用户 单条：
+$ xsh.exe -mode cmd -group alpha02 -cmd whoami[192.168.165.37 ] ---------------------------------------------------------abc[192.168.170.109 ] ---------------------------------------------------------abc多条：
+$ xsh.exe -mode cmd -group alpha02 -cmd whoami;date[192.168.170.109 ] ---------------------------------------------------------abcTue May 5 13:58:42 CST 2020[192.168.165.37 ] ---------------------------------------------------------abcTue May 5 13:58:33 CST 2020多条（含空格）：
+$ xsh.exe -mode cmd -group alpha02 -cmd &quot;whoami; date; free -h&quot;[192.168.170.109 ] ---------------------------------------------------------abcTue May 5 14:01:04 CST 2020total used free shared buff/cache availableMem: 15G 2." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/command/" />
+<meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/cli/command/" />
 
 <title>Command | xsh</title>
 <link rel="icon" href="/xsh/favicon.png" type="image/x-icon">
@@ -81,14 +81,14 @@ https://github.com/alex-shpak/hugo-book
 <li>交互式操作
 <ul>
 <li><a href="/xsh/docs/example/env/">切换环境</a></li>
-<li><a href="/xsh/docs/example/command/"class=active>执行命令</a></li>
+<li><a href="/xsh/docs/example/command/">执行命令</a></li>
 <li><a href="/xsh/docs/example/copy/">上传下载</a></li>
 </ul>
 </li>
 <li>命令行操作
 <ul>
 <li><a href="/xsh/docs/example/cli/crypt/">加解密</a></li>
-<li><a href="/xsh/docs/example/cli/command/">执行命令</a></li>
+<li><a href="/xsh/docs/example/cli/command/"class=active>执行命令</a></li>
 <li><a href="/xsh/docs/example/cli/copy/">上传下载</a></li>
 <li><a href="/xsh/docs/example/cli/task/">任务编排</a></li>
 <li><a href="/xsh/docs/example/cli/value/">带变量的任务</a></li>
@@ -157,20 +157,8 @@ https://github.com/alex-shpak/hugo-book
     <li><a href="#执行命令">执行命令</a>
       <ul>
         <li><a href="#前提">前提</a></li>
-        <li><a href="#执行方式普通用户">执行方式：普通用户</a>
-          <ul>
-            <li><a href="#切换上下文">切换上下文</a></li>
-            <li><a href="#执行单条命令">执行单条命令</a></li>
-            <li><a href="#执行多条命令">执行多条命令</a></li>
-          </ul>
-        </li>
-        <li><a href="#执行方式从普通用户切换至其他用户">执行方式：从普通用户切换至其他用户</a>
-          <ul>
-            <li><a href="#切换上下文-1">切换上下文</a></li>
-            <li><a href="#执行单条命令-1">执行单条命令</a></li>
-            <li><a href="#执行多条命令-1">执行多条命令</a></li>
-          </ul>
-        </li>
+        <li><a href="#执行方式普通用户">执行方式：普通用户</a></li>
+        <li><a href="#执行方式从普通用户切换至其他用户">执行方式：从普通用户切换至其他用户</a></li>
       </ul>
     </li>
   </ul>
@@ -188,71 +176,94 @@ https://github.com/alex-shpak/hugo-book
 <h2 id="前提">前提</h2>
 <ul>
 <li>已设置好配置项：系统配置、认证配置、主机配置</li>
-<li>已切换到目标主机组环境</li>
 </ul>
-<blockquote>
-<p>以group=alpha02为例</p>
-</blockquote>
 <h2 id="执行方式普通用户">执行方式：普通用户</h2>
-<h3 id="切换上下文">切换上下文</h3>
-<p>命令：<code>:do</code></p>
-<pre><code>[alpha02:do]# :do
-[alpha02:do]#
-</code></pre><h3 id="执行单条命令">执行单条命令</h3>
-<pre><code>[alpha02:do]# whoami
-..
-[192.168.170.109   ] ---------------------------------------------------------
-abc
-
+<p>单条：</p>
+<pre><code>$ xsh.exe -mode cmd -group alpha02 -cmd whoami
 [192.168.165.37    ] ---------------------------------------------------------
 abc
 
-</code></pre><h3 id="执行多条命令">执行多条命令</h3>
-<pre><code>[alpha02:do]# whoami;date;pwd
-..
-[192.168.165.37    ] ---------------------------------------------------------
-abc
-Mon May  4 10:47:46 CST 2020
-/home/abc
-
 [192.168.170.109   ] ---------------------------------------------------------
 abc
-Mon May  4 10:47:55 CST 2020
-/home/abc
+
+</code></pre><p>多条：</p>
+<pre><code>$ xsh.exe -mode cmd -group alpha02 -cmd whoami;date
+[192.168.170.109   ] ---------------------------------------------------------
+abc
+Tue May  5 13:58:42 CST 2020
+
+[192.168.165.37    ] ---------------------------------------------------------
+abc
+Tue May  5 13:58:33 CST 2020
+
+
+</code></pre><p>多条（含空格）：</p>
+<pre><code>$ xsh.exe -mode cmd -group alpha02 -cmd &quot;whoami; date; free -h&quot;
+[192.168.170.109   ] ---------------------------------------------------------
+abc
+Tue May  5 14:01:04 CST 2020
+              total        used        free      shared  buff/cache   available
+Mem:            15G        2.6G        2.7G         34M         10G         12G
+Swap:            0B          0B          0B
+
+[192.168.165.37    ] ---------------------------------------------------------
+abc
+Tue May  5 14:00:55 CST 2020
+              total        used        free      shared  buff/cache   available
+Mem:           7.6G        1.0G        1.1G        449M        5.5G        5.9G
+Swap:            0B          0B          0B
+
 
 </code></pre><h2 id="执行方式从普通用户切换至其他用户">执行方式：从普通用户切换至其他用户</h2>
-<h3 id="切换上下文-1">切换上下文</h3>
-<p>命令：<code>:sudo</code></p>
-<pre><code>[alpha02:do]# :sudo
-[alpha02:sudo]#
-</code></pre><h3 id="执行单条命令-1">执行单条命令</h3>
-<pre><code>[alpha02:sudo]# whoami
-..
-[192.168.165.37    ] ---------------------------------------------------------
-root
-
-Warn =&gt;
-[sudo] password for root:
+<p>单条：</p>
+<pre><code>$ xsh.exe -mode cmd -group alpha02 -su -cmd whoami
 [192.168.170.109   ] ---------------------------------------------------------
 root
 
 Warn =&gt;
 [sudo] password for root:
-</code></pre><h3 id="执行多条命令-1">执行多条命令</h3>
-<pre><code>[alpha02:sudo]# whoami;date
-..
 [192.168.165.37    ] ---------------------------------------------------------
 root
-Mon May  4 10:49:08 CST 2020
+
+Warn =&gt;
+[sudo] password for root:
+
+</code></pre><p>多条：</p>
+<pre><code>$ xsh.exe -mode cmd -group alpha02 -su -cmd whoami;date
+[192.168.170.109   ] ---------------------------------------------------------
+root
+Tue May  5 14:02:23 CST 2020
+
+Warn =&gt;
+[sudo] password for root:
+[192.168.165.37    ] ---------------------------------------------------------
+root
+Tue May  5 14:02:14 CST 2020
+
+Warn =&gt;
+[sudo] password for root:
+
+</code></pre><p>多条（含空格）：</p>
+<pre><code>$ xsh.exe -mode cmd -group alpha02 -su -cmd &quot;whoami;date;free -h&quot;
+[192.168.165.37    ] ---------------------------------------------------------
+root
+Tue May  5 14:02:49 CST 2020
+              total        used        free      shared  buff/cache   available
+Mem:           7.6G        1.0G        1.0G        449M        5.5G        5.9G
+Swap:            0B          0B          0B
 
 Warn =&gt;
 [sudo] password for root:
 [192.168.170.109   ] ---------------------------------------------------------
 root
-Mon May  4 10:49:17 CST 2020
+Tue May  5 14:02:58 CST 2020
+              total        used        free      shared  buff/cache   available
+Mem:            15G        2.6G        2.7G         34M         10G         12G
+Swap:            0B          0B          0B
 
 Warn =&gt;
 [sudo] password for root:
+
 </code></pre></article>
  
       
@@ -279,20 +290,8 @@ Warn =&gt;
     <li><a href="#执行命令">执行命令</a>
       <ul>
         <li><a href="#前提">前提</a></li>
-        <li><a href="#执行方式普通用户">执行方式：普通用户</a>
-          <ul>
-            <li><a href="#切换上下文">切换上下文</a></li>
-            <li><a href="#执行单条命令">执行单条命令</a></li>
-            <li><a href="#执行多条命令">执行多条命令</a></li>
-          </ul>
-        </li>
-        <li><a href="#执行方式从普通用户切换至其他用户">执行方式：从普通用户切换至其他用户</a>
-          <ul>
-            <li><a href="#切换上下文-1">切换上下文</a></li>
-            <li><a href="#执行单条命令-1">执行单条命令</a></li>
-            <li><a href="#执行多条命令-1">执行多条命令</a></li>
-          </ul>
-        </li>
+        <li><a href="#执行方式普通用户">执行方式：普通用户</a></li>
+        <li><a href="#执行方式从普通用户切换至其他用户">执行方式：从普通用户切换至其他用户</a></li>
       </ul>
     </li>
   </ul>

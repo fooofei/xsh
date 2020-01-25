@@ -5,7 +5,9 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Value"><meta property="og:title" content="" />
-<meta property="og:description" content="" />
+<meta property="og:description" content="带变量的任务 前提  已设置好配置项：系统配置、认证配置、主机配置  说明 name: add new useractions:- name: add user and set passwdgroup: alpha03steps:- type: commandcommands:- useradd -m {{.alpha.test.username}}- echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}- id {{.alpha.test.username}} 变量采用text/template语法
+ alpha:test:username: hello3passwd: Tst@1qaz 变量单独定义文件
+ 执行 $ xsh.exe -mode task -task example\add-user\add-user.yaml -value example\add-user\user-info.yaml[add new user ] &#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;[alpha03: add user and set passwd ] =======================================[192." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/cli/value/" />
 
@@ -80,14 +82,15 @@ https://github.com/alex-shpak/hugo-book
 <li><a href="/xsh/docs/example/env/">切换环境</a></li>
 <li><a href="/xsh/docs/example/command/">执行命令</a></li>
 <li><a href="/xsh/docs/example/copy/">上传下载</a></li>
-<li><a href="/xsh/docs/example/crypt/">加解密</a></li>
 </ul>
 </li>
 <li>命令行操作
 <ul>
-<li><a href="/xsh/docs/example/cli/cmd/">命令行动作</a></li>
-<li><a href="/xsh/docs/example/cli/task/">脚本任务编排</a></li>
-<li><a href="/xsh/docs/example/cli/value/"class=active>带变量的脚本任务</a></li>
+<li><a href="/xsh/docs/example/cli/crypt/">加解密</a></li>
+<li><a href="/xsh/docs/example/cli/command/">执行命令</a></li>
+<li><a href="/xsh/docs/example/cli/copy/">上传下载</a></li>
+<li><a href="/xsh/docs/example/cli/task/">任务编排</a></li>
+<li><a href="/xsh/docs/example/cli/value/"class=active>带变量的任务</a></li>
 </ul>
 </li>
 </ul>
@@ -148,7 +151,20 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" class="hidden" id="toc-control" />
     <aside class="hidden clearfix">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#带变量的任务">带变量的任务</a>
+      <ul>
+        <li><a href="#前提">前提</a></li>
+      </ul>
+    </li>
+    <li><a href="#说明">说明</a>
+      <ul>
+        <li><a href="#执行">执行</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
 
     </aside>
@@ -158,7 +174,56 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-<article class="markdown"></article>
+<article class="markdown"><h1 id="带变量的任务">带变量的任务</h1>
+<h2 id="前提">前提</h2>
+<ul>
+<li>已设置好配置项：系统配置、认证配置、主机配置</li>
+</ul>
+<h1 id="说明">说明</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-example\add-user\add-user.yaml" data-lang="example\add-user\add-user.yaml"><span style="color:#66d9ef">name</span>: add new user
+actions:
+  - <span style="color:#66d9ef">name</span>: add user and set passwd
+    <span style="color:#66d9ef">group</span>: alpha03
+    steps:
+      - <span style="color:#66d9ef">type</span>: command
+        commands:
+          - useradd -m {{.alpha.test.username}}
+          - echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}
+          - id {{.alpha.test.username}}
+
+</code></pre></div><blockquote>
+<p>变量采用<code>text/template</code>语法</p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-example\add-user\user-info.yaml" data-lang="example\add-user\user-info.yaml">alpha:
+  test:
+    <span style="color:#66d9ef">username</span>: hello3
+    <span style="color:#66d9ef">passwd</span>: Tst@1qaz
+
+</code></pre></div><blockquote>
+<p>变量单独定义文件</p>
+</blockquote>
+<h2 id="执行">执行</h2>
+<pre><code>$ xsh.exe -mode task -task example\add-user\add-user.yaml -value example\add-user\user-info.yaml
+[add new user                        ] +++++++++++++++++++++++++++++++++++++++
+[alpha03: add user and set passwd    ] =======================================
+[192.168.184.236   ] ---------------------------------------------------------
+Changing password for user hello3.
+passwd: all authentication tokens updated successfully.
+uid=1004(hello3) gid=1004(hello3) groups=1004(hello3)
+
+Warn =&gt;
+configuration error - unknown item 'ALWAYS_SET_PATH' (notify administrator)
+
+[192.168.187.117   ] ---------------------------------------------------------
+Changing password for user hello3.
+passwd: all authentication tokens updated successfully.
+uid=1004(hello3) gid=1005(hello3) groups=1005(hello3)
+
+Warn =&gt;
+configuration error - unknown item 'ALWAYS_SET_PATH' (notify administrator)
+
+
+</code></pre></article>
  
       
 
@@ -179,7 +244,20 @@ https://github.com/alex-shpak/hugo-book
     
     <aside class="book-toc">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#带变量的任务">带变量的任务</a>
+      <ul>
+        <li><a href="#前提">前提</a></li>
+      </ul>
+    </li>
+    <li><a href="#说明">说明</a>
+      <ul>
+        <li><a href="#执行">执行</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
  
     </aside>

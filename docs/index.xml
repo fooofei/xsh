@@ -11,11 +11,35 @@
     
     <item>
       <title></title>
-      <link>https://xied5531.github.io/xsh/docs/example/cli/cmd/</link>
+      <link>https://xied5531.github.io/xsh/docs/example/cli/command/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://xied5531.github.io/xsh/docs/example/cli/cmd/</guid>
-      <description></description>
+      <guid>https://xied5531.github.io/xsh/docs/example/cli/command/</guid>
+      <description>执行命令 前提  已设置好配置项：系统配置、认证配置、主机配置  执行方式：普通用户 单条：
+$ xsh.exe -mode cmd -group alpha02 -cmd whoami[192.168.165.37 ] ---------------------------------------------------------abc[192.168.170.109 ] ---------------------------------------------------------abc多条：
+$ xsh.exe -mode cmd -group alpha02 -cmd whoami;date[192.168.170.109 ] ---------------------------------------------------------abcTue May 5 13:58:42 CST 2020[192.168.165.37 ] ---------------------------------------------------------abcTue May 5 13:58:33 CST 2020多条（含空格）：
+$ xsh.exe -mode cmd -group alpha02 -cmd &amp;quot;whoami; date; free -h&amp;quot;[192.168.170.109 ] ---------------------------------------------------------abcTue May 5 14:01:04 CST 2020total used free shared buff/cache availableMem: 15G 2.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://xied5531.github.io/xsh/docs/example/cli/copy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://xied5531.github.io/xsh/docs/example/cli/copy/</guid>
+      <description>上传下载 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  以\（Windows）或/（Linux）结尾代表文件夹 上传时，local可以是文件或文件夹，remote默认是文件夹 下载时，remote可以是文件或文件夹，local默认是文件夹  上传  将本地节点上的内容上传至远端目标主机组的每个主机上
+ 文件：
+$ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\LICENSE -remote /tmp/xyz[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/xyz/LICENSE :OK[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/xyz/LICENSE :OK文件夹：
+$ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\ -remote /tmp/xyz1[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/xyz1/LICENSE :OKD:\tmp\hello -&amp;gt; /tmp/xyz1/hello :OKD:\tmp\hello\README.md -&amp;gt; /tmp/xyz1/hello/README.md :OK[192.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://xied5531.github.io/xsh/docs/example/cli/crypt/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://xied5531.github.io/xsh/docs/example/cli/crypt/</guid>
+      <description>加解密 前提  已设置好配置项：系统配置、认证配置、主机配置 已设置系统配置项crypt  加密 $ xsh.exe -mode crypt -plain hellohello -&amp;gt; d436838303eab251c32d5622e92160ad40a4f64328解密 $ xsh.exe -mode crypt -cipher d436838303eab251c32d5622e92160ad40a4f64328d436838303eab251c32d5622e92160ad40a4f64328 -&amp;gt; hello</description>
     </item>
     
     <item>
@@ -24,7 +48,7 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/example/cli/task/</guid>
-      <description></description>
+      <description>任务编排 前提  已设置好配置项：系统配置、认证配置、主机配置  说明 name: show infoactions:- name: show mem and diskgroup: alpha02steps:- type: commandcommands:- free -h- df -h- name: show user infogroup: alpha03steps:- type: commandcommands:- id 在alpha02上查看内存和磁盘信息 在alpha03上查看用户信息  执行 $ xsh.exe -mode task -task example\show-info.yaml[show info ] +++++++++++++++++++++++++++++++++++++++[alpha02: show mem and disk ] =======================================[192.168.165.37 ] ---------------------------------------------------------total used free shared buff/cache availableMem: 7.</description>
     </item>
     
     <item>
@@ -33,7 +57,9 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/example/cli/value/</guid>
-      <description></description>
+      <description>带变量的任务 前提  已设置好配置项：系统配置、认证配置、主机配置  说明 name: add new useractions:- name: add user and set passwdgroup: alpha03steps:- type: commandcommands:- useradd -m {{.alpha.test.username}}- echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}- id {{.alpha.test.username}} 变量采用text/template语法
+ alpha:test:username: hello3passwd: Tst@1qaz 变量单独定义文件
+ 执行 $ xsh.exe -mode task -task example\add-user\add-user.yaml -value example\add-user\user-info.yaml[add new user ] +++++++++++++++++++++++++++++++++++++++[alpha03: add user and set passwd ] =======================================[192.</description>
     </item>
     
     <item>
@@ -59,17 +85,9 @@
 [alpha02:do]# :copy[alpha02:copy]#上传  将本地节点上的内容上传至远端目标主机组的每个主机上
  用法：local -&amp;gt; remote
 约束：
- local和remote必须是全路径，例如：D:\tmp\LICENSE（Windows）或/tmp/abc（Linux） local可以是文件或文件夹，以\（Windows）或/（Linux）结尾代表文件夹 remote必须是文件夹，如果不存在将自动在远端新建文件夹  上传文件 [alpha02:copy]# D:\tmp\LICENSE -&amp;gt; /tmp/abc..[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/abc/LICENSE :OK[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/abc/LICENSE :OK检查结果（任一目标节点）：
-# find /tmp/abc/tmp/abc/tmp/abc/LICENSE上传文件夹 [alpha02:copy]# D:\tmp\ -&amp;gt; /tmp/abc1..[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/abc1/LICENSE :OKD:\tmp\hello -&amp;gt; /tmp/abc1/hello :OKD:\tmp\hello\README.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://xied5531.github.io/xsh/docs/example/crypt/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://xied5531.github.io/xsh/docs/example/crypt/</guid>
-      <description></description>
+ local和remote必须是全路径，例如：D:\tmp\LICENSE（Windows）或/tmp/abc（Linux） local可以是文件或文件夹，以\（Windows）或/（Linux）结尾代表文件夹 remote必须是文件夹，如果不存在将自动在远端新建文件夹  文件：
+[alpha02:copy]# D:\tmp\LICENSE -&amp;gt; /tmp/abc..[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/abc/LICENSE :OK[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/abc/LICENSE :OK# find /tmp/abc/tmp/abc/tmp/abc/LICENSE文件夹：
+[alpha02:copy]# D:\tmp\ -&amp;gt; /tmp/abc1..[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/abc1/LICENSE :OKD:\tmp\hello -&amp;gt; /tmp/abc1/hello :OKD:\tmp\hello\README.md -&amp;gt; /tmp/abc1/hello/README.</description>
     </item>
     
     <item>
@@ -143,7 +161,7 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/setup/config/</guid>
-      <description></description>
+      <description>系统配置 timeout:action_timeout_s: 3600command_timeout_s: 300copy_timeout_s: 600dial_timeout_s: 10command:port: 22ciphers:- aes128-ctr- aes192-ctr- aes256-ctr- aes128-gcm@openssh.com- arcfour256- arcfour128- aes128-cbc- 3des-cbc- aes192-cbc- aes256-cbcpty:term: width: 80height: 60ispeed: 14400ospeed: 14400interval_ms: 100copy:sftp_max_package_size: 32768override: falseskip: falsecache:expiration_s: 900cleanup_interval_s: 10ticker_interval_s: 10crypt:type: key: output:type: textprogress: falseconcurrency: 20common_commands:- cat- cd- cp- df- awk- date- du- chown- chmod- curl- dos2unix- echo- find- free- grep- hostname- ifconfig- kill- ln- ls- man- mkdir- mount- mv- openssl- ping- ps- pwd- rpm- sed- scp- tar- umask- uname- unzip- zip- uptime- wget- which- who- whoamiblack_command_regexps:- ^\s*(vi|vim)\s+- ^\s*top\s*$- ^\s*expect\s*$- ^\s*more\s*$- ^\s*less\s*$- ^\s*tailf\s*$- ^\s*tail\s*\-f\s*$command_sep: ;issue_url: https://github.</description>
     </item>
     
     <item>

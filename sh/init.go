@@ -4,7 +4,7 @@ func init() {
 	initSshClientCache()
 }
 
-type sshResponse struct {
+type SshResponse struct {
 	Address string
 	Stdout  string
 	Stderr  string

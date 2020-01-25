@@ -19,14 +19,14 @@ type sshCopy struct {
 	Remote    string
 }
 
-func (s sshCopy) run() sshResponse {
-	var result sshResponse
+func (s sshCopy) run() SshResponse {
+	var result SshResponse
 	result = withTimeout(s.copy, s.Direction, time.Duration(XConfig.Timeout.CopyTimeoutS)*time.Second)
 	result.Address = s.Session.Client.Host
 	return result
 }
 
-func (s sshCopy) copy(arg interface{}) sshResponse {
+func (s sshCopy) copy(arg interface{}) SshResponse {
 	d := arg.(string)
 	if d == "upload" {
 		return s.upload()
@@ -36,8 +36,8 @@ func (s sshCopy) copy(arg interface{}) sshResponse {
 }
 
 //remote must be directory
-func (s sshCopy) upload() sshResponse {
-	response := sshResponse{}
+func (s sshCopy) upload() SshResponse {
+	response := SshResponse{}
 
 	session, err := s.Session.newSftpSession()
 	if err != nil {
@@ -108,8 +108,8 @@ func (s sshCopy) upload() sshResponse {
 }
 
 //local must be directory
-func (s sshCopy) download() sshResponse {
-	response := sshResponse{}
+func (s sshCopy) download() SshResponse {
+	response := SshResponse{}
 
 	if err := os.Mkdir(s.Local, os.ModeDir|0755); err != nil && !os.IsExist(err) {
 		response.Err = err

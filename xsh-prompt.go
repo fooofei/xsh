@@ -50,12 +50,8 @@ func runCommand(line string) bool {
 		reload()
 		return false
 	}
-	if strings.HasPrefix(line, ":encrypt") {
-		encrypt(line)
-		return false
-	}
-	if strings.HasPrefix(line, ":decrypt") {
-		decrypt(line)
+	if strings.HasPrefix(line, ":show") {
+		show(line)
 		return false
 	}
 	if strings.HasPrefix(line, ":set") {
@@ -67,27 +63,22 @@ func runCommand(line string) bool {
 		return false
 	}
 
-	if strings.HasPrefix(line, ":show") {
-		show(line)
-		return false
-	}
-
 	switch line {
 	case ":do":
-		if CurEnv.ActionType != ":do" {
-			CurEnv.ActionType = ":do"
+		if CurEnv.Action != ":do" {
+			CurEnv.Action = ":do"
 			SaveEnv()
 		}
 		return false
 	case ":sudo":
-		if CurEnv.ActionType != ":sudo" {
-			CurEnv.ActionType = ":sudo"
+		if CurEnv.Action != ":sudo" {
+			CurEnv.Action = ":sudo"
 			SaveEnv()
 		}
 		return false
 	case ":copy":
-		if CurEnv.ActionType != ":copy" {
-			CurEnv.ActionType = ":copy"
+		if CurEnv.Action != ":copy" {
+			CurEnv.Action = ":copy"
 			SaveEnv()
 		}
 		return false
@@ -98,7 +89,7 @@ func runCommand(line string) bool {
 		return false
 	}
 
-	switch CurEnv.ActionType {
+	switch CurEnv.Action {
 	case ":do":
 		if action := newCommandAction(line, false); action != nil {
 			Out(action.Do())
@@ -125,12 +116,12 @@ func newCommandAction(line string, su bool) *SshAction {
 	}
 
 	action := &SshAction{
-		Name:       "Default",
-		TargetType: CurEnv.TargetType,
-		SubActions: []SubAction{{
-			ActionType: "command",
-			Commands:   cmds,
-			Su:         su,
+		Name:   "Default",
+		Single: CurEnv.Single,
+		Steps: []Step{{
+			Type:     "command",
+			Commands: cmds,
+			Su:       su,
 		}},
 	}
 	setupActionTaget(action)
@@ -159,13 +150,13 @@ func newCopyAction(line string) (*SshAction, error) {
 	}
 
 	action := &SshAction{
-		Name:       "Default",
-		TargetType: CurEnv.TargetType,
-		SubActions: []SubAction{{
-			ActionType: "copy",
-			Direction:  direction,
-			Local:      local,
-			Remote:     remote,
+		Name:   "Default",
+		Single: CurEnv.Single,
+		Steps: []Step{{
+			Type:      "copy",
+			Direction: direction,
+			Local:     local,
+			Remote:    remote,
 		}},
 	}
 	setupActionTaget(action)
@@ -174,18 +165,18 @@ func newCopyAction(line string) (*SshAction, error) {
 }
 
 func setupActionTaget(action *SshAction) {
-	if action.TargetType == "group" {
-		action.HostGroup = CurEnv.HostGroup
+	if !action.Single {
+		action.Group = CurEnv.Group
 	} else {
-		authentication := XAuthMap[CurEnv.Authentication]
-		action.HostDetail = HostDetail{
-			Address:    CurEnv.HostAddress,
-			Username:   authentication.Username,
-			Password:   authentication.Password,
-			PrivateKey: authentication.PrivateKey,
-			Passphrase: authentication.Passphrase,
-			SuType:     authentication.SuType,
-			SuPass:     authentication.SuPass,
+		auth := XAuthMap[CurEnv.Auth]
+		action.Detail = HostDetail{
+			Address:    CurEnv.Address,
+			Username:   auth.Username,
+			Password:   auth.Password,
+			PrivateKey: auth.PrivateKey,
+			Passphrase: auth.Passphrase,
+			SuType:     auth.SuType,
+			SuPass:     auth.SuPass,
 		}
 	}
 }
@@ -194,8 +185,19 @@ func show(line string) {
 	fields := strings.Fields(line)
 	if len(fields) > 1 {
 		switch fields[1] {
+		case "group":
+			var groups []string
+			for k, _ := range XHostMap {
+				groups = append(groups, k)
+			}
+			sort.Strings(groups)
+			PrintYaml(groups)
 		case "address":
-			group, _ := XHostMap[CurEnv.HostGroup]
+			group, ok := XHostMap[CurEnv.Group]
+			if !ok {
+				fmt.Printf("current group[%s] not found\n", CurEnv.Group)
+				return
+			}
 			addresses := make([]string, len(group.AllHost))
 			for i, v := range group.AllHost {
 				addresses[i] = v.Address
@@ -225,25 +227,25 @@ func set(line string) {
 					fmt.Printf("group[%s] not found\n", currFields[1])
 					return
 				} else {
-					CurEnv.TargetType = currFields[0]
-					CurEnv.HostGroup = group.Name
-					CurEnv.Authentication = group.Authentication
+					CurEnv.Single = false
+					CurEnv.Group = group.Name
+					CurEnv.Auth = group.Auth
 				}
 			case "address":
 				if !CheckIp(currFields[1]) {
 					fmt.Printf("address[%s] illegal\n", currFields[1])
 					return
 				}
-				if CurEnv.Authentication == "" {
-					fmt.Println("authentication empty, please :set group= first.")
+				if CurEnv.Auth == "" {
+					fmt.Println("auth empty, please :set group= first.")
 					return
 				}
-				if !ContainsAddress(currFields[1], XHostMap[CurEnv.HostGroup].AllHost) {
-					fmt.Printf("address[%s] not found in group [%s]\n", currFields[1], CurEnv.HostGroup)
+				if !ContainsAddress(currFields[1], XHostMap[CurEnv.Group].AllHost) {
+					fmt.Printf("address[%s] not found in group [%s]\n", currFields[1], CurEnv.Group)
 					return
 				}
-				CurEnv.TargetType = currFields[0]
-				CurEnv.HostAddress = currFields[1]
+				CurEnv.Single = true
+				CurEnv.Address = currFields[1]
 			}
 		}
 		SaveEnv()
@@ -252,26 +254,36 @@ func set(line string) {
 	}
 }
 
-func encrypt(line string) {
-	fields := strings.Fields(line)
-	if len(fields) == 2 {
-		fmt.Println(GetMaskPassword(fields[1]))
-	} else {
-		Error.Printf("line[%s] illegal", line)
-	}
-}
-
-func decrypt(line string) {
-	fields := strings.Fields(line)
-	if len(fields) == 2 {
-		fmt.Println(GetPlainPassword(fields[1]))
-	} else {
-		Error.Printf("line[%s] illegal", line)
-	}
-}
-
 func reload() {
 	InitXConfig()
 	InitXAuth()
 	InitXHost()
+}
+
+func help() {
+	fmt.Println(`NAME:
+   xsh - A command line tool that can execute commands on remote hosts or upload and download files.
+
+SYNOPSIS:
+   [KEYWORD] [ARG]... 
+
+VERSION:
+` + Version + `
+
+DESCRIPTION:
+   Please report a issue at ` + XConfig.IssueUrl + ` if possible.
+
+   :help or :h                         Show help info
+   :set [group=xxx|address=x.x.x.x]    Set current target hosts
+   :show                               Show address list of current host group
+   :reload                             Reload config auth and host information
+
+   :do                                 Run ssh command as normal user
+   :sudo                               Run ssh command as su user from normal user
+   :copy                               Upload or download files between local and remote
+     local -> remote                   -> means upload, remote must be directory
+     local <- remote                   <- means download, local must be directory
+
+   :exit or :quit or :q                Exit xsh
+`)
 }

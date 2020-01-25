@@ -104,12 +104,20 @@ func wordCompleter(line string, pos int) (head string, completions []string, tai
 		}
 	}
 
-	i := strings.LastIndex(head, XConfig.CommandSep)
-	if i > 0 {
-		return head[:i] + XConfig.CommandSep, cmdCompleter(head[i+1:]), ""
-	} else {
-		return "", cmdCompleter(head), ""
+	if CurEnv.Group == "" {
+		return ":set group=", groupCompleter(""), ""
 	}
+
+	if CurEnv.Action == ":do" || CurEnv.Action == ":sudo" {
+		i := strings.LastIndex(head, XConfig.CommandSep)
+		if i > 0 {
+			return head[:i] + XConfig.CommandSep, cmdCompleter(head[i+1:]), ""
+		} else {
+			return "", cmdCompleter(head), ""
+		}
+	}
+
+	return head, nil, tail
 }
 
 func NewLiner() (*liner.State, error) {
@@ -117,7 +125,7 @@ func NewLiner() (*liner.State, error) {
 	line.SetWordCompleter(wordCompleter)
 	line.SetTabCompletionStyle(liner.TabPrints)
 
-	if f, err := os.Open(path.Join(ConfigRootPath, HisFile)); err == nil {
+	if f, err := os.Open(path.Join(RootPath, HisFile)); err == nil {
 		line.ReadHistory(f)
 		f.Close()
 	}
@@ -126,7 +134,7 @@ func NewLiner() (*liner.State, error) {
 }
 
 func Prompt(l *liner.State) (string, error) {
-	name, err := l.Prompt(CurEnv.PromptStr)
+	name, err := l.Prompt(CurEnv.Prompt)
 	if err == nil {
 		l.AppendHistory(name)
 	} else if err == liner.ErrPromptAborted {
@@ -135,7 +143,7 @@ func Prompt(l *liner.State) (string, error) {
 		return "", PromptAborted
 	}
 
-	if f, err := os.Create(path.Join(ConfigRootPath, HisFile)); err != nil {
+	if f, err := os.Create(path.Join(RootPath, HisFile)); err != nil {
 		Warn.Print("Error writing history file: ", err)
 		return name, PromptHisErr
 	} else {

@@ -7,37 +7,33 @@ import (
 	"path"
 )
 
-//TargetType: group/address
+//Single: group/address
 type CurrentEnv struct {
-	TargetType     string `yaml:"target_type,omitempty"`
-	HostGroup      string `yaml:"host_group,omitempty"`
-	HostAddress    string `yaml:"host_address,omitempty"`
-	Authentication string `yaml:"authentication,omitempty"`
-	PromptStr      string `yaml:"prompt_str,omitempty"`
-	ActionType     string `yaml:"action_type,omitempty"`
-	OutputType     string `yaml:"output_type,omitempty"`
+	Single  bool   `yaml:"single,omitempty"`
+	Group   string `yaml:"group,omitempty"`
+	Address string `yaml:"address,omitempty"`
+	Auth    string `yaml:"auth,omitempty"`
+	Prompt  string `yaml:"prompt,omitempty"`
+	Action  string `yaml:"action,omitempty"`
+	Output  string `yaml:"output,omitempty"`
 }
 
 var CurEnv CurrentEnv
 
 func CheckEnv() bool {
-	if CurEnv.TargetType == "" {
-		return false
+	if !CurEnv.Single {
+		return CurEnv.Group != ""
 	}
 
-	if CurEnv.TargetType == "group" {
-		return CurEnv.HostGroup != ""
-	}
-
-	return CurEnv.HostAddress != "" && CurEnv.Authentication != ""
+	return CurEnv.Address != "" && CurEnv.Auth != ""
 }
 
 func SaveEnv() {
 	if CheckEnv() {
-		if CurEnv.TargetType == "group" {
-			CurEnv.PromptStr = "[" + CurEnv.HostGroup + CurEnv.ActionType + "]# "
+		if !CurEnv.Single {
+			CurEnv.Prompt = "[" + CurEnv.Group + CurEnv.Action + "]# "
 		} else {
-			CurEnv.PromptStr = "[" + CurEnv.Authentication + "@" + CurEnv.HostAddress + CurEnv.ActionType + "]# "
+			CurEnv.Prompt = "[" + CurEnv.Auth + "@" + CurEnv.Address + CurEnv.Action + "]# "
 		}
 
 		d, err := yaml.Marshal(&CurEnv)
@@ -45,7 +41,7 @@ func SaveEnv() {
 			Warn.Printf("marshal env error: %v", err)
 		}
 
-		if err := ioutil.WriteFile(path.Join(ConfigRootPath, EnvFile), d, os.ModeAppend|0644); err != nil {
+		if err := ioutil.WriteFile(path.Join(RootPath, EnvFile), d, os.ModeAppend|0644); err != nil {
 			Warn.Printf("save env error: %v", err)
 		}
 	} else {
@@ -56,12 +52,12 @@ func SaveEnv() {
 }
 
 func initEnv() {
-	CurEnv.TargetType = ""
-	CurEnv.PromptStr = PromptStr
-	CurEnv.ActionType = ":do"
-	CurEnv.OutputType = XConfig.Output.Type
+	CurEnv.Single = false
+	CurEnv.Prompt = PromptStr
+	CurEnv.Action = ":do"
+	CurEnv.Output = XConfig.Output.Type
 
-	e, err := ioutil.ReadFile(path.Join(ConfigRootPath, EnvFile))
+	e, err := ioutil.ReadFile(path.Join(RootPath, EnvFile))
 	if err != nil {
 		Warn.Printf("read current env error: %v", err)
 		return
@@ -73,10 +69,10 @@ func initEnv() {
 	}
 
 	if CheckEnv() {
-		if CurEnv.TargetType == "group" {
-			CurEnv.PromptStr = "[" + CurEnv.HostGroup + CurEnv.ActionType + "]# "
+		if !CurEnv.Single {
+			CurEnv.Prompt = "[" + CurEnv.Group + CurEnv.Action + "]# "
 		} else {
-			CurEnv.PromptStr = "[" + CurEnv.Authentication + "@" + CurEnv.HostAddress + CurEnv.ActionType + "]# "
+			CurEnv.Prompt = "[" + CurEnv.Auth + "@" + CurEnv.Address + CurEnv.Action + "]# "
 		}
 	}
 }

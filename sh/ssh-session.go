@@ -34,21 +34,25 @@ func (s sshSession) newSession() (*xSshSession, error) {
 	}, nil
 }
 
-func (s sshSession) run(arg interface{}) sshResponse {
+func (s sshSession) run(arg interface{}) SshResponse {
 	command := arg.(string)
 
 	session, err := s.newSession()
 	if err != nil {
-		return sshResponse{Err: err}
+		return SshResponse{Err: err}
 	}
 	defer session.Close()
 
 	stdout, stderr, err := session.OutputStdoutStderr(command)
 	if err != nil {
-		return sshResponse{Err: err}
+		return SshResponse{
+			Stdout: stdout,
+			Stderr: stderr,
+			Err:    err,
+		}
 	}
 
-	return sshResponse{
+	return SshResponse{
 		Address: s.Client.Host,
 		Stdout:  stdout,
 		Stderr:  stderr,
@@ -58,18 +62,18 @@ func (s sshSession) run(arg interface{}) sshResponse {
 
 type Callback func(stdin io.WriteCloser) error
 
-func (s sshSession) shell(arg interface{}) sshResponse {
+func (s sshSession) shell(arg interface{}) SshResponse {
 	callback := arg.(Callback)
 
 	session, err := s.newSession()
 	if err != nil {
-		return sshResponse{Err: err}
+		return SshResponse{Err: err}
 	}
 	defer session.Close()
 
 	stdin, err := session.StdinPipe()
 	if err != nil {
-		return sshResponse{Err: err}
+		return SshResponse{Err: err}
 	}
 
 	var stdoutBuf bytes.Buffer
@@ -80,19 +84,19 @@ func (s sshSession) shell(arg interface{}) sshResponse {
 
 	err = session.Shell()
 	if err != nil {
-		return sshResponse{Err: err}
+		return SshResponse{Err: err}
 	}
 
 	if err = callback(stdin); err != nil {
-		return sshResponse{Err: err}
+		return SshResponse{Err: err}
 	}
 
 	err = session.Wait()
 	if err != nil {
-		return sshResponse{Err: err}
+		return SshResponse{Err: err}
 	}
 
-	return sshResponse{
+	return SshResponse{
 		Address: s.Client.Host,
 		Stdout:  stdoutBuf.String(),
 		Stderr:  stderrBuf.String(),

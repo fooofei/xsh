@@ -1,0 +1,16 @@
+name: hello world
+actions:
+  - name: echo 123
+    group: alpha02
+    steps:
+      - type: command
+        commands:
+          - echo 123
+  - name: echo date
+    group: alpha02
+    steps:
+      - type: command
+        su: true
+        commands:
+          - date
+          - whoami

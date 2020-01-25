@@ -3,22 +3,22 @@ package base
 import "runtime"
 
 const (
-	ConfigRootPath      = ".xsh"
-	ConfigsFile         = "configs.yaml"
-	AuthenticationsFile = "authentications.yaml"
-	HostgroupsFile      = "hostgroups.yaml"
-	TempFile            = "xsh.temp"
-	HisFile             = "xsh.his"
-	EnvFile             = "xsh.env"
-	LogPath             = ".xsh/logs"
-	LogoStr             = "xsh"
-	PromptStr           = "[" + LogoStr + "]# "
+	Version    = "1.0.0"
+	RootPath   = ".xsh"
+	ConfigFile = "config.yaml"
+	AuthFile   = "auth.yaml"
+	HostFile   = "host.yaml"
+	HisFile    = "xsh.his"
+	EnvFile    = "xsh.env"
+	TempPath   = ".xsh/temp"
+	LogPath    = ".xsh/logs"
+	PromptStr  = "[xsh]# "
 )
 
 var (
-	Keywords = []string{":help", ":show", ":set", ":reload", ":do", ":sudo", ":copy", ":encrypt", ":decrypt"}
+	Keywords = []string{":help", ":show", ":set", ":reload", ":do", ":sudo", ":copy"}
 	setopts  = []string{"group=", "address="}
-	showopts = []string{"address", "env"}
+	showopts = []string{"group", "address", "env"}
 )
 
 var (

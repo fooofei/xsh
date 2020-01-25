@@ -15,7 +15,7 @@ type sshCommand struct {
 	SuPass   string
 }
 
-func (s sshCommand) run() sshResponse {
+func (s sshCommand) run() SshResponse {
 	if s.SuType != "" {
 		result := s.sudo()
 		result.Address = s.Session.Client.Host
@@ -27,13 +27,13 @@ func (s sshCommand) run() sshResponse {
 	return result
 }
 
-func (s sshCommand) do() sshResponse {
+func (s sshCommand) do() SshResponse {
 	cmd := "set -e;set +o history;" + strings.Join(s.Commands, ";")
 
 	return withTimeout(s.Session.run, cmd, time.Duration(XConfig.Timeout.CommandTimeoutS)*time.Second)
 }
 
-func (s sshCommand) sudo() sshResponse {
+func (s sshCommand) sudo() SshResponse {
 	cmd := "set -e;set +o history;" + strings.Join(s.Commands, ";")
 
 	if XConfig.Command.Pty.Term == "" {
@@ -44,16 +44,16 @@ func (s sshCommand) sudo() sshResponse {
 	return s.sudoWithPty()
 }
 
-func (s sshCommand) sudoWithPty() sshResponse {
+func (s sshCommand) sudoWithPty() SshResponse {
 	randName := fmt.Sprintf("%d", time.Now().UnixNano())
 
-	res := withTimeout(s.Session.shell, func(stdin io.WriteCloser) sshResponse {
+	res := withTimeout(s.Session.shell, func(stdin io.WriteCloser) SshResponse {
 		if _, err := stdin.Write([]byte("set +o history;stty -echo;" + s.SuType + " || exit 110 \n")); err != nil {
-			return sshResponse{Err: err}
+			return SshResponse{Err: err}
 		}
 		time.Sleep(time.Millisecond * time.Duration(XConfig.Command.Pty.IntervalMS))
 		if _, err := stdin.Write([]byte(s.SuPass + "\n")); err != nil {
-			return sshResponse{Err: err}
+			return SshResponse{Err: err}
 		}
 		time.Sleep(time.Millisecond * time.Duration(XConfig.Command.Pty.IntervalMS))
 
@@ -61,11 +61,11 @@ func (s sshCommand) sudoWithPty() sshResponse {
 
 		for _, cmd := range commands {
 			if _, err := stdin.Write([]byte(cmd + "\n")); err != nil {
-				return sshResponse{Err: err}
+				return SshResponse{Err: err}
 			}
 			time.Sleep(time.Millisecond * time.Duration(XConfig.Command.Pty.IntervalMS))
 		}
-		return sshResponse{}
+		return SshResponse{}
 	}, time.Duration(XConfig.Timeout.CommandTimeoutS)*time.Second)
 
 	return s.postProcessOutput4Pty(res, randName)
@@ -103,7 +103,7 @@ func (s sshCommand) preProcessCmd4Pty(commands []string, randName string) []stri
 	return ret
 }
 
-func (s sshCommand) postProcessOutput4Pty(res sshResponse, randName string) sshResponse {
+func (s sshCommand) postProcessOutput4Pty(res SshResponse, randName string) SshResponse {
 	stdoutBegin := "<XSH-STDOUT-BEGIN>"
 	stdoutEnd := "<XSH-STDOUT-END>"
 	stderrBegin := "<XSH-STDERR-BEGIN>"
@@ -132,7 +132,7 @@ func (s sshCommand) postProcessOutput4Pty(res sshResponse, randName string) sshR
 		Warn.Printf("host: %s, Commands: %v, res: %v", s.Session.Client.Host, s.Commands, res)
 	}
 
-	return sshResponse{
+	return SshResponse{
 		Stdout: stdoutReturn,
 		Stderr: stderrReturn,
 		Err:    nil,

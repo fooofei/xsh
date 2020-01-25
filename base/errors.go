@@ -15,7 +15,6 @@ var (
 	RemoteFileExistErr = errors.New("remote file existed")
 	LocalFileExistErr  = errors.New("local file existed")
 	RemoteWalkErr      = errors.New("remote walk existed")
-	RemoteStatErr      = errors.New("remote stat existed")
 
 	CryptTypeUnknown = errors.New("crypt type unknown")
 	CryptKeyIllegal  = errors.New("crypt key illegal")

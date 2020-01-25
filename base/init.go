@@ -6,6 +6,5 @@ func init() {
 	InitXConfig()
 	InitXAuth()
 	InitXHost()
-	initXTask()
 	initEnv()
 }

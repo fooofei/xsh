@@ -17,7 +17,7 @@ var (
 	Warn  *log.Logger
 	Error *log.Logger
 
-	logfileprefix = ConfigRootPath + "/logs/xsh-"
+	logfileprefix = LogPath + "/xsh-"
 	logfilesuffix = ".log"
 )
 
@@ -41,12 +41,6 @@ func initLog() {
 }
 
 func rotate() {
-	if err := os.Mkdir(LogPath, os.ModeDir|0755); err != nil {
-		if os.IsNotExist(err) {
-			log.Fatalf("mkdir %s error: %v\n", LogPath, err)
-		}
-	}
-
 	lfs, err := filepath.Glob(logfileprefix + "*")
 	if err != nil {
 		log.Fatalf("glob the log file [%s] error: %v\n", logfileprefix, err)

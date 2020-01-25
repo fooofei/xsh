@@ -7,42 +7,42 @@ import (
 	"time"
 )
 
-type SubAction struct {
-	ActionType string // command/copy
+type Step struct {
+	Type string `yaml:"type"` // command/copy
 
-	// for ssh
-	Commands []string
-	Su       bool
+	// for command
+	Commands []string `yaml:"commands"`
+	Su       bool     `yaml:"su"`
 
-	// for sftp/scp
-	Direction string // upload/download
-	Local     string
-	Remote    string
+	// for copy
+	Direction string `yaml:"direction"` // upload/download
+	Local     string `yaml:"local"`
+	Remote    string `yaml:"remote"`
 }
 
 type SshAction struct {
-	Name       string
-	TargetType string // group/Address
-	HostGroup  string
-	HostDetail HostDetail
-	SubActions []SubAction
+	Name   string     `yaml:"name"`
+	Single bool       `yaml:"single,omitempty"`
+	Group  string     `yaml:"group,omitempty"`
+	Detail HostDetail `yaml:"detail,omitempty"`
+	Steps  []Step     `yaml:"steps"`
 }
 
 type SshActionResult struct {
-	Name   string
-	Target string
-	Result map[string][]sshResponse
-	Err    error
+	Name       string
+	Target     string
+	StepResult map[string][]SshResponse
+	Err        error
 }
 
 func (s *SshAction) checkAction() error {
-	if len(s.SubActions) == 0 {
+	if len(s.Steps) == 0 {
 		return ActionEmptyErr
 	}
 
 	su := false
-	for _, action := range s.SubActions {
-		if action.ActionType == "command" {
+	for _, action := range s.Steps {
+		if action.Type == "command" {
 			if len(action.Commands) == 0 {
 				return CommandEmptyErr
 			}
@@ -63,13 +63,13 @@ func (s *SshAction) checkAction() error {
 	}
 
 	if su {
-		if s.TargetType == "group" {
-			a := XAuthMap[XHostMap[s.HostGroup].Authentication]
+		if !s.Single {
+			a := XAuthMap[XHostMap[s.Group].Auth]
 			if a.SuType == "" {
 				return CommandSuErr
 			}
 		} else {
-			if s.HostDetail.SuType == "" {
+			if s.Detail.SuType == "" {
 				return CommandSuErr
 			}
 		}
@@ -90,22 +90,22 @@ func (s *SshAction) Do() SshActionResult {
 
 	ctx, _ := context.WithTimeout(context.Background(), time.Duration(XConfig.Timeout.ActionTimeoutS)*time.Second)
 
-	if s.TargetType == "group" {
-		sshActionResult.Target = s.HostGroup
+	if !s.Single {
+		sshActionResult.Target = s.Group
 
-		responseCh := make(chan map[string][]sshResponse, 1)
+		responseCh := make(chan map[string][]SshResponse, 1)
 		defer close(responseCh)
 		s.do4group(ctx, responseCh)
 
-		sshActionResult.Result = <-responseCh
+		sshActionResult.StepResult = <-responseCh
 	} else {
-		sshActionResult.Target = s.HostDetail.Address
+		sshActionResult.Target = s.Detail.Address
 
-		responseCh := make(chan []sshResponse, 1)
+		responseCh := make(chan []SshResponse, 1)
 		defer close(responseCh)
-		s.do4host(ctx, s.HostDetail, responseCh)
+		s.do4host(ctx, s.Detail, responseCh)
 
-		sshActionResult.Result[s.HostDetail.Address] = <-responseCh
+		sshActionResult.StepResult[s.Detail.Address] = <-responseCh
 	}
 
 	return sshActionResult
@@ -155,14 +155,14 @@ func (s *SshAction) newSshCommand(hostDetail HostDetail) sshCommand {
 	return resut
 }
 
-func (s *SshAction) do4host(ctx context.Context, hostDetail HostDetail, resultCh chan []sshResponse) {
-	responseCh := make(chan sshResponse, 1)
+func (s *SshAction) do4host(ctx context.Context, hostDetail HostDetail, resultCh chan []SshResponse) {
+	responseCh := make(chan SshResponse, 1)
 	defer close(responseCh)
 
-	result := make([]sshResponse, 0)
+	result := make([]SshResponse, 0)
 
-	for _, action := range s.SubActions {
-		switch action.ActionType {
+	for _, action := range s.Steps {
+		switch action.Type {
 		case "command":
 			sc := s.newSshCommand(hostDetail)
 			sc.Commands = action.Commands
@@ -187,11 +187,11 @@ func (s *SshAction) do4host(ctx context.Context, hostDetail HostDetail, resultCh
 	resultCh <- result
 }
 
-func (s *SshAction) do4group(ctx context.Context, resultCh chan map[string][]sshResponse) {
-	responseCh := make(chan []sshResponse, XConfig.Concurrency)
+func (s *SshAction) do4group(ctx context.Context, resultCh chan map[string][]SshResponse) {
+	responseCh := make(chan []SshResponse, XConfig.Concurrency)
 	defer close(responseCh)
 
-	xHost, _ := XHostMap[s.HostGroup]
+	xHost, _ := XHostMap[s.Group]
 	go func() {
 		for _, hostDetail := range xHost.AllHost {
 			go s.do4host(ctx, hostDetail, responseCh)
@@ -199,7 +199,7 @@ func (s *SshAction) do4group(ctx context.Context, resultCh chan map[string][]ssh
 	}()
 
 	size := len(xHost.AllHost)
-	result := make(map[string][]sshResponse)
+	result := make(map[string][]SshResponse)
 	for i := 0; i < size; i++ {
 		response := <-responseCh
 		result[response[0].Address] = response
@@ -210,8 +210,8 @@ func (s *SshAction) do4group(ctx context.Context, resultCh chan map[string][]ssh
 	resultCh <- result
 }
 
-func (s *SshAction) doCommand(ctx context.Context, resultCh chan sshResponse, sc sshCommand) {
-	rc := make(chan sshResponse, 1)
+func (s *SshAction) doCommand(ctx context.Context, resultCh chan SshResponse, sc sshCommand) {
+	rc := make(chan SshResponse, 1)
 	go func() {
 		defer close(rc)
 		select {
@@ -226,12 +226,12 @@ func (s *SshAction) doCommand(ctx context.Context, resultCh chan sshResponse, sc
 	case r := <-rc:
 		resultCh <- r
 	case <-ctx.Done():
-		resultCh <- sshResponse{Address: sc.Session.Client.Host, Err: ActionTimeoutErr}
+		resultCh <- SshResponse{Address: sc.Session.Client.Host, Err: ActionTimeoutErr}
 	}
 }
 
-func (s *SshAction) doCopy(ctx context.Context, resultCh chan sshResponse, sc sshCopy) {
-	rc := make(chan sshResponse, 1)
+func (s *SshAction) doCopy(ctx context.Context, resultCh chan SshResponse, sc sshCopy) {
+	rc := make(chan SshResponse, 1)
 	go func() {
 		defer close(rc)
 		select {
@@ -246,11 +246,11 @@ func (s *SshAction) doCopy(ctx context.Context, resultCh chan sshResponse, sc ss
 	case r := <-rc:
 		resultCh <- r
 	case <-ctx.Done():
-		resultCh <- sshResponse{Address: sc.Session.Client.Host, Err: ActionTimeoutErr}
+		resultCh <- SshResponse{Address: sc.Session.Client.Host, Err: ActionTimeoutErr}
 	}
 }
 
-func printProgress(response []sshResponse, end bool) {
+func printProgress(response []SshResponse, end bool) {
 	if XConfig.Output.Type == "text" && XConfig.Output.Progress {
 		if end {
 			fmt.Println()

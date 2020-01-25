@@ -49,7 +49,6 @@ type config struct {
 
 	Output struct {
 		Type     string `yaml:"type,omitempty"`
-		Ordered  bool   `yaml:"ordered,omitempty"`
 		Progress bool   `yaml:"progress,omitempty"`
 	} `yaml:"output,omitempty"`
 
@@ -65,7 +64,7 @@ var XConfig = config{}
 func InitXConfig() {
 	setupXConfigDefault()
 
-	var filePath = path.Join(ConfigRootPath, ConfigsFile)
+	var filePath = path.Join(RootPath, ConfigFile)
 	c, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		Warn.Printf("Can not find configs file[%s].", filePath)
@@ -144,7 +143,7 @@ func setupXConfigDefault() {
 	}
 
 	if len(XConfig.CommonCommands) == 0 {
-		XConfig.CommonCommands = []string{"cat", "cd", "cp", "df", "awk", "date", "du", "chown", "chmod", "curl", "dos2unix", "echo", "find", "free", "grep", "hostname", "kill", "ln", "ls", "man", "mkdir", "mount", "mv", "openssl", "ping", "ps", "pwd", "rpm", "sed", "scp", "tar", "umask", "uname", "unzip", "zip", "uptime", "wget", "which", "who", "whoami"}
+		XConfig.CommonCommands = []string{"cat", "cd", "cp", "df", "awk", "date", "du", "chown", "chmod", "curl", "dos2unix", "echo", "find", "free", "grep", "hostname", "ifconfig", "kill", "ln", "ls", "man", "mkdir", "mount", "mv", "openssl", "ping", "ps", "pwd", "rpm", "sed", "scp", "tar", "umask", "uname", "unzip", "zip", "uptime", "wget", "which", "who", "whoami"}
 	}
 	if len(XConfig.BlackCommandRegexps) == 0 {
 		XConfig.BlackCommandRegexps = []string{"^\\s*(vi|vim)\\s+", "^\\s*top\\s*$", "^\\s*expect\\s*$", "^\\s*more\\s*$", "^\\s*less\\s*$", "^\\s*tailf\\s*$", "^\\s*tail\\s*\\-f\\s*$"}

@@ -1,16 +1,15 @@
 name: hello world
 actions:
-  - name: echo 123
+  - name: show mem and disk
     group: alpha02
     steps:
       - type: command
         commands:
-          - echo 123
-  - name: echo date
+          - free -h
+          - df -h
+  - name: show user info
     group: alpha02
     steps:
       - type: command
-        su: true
         commands:
-          - date
-          - whoami
+          - id

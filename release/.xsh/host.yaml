@@ -3,10 +3,9 @@ hosts:
     auth: alpha-root
     addresses:
       - 192.168.162.65
-      - 192.168.173.132
 
   - name: alpha02
-    auth: alpha-key
+    auth: alpha
     addresses:
       - 192.168.170.109
       - 192.168.165.37

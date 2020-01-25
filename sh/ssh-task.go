@@ -89,12 +89,11 @@ func (s SshTask) applyValue() error {
 
 func (s SshTask) Do() SshTaskResult {
 	result := SshTaskResult{}
-	result.Name = xTask.Name
-
 	if err := s.applyValue(); err != nil {
 		result.Err = err
 		return result
 	}
+	result.Name = xTask.Name
 
 	for _, action := range xTask.SshActions {
 		actionResult := action.Do()

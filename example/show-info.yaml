@@ -1,4 +1,4 @@
-name: hello world
+name: show infor
 actions:
   - name: show mem and disk
     group: alpha02

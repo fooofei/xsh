@@ -41,7 +41,7 @@ func printText(v interface{}) {
 }
 
 func printTaskResult(result SshTaskResult) {
-	fmt.Printf("[%-36s] +++++++++++++++++++++++++++++++++++++++\n", result)
+	fmt.Printf("[%-36s] +++++++++++++++++++++++++++++++++++++++\n", result.Name)
 	if result.Err != nil {
 		fmt.Printf("error: %s\n", result.Err.Error())
 	}

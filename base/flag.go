@@ -7,14 +7,19 @@ import (
 )
 
 var (
-	RunMode = flag.String("m", "interaction", "The run mode. value ranges: task/command/interaction(default)")
+	Mode = flag.String("mode", "interaction", "The run mode. value ranges: task/cmd/copy/interaction(default)")
 
-	TaskFile  = flag.String("t", "", "The task yaml when run task")
-	ValueFile = flag.String("v", "", "The value yaml when run task")
+	Task  = flag.String("task", "", "The task yaml when run task")
+	Value = flag.String("value", "", "The value yaml when run task")
 
-	GroupName = flag.String("g", "", "The group name when run command")
-	SshPort   = flag.Int("p", 22, "The ssh port when run command, default: 22")
-	Cmdline   = flag.String("c", "", "The command line when run command")
+	Group = flag.String("group", "", "The group name when run cmd or copy")
+
+	Cmd = flag.String("cmd", "", "The command line when run cmd")
+	Su  = flag.Bool("su", false, "Su or not when run cmd")
+
+	Direction = flag.String("direction", "", "The direction upload/download when run copy")
+	Local     = flag.String("local", "", "The local path when run copy")
+	Remote    = flag.String("remote", "", "The remote path when run copy")
 )
 
 func initFlag() {

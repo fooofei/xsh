@@ -24,37 +24,37 @@ type SshTaskResult struct {
 var xTask SshTask
 
 func (s SshTask) applyValue() error {
-	if *TaskFile == "" {
+	if *Task == "" {
 		return fmt.Errorf("task file not found")
 	}
 
 	var values map[string]interface{}
-	if *ValueFile != "" {
-		vf, err := ioutil.ReadFile(*ValueFile)
+	if *Value != "" {
+		vf, err := ioutil.ReadFile(*Value)
 		if err != nil {
-			return fmt.Errorf("can not read value file[%s], err: %v", *ValueFile, err)
+			return fmt.Errorf("can not read value file[%s], err: %v", *Value, err)
 		}
 
 		err = yaml.Unmarshal(vf, &values)
 		if err != nil {
-			return fmt.Errorf("value file[%s] unmarshal error: %v", *ValueFile, err)
+			return fmt.Errorf("value file[%s] unmarshal error: %v", *Value, err)
 		}
 	}
 
 	if len(values) == 0 {
-		tf, err := ioutil.ReadFile(*TaskFile)
+		tf, err := ioutil.ReadFile(*Task)
 		if err != nil {
-			return fmt.Errorf("can not read task file[%s], err: %v", *TaskFile, err)
+			return fmt.Errorf("can not read task file[%s], err: %v", *Task, err)
 		}
 
 		err = yaml.Unmarshal(tf, &xTask)
 		if err != nil {
-			return fmt.Errorf("task file[%s] unmarshal error: %v", *TaskFile, err)
+			return fmt.Errorf("task file[%s] unmarshal error: %v", *Task, err)
 		}
 	} else {
-		tf, err := template.ParseFiles(*TaskFile)
+		tf, err := template.ParseFiles(*Task)
 		if err != nil {
-			return fmt.Errorf("parse template task file[%s] failed", *TaskFile)
+			return fmt.Errorf("parse template task file[%s] failed", *Task)
 		}
 
 		tmp, err := ioutil.TempFile(TempPath, "xsh-task-*.yaml")
@@ -64,7 +64,7 @@ func (s SshTask) applyValue() error {
 		defer os.Remove(filepath.Join(TempPath, tmp.Name()))
 
 		if err := tf.Execute(tmp, values); err != nil {
-			return fmt.Errorf("execute template task file[%s] by value file[%s] task failed", *TaskFile, *ValueFile)
+			return fmt.Errorf("execute template task file[%s] by value file[%s] task failed", *Task, *Value)
 		}
 
 		realTaskFile := filepath.Join(TempPath, tmp.Name())
@@ -80,7 +80,7 @@ func (s SshTask) applyValue() error {
 	}
 
 	if len(xTask.SshActions) == 0 {
-		return fmt.Errorf("Task file[%s] action empty", *TaskFile)
+		return fmt.Errorf("Task file[%s] action empty", *Task)
 	}
 
 	return nil

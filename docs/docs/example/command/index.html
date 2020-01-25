@@ -5,7 +5,10 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Command"><meta property="og:title" content="" />
-<meta property="og:description" content="执行命令 " />
+<meta property="og:description" content="执行命令 前提  已设置好配置项：系统配置、认证配置、主机配置 已切换到目标主机组环境   以group=alpha02为例
+ 执行方式：普通用户 切换上下文 命令：:do
+[alpha02:do]# :do[alpha02:do]#执行单条命令 [alpha02:do]# whoami..[192.168.170.109 ] ---------------------------------------------------------abc[192.168.165.37 ] ---------------------------------------------------------abc执行多条命令 [alpha02:do]# whoami;date;pwd..[192.168.165.37 ] ---------------------------------------------------------abcMon May 4 10:47:46 CST 2020/home/abc[192.168.170.109 ] ---------------------------------------------------------abcMon May 4 10:47:55 CST 2020/home/abc执行方式：从普通用户切换至其他用户 切换上下文 命令：:sudo
+[alpha02:do]# :sudo[alpha02:sudo]#执行单条命令 [alpha02:sudo]# whoami..[192.168.165.37 ] ---------------------------------------------------------rootWarn =&gt;[sudo] password for root:[192." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/command/" />
 
@@ -149,7 +152,25 @@ https://github.com/alex-shpak/hugo-book
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#执行命令">执行命令</a></li>
+    <li><a href="#执行命令">执行命令</a>
+      <ul>
+        <li><a href="#前提">前提</a></li>
+        <li><a href="#执行方式普通用户">执行方式：普通用户</a>
+          <ul>
+            <li><a href="#切换上下文">切换上下文</a></li>
+            <li><a href="#执行单条命令">执行单条命令</a></li>
+            <li><a href="#执行多条命令">执行多条命令</a></li>
+          </ul>
+        </li>
+        <li><a href="#执行方式从普通用户切换至其他用户">执行方式：从普通用户切换至其他用户</a>
+          <ul>
+            <li><a href="#切换上下文-1">切换上下文</a></li>
+            <li><a href="#执行单条命令-1">执行单条命令</a></li>
+            <li><a href="#执行多条命令-1">执行多条命令</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
   </ul>
 </nav>
 
@@ -162,7 +183,75 @@ https://github.com/alex-shpak/hugo-book
       
       
 <article class="markdown"><h1 id="执行命令">执行命令</h1>
-</article>
+<h2 id="前提">前提</h2>
+<ul>
+<li>已设置好配置项：系统配置、认证配置、主机配置</li>
+<li>已切换到目标主机组环境</li>
+</ul>
+<blockquote>
+<p>以group=alpha02为例</p>
+</blockquote>
+<h2 id="执行方式普通用户">执行方式：普通用户</h2>
+<h3 id="切换上下文">切换上下文</h3>
+<p>命令：<code>:do</code></p>
+<pre><code>[alpha02:do]# :do
+[alpha02:do]#
+</code></pre><h3 id="执行单条命令">执行单条命令</h3>
+<pre><code>[alpha02:do]# whoami
+..
+[192.168.170.109   ] ---------------------------------------------------------
+abc
+
+[192.168.165.37    ] ---------------------------------------------------------
+abc
+
+</code></pre><h3 id="执行多条命令">执行多条命令</h3>
+<pre><code>[alpha02:do]# whoami;date;pwd
+..
+[192.168.165.37    ] ---------------------------------------------------------
+abc
+Mon May  4 10:47:46 CST 2020
+/home/abc
+
+[192.168.170.109   ] ---------------------------------------------------------
+abc
+Mon May  4 10:47:55 CST 2020
+/home/abc
+
+</code></pre><h2 id="执行方式从普通用户切换至其他用户">执行方式：从普通用户切换至其他用户</h2>
+<h3 id="切换上下文-1">切换上下文</h3>
+<p>命令：<code>:sudo</code></p>
+<pre><code>[alpha02:do]# :sudo
+[alpha02:sudo]#
+</code></pre><h3 id="执行单条命令-1">执行单条命令</h3>
+<pre><code>[alpha02:sudo]# whoami
+..
+[192.168.165.37    ] ---------------------------------------------------------
+root
+
+Warn =&gt;
+[sudo] password for root:
+[192.168.170.109   ] ---------------------------------------------------------
+root
+
+Warn =&gt;
+[sudo] password for root:
+</code></pre><h3 id="执行多条命令-1">执行多条命令</h3>
+<pre><code>[alpha02:sudo]# whoami;date
+..
+[192.168.165.37    ] ---------------------------------------------------------
+root
+Mon May  4 10:49:08 CST 2020
+
+Warn =&gt;
+[sudo] password for root:
+[192.168.170.109   ] ---------------------------------------------------------
+root
+Mon May  4 10:49:17 CST 2020
+
+Warn =&gt;
+[sudo] password for root:
+</code></pre></article>
  
       
 
@@ -185,7 +274,25 @@ https://github.com/alex-shpak/hugo-book
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#执行命令">执行命令</a></li>
+    <li><a href="#执行命令">执行命令</a>
+      <ul>
+        <li><a href="#前提">前提</a></li>
+        <li><a href="#执行方式普通用户">执行方式：普通用户</a>
+          <ul>
+            <li><a href="#切换上下文">切换上下文</a></li>
+            <li><a href="#执行单条命令">执行单条命令</a></li>
+            <li><a href="#执行多条命令">执行多条命令</a></li>
+          </ul>
+        </li>
+        <li><a href="#执行方式从普通用户切换至其他用户">执行方式：从普通用户切换至其他用户</a>
+          <ul>
+            <li><a href="#切换上下文-1">切换上下文</a></li>
+            <li><a href="#执行单条命令-1">执行单条命令</a></li>
+            <li><a href="#执行多条命令-1">执行多条命令</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
   </ul>
 </nav>
 

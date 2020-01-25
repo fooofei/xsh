@@ -5,7 +5,18 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Env"><meta property="og:title" content="" />
-<meta property="og:description" content="" />
+<meta property="og:description" content="切换环境 前提  已设置好配置项：系统配置、认证配置、主机配置  切换环境 切换至目标主机组 查看主机组列表：
+命令：:show group
+[alpha01:do]# :show group- alpha-123- alpha01- alpha02切换至目标主机组：
+命令：:set group=xxx
+ xxx，主机配置项中的主机组名称
+ [alpha01:do]# :set group=alpha02[alpha02:do]#切换至目标主机地址 查看当前主机组主机地址列表：
+命令：:show address
+[alpha02:do]# :show address- 192.168.165.37- 192.168.170.109切换至目标主机地址：
+命令：:set address=x.x.x.x
+ x.x.x.x，当前主机组中某一个主机地址
+ [alpha02:do]# :set address=192.168.165.37[alpha@192.168.165.37:do]#切换上下文 支持的上下文列表
+ :do，以配置的用户身份，登录目标主机，执行命令 :sudo，以配置的用户身份，登录目标主机，执行su切换用户，执行命令 :copy，进入上传下载模式，-&gt;代表上传，&lt;-代表下载  [alpha02:do]# :do[alpha02:do]# :sudo[alpha02:sudo]# :copy[alpha02:copy]# :do[alpha02:do]#" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/env/" />
 
@@ -68,9 +79,9 @@ https://github.com/alex-shpak/hugo-book
 </li>
 <li>配置
 <ul>
-<li><a href="/xsh/docs/setup/configs/">系统配置</a></li>
-<li><a href="/xsh/docs/setup/authentications/">认证配置</a></li>
-<li><a href="/xsh/docs/setup/hostgroups/">主机组配置</a></li>
+<li><a href="/xsh/docs/setup/config/">系统配置</a></li>
+<li><a href="/xsh/docs/setup/auth/">认证配置</a></li>
+<li><a href="/xsh/docs/setup/host/">主机组配置</a></li>
 </ul>
 </li>
 <li>示例
@@ -83,17 +94,18 @@ https://github.com/alex-shpak/hugo-book
 <li><a href="/xsh/docs/example/crypt/">加解密</a></li>
 </ul>
 </li>
-<li>编排式任务
+<li>命令行操作
 <ul>
-<li><a href="/xsh/docs/example/task/">普通任务</a></li>
-<li><a href="/xsh/docs/example/value/">带变量任务</a></li>
+<li><a href="/xsh/docs/example/cli/cmd/">命令行动作</a></li>
+<li><a href="/xsh/docs/example/cli/task/">脚本任务编排</a></li>
+<li><a href="/xsh/docs/example/cli/value/">带变量的脚本任务</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="/xsh/docs/faq/">FAQ</a>
-<br/></li>
+<li><a href="/xsh/docs/faq/">FAQ</a></li>
 </ul>
+<br/>
 
 
 
@@ -147,7 +159,22 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" class="hidden" id="toc-control" />
     <aside class="hidden clearfix">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#切换环境">切换环境</a>
+      <ul>
+        <li><a href="#前提">前提</a></li>
+        <li><a href="#切换环境-1">切换环境</a>
+          <ul>
+            <li><a href="#切换至目标主机组">切换至目标主机组</a></li>
+            <li><a href="#切换至目标主机地址">切换至目标主机地址</a></li>
+          </ul>
+        </li>
+        <li><a href="#切换上下文">切换上下文</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
 
     </aside>
@@ -157,7 +184,54 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-<article class="markdown"></article>
+<article class="markdown"><h1 id="切换环境">切换环境</h1>
+<h2 id="前提">前提</h2>
+<ul>
+<li>已设置好配置项：系统配置、认证配置、主机配置</li>
+</ul>
+<h2 id="切换环境-1">切换环境</h2>
+<h3 id="切换至目标主机组">切换至目标主机组</h3>
+<p>查看主机组列表：</p>
+<p>命令：<code>:show group</code></p>
+<pre><code>[alpha01:do]# :show group
+- alpha-123
+- alpha01
+- alpha02
+
+</code></pre><p>切换至目标主机组：</p>
+<p>命令：<code>:set group=xxx</code></p>
+<blockquote>
+<p>xxx，主机配置项中的主机组名称</p>
+</blockquote>
+<pre><code>[alpha01:do]# :set group=alpha02
+[alpha02:do]#
+</code></pre><h3 id="切换至目标主机地址">切换至目标主机地址</h3>
+<p>查看当前主机组主机地址列表：</p>
+<p>命令：<code>:show address</code></p>
+<pre><code>[alpha02:do]# :show address
+- 192.168.165.37
+- 192.168.170.109
+
+</code></pre><p>切换至目标主机地址：</p>
+<p>命令：<code>:set address=x.x.x.x</code></p>
+<blockquote>
+<p>x.x.x.x，当前主机组中某一个主机地址</p>
+</blockquote>
+<pre><code>[alpha02:do]# :set address=192.168.165.37
+[alpha@192.168.165.37:do]#
+</code></pre><h2 id="切换上下文">切换上下文</h2>
+<p>支持的上下文列表</p>
+<ul>
+<li><code>:do</code>，以配置的用户身份，登录目标主机，执行命令</li>
+<li><code>:sudo</code>，以配置的用户身份，登录目标主机，执行su切换用户，执行命令</li>
+<li><code>:copy</code>，进入上传下载模式，<code>-&gt;</code>代表上传，<code>&lt;-</code>代表下载</li>
+</ul>
+<pre><code>[alpha02:do]# :do
+[alpha02:do]# :sudo
+[alpha02:sudo]# :copy
+[alpha02:copy]# :do
+[alpha02:do]#
+</code></pre></article>
  
       
 
@@ -178,7 +252,22 @@ https://github.com/alex-shpak/hugo-book
     
     <aside class="book-toc">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#切换环境">切换环境</a>
+      <ul>
+        <li><a href="#前提">前提</a></li>
+        <li><a href="#切换环境-1">切换环境</a>
+          <ul>
+            <li><a href="#切换至目标主机组">切换至目标主机组</a></li>
+            <li><a href="#切换至目标主机地址">切换至目标主机地址</a></li>
+          </ul>
+        </li>
+        <li><a href="#切换上下文">切换上下文</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
  
     </aside>

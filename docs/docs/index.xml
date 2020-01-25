@@ -11,6 +11,33 @@
     
     <item>
       <title></title>
+      <link>https://xied5531.github.io/xsh/docs/example/cli/cmd/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://xied5531.github.io/xsh/docs/example/cli/cmd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://xied5531.github.io/xsh/docs/example/cli/task/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://xied5531.github.io/xsh/docs/example/cli/task/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://xied5531.github.io/xsh/docs/example/cli/value/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://xied5531.github.io/xsh/docs/example/cli/value/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>https://xied5531.github.io/xsh/docs/example/command/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -51,25 +78,18 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/example/env/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://xied5531.github.io/xsh/docs/example/task/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://xied5531.github.io/xsh/docs/example/task/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://xied5531.github.io/xsh/docs/example/value/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://xied5531.github.io/xsh/docs/example/value/</guid>
-      <description></description>
+      <description>切换环境 前提  已设置好配置项：系统配置、认证配置、主机配置  切换环境 切换至目标主机组 查看主机组列表：
+命令：:show group
+[alpha01:do]# :show group- alpha-123- alpha01- alpha02切换至目标主机组：
+命令：:set group=xxx
+ xxx，主机配置项中的主机组名称
+ [alpha01:do]# :set group=alpha02[alpha02:do]#切换至目标主机地址 查看当前主机组主机地址列表：
+命令：:show address
+[alpha02:do]# :show address- 192.168.165.37- 192.168.170.109切换至目标主机地址：
+命令：:set address=x.x.x.x
+ x.x.x.x，当前主机组中某一个主机地址
+ [alpha02:do]# :set address=192.168.165.37[alpha@192.168.165.37:do]#切换上下文 支持的上下文列表
+ :do，以配置的用户身份，登录目标主机，执行命令 :sudo，以配置的用户身份，登录目标主机，执行su切换用户，执行命令 :copy，进入上传下载模式，-&amp;gt;代表上传，&amp;lt;-代表下载  [alpha02:do]# :do[alpha02:do]# :sudo[alpha02:sudo]# :copy[alpha02:copy]# :do[alpha02:do]#</description>
     </item>
     
     <item>
@@ -110,28 +130,28 @@
     
     <item>
       <title></title>
-      <link>https://xied5531.github.io/xsh/docs/setup/authentications/</link>
+      <link>https://xied5531.github.io/xsh/docs/setup/auth/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://xied5531.github.io/xsh/docs/setup/authentications/</guid>
+      <guid>https://xied5531.github.io/xsh/docs/setup/auth/</guid>
       <description></description>
     </item>
     
     <item>
       <title></title>
-      <link>https://xied5531.github.io/xsh/docs/setup/configs/</link>
+      <link>https://xied5531.github.io/xsh/docs/setup/config/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://xied5531.github.io/xsh/docs/setup/configs/</guid>
+      <guid>https://xied5531.github.io/xsh/docs/setup/config/</guid>
       <description></description>
     </item>
     
     <item>
       <title></title>
-      <link>https://xied5531.github.io/xsh/docs/setup/hostgroups/</link>
+      <link>https://xied5531.github.io/xsh/docs/setup/host/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://xied5531.github.io/xsh/docs/setup/hostgroups/</guid>
+      <guid>https://xied5531.github.io/xsh/docs/setup/host/</guid>
       <description></description>
     </item>
     

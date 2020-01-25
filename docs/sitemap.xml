@@ -11,6 +11,18 @@
   </url>
   
   <url>
+    <loc>https://xied5531.github.io/xsh/docs/example/cli/cmd/</loc>
+  </url>
+  
+  <url>
+    <loc>https://xied5531.github.io/xsh/docs/example/cli/task/</loc>
+  </url>
+  
+  <url>
+    <loc>https://xied5531.github.io/xsh/docs/example/cli/value/</loc>
+  </url>
+  
+  <url>
     <loc>https://xied5531.github.io/xsh/docs/example/command/</loc>
   </url>
   
@@ -24,14 +36,6 @@
   
   <url>
     <loc>https://xied5531.github.io/xsh/docs/example/env/</loc>
-  </url>
-  
-  <url>
-    <loc>https://xied5531.github.io/xsh/docs/example/task/</loc>
-  </url>
-  
-  <url>
-    <loc>https://xied5531.github.io/xsh/docs/example/value/</loc>
   </url>
   
   <url>
@@ -51,15 +55,15 @@
   </url>
   
   <url>
-    <loc>https://xied5531.github.io/xsh/docs/setup/authentications/</loc>
+    <loc>https://xied5531.github.io/xsh/docs/setup/auth/</loc>
   </url>
   
   <url>
-    <loc>https://xied5531.github.io/xsh/docs/setup/configs/</loc>
+    <loc>https://xied5531.github.io/xsh/docs/setup/config/</loc>
   </url>
   
   <url>
-    <loc>https://xied5531.github.io/xsh/docs/setup/hostgroups/</loc>
+    <loc>https://xied5531.github.io/xsh/docs/setup/host/</loc>
   </url>
   
   <url>

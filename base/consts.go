@@ -1,20 +1,26 @@
 package base
 
+import "runtime"
+
 const (
-	ConfigRootPath      string = ".xsh"
-	ConfigsFile         string = "configs.yaml"
-	AuthenticationsFile string = "authentications.yaml"
-	HostgroupsFile      string = "hostgroups.yaml"
-	TempFile            string = "xsh.temp"
-	HisFile             string = "xsh.his"
-	EnvFile             string = "xsh.env"
-	LogPath             string = ".xsh/logs"
-	LogoStr             string = "xsh"
-	PromptStr           string = "[" + LogoStr + "]# "
+	ConfigRootPath      = ".xsh"
+	ConfigsFile         = "configs.yaml"
+	AuthenticationsFile = "authentications.yaml"
+	HostgroupsFile      = "hostgroups.yaml"
+	TempFile            = "xsh.temp"
+	HisFile             = "xsh.his"
+	EnvFile             = "xsh.env"
+	LogPath             = ".xsh/logs"
+	LogoStr             = "xsh"
+	PromptStr           = "[" + LogoStr + "]# "
 )
 
 var (
-	Keywords = []string{":show", ":set", ":exit", ":do", ":sudo"}
+	Keywords = []string{":help", ":show", ":set", ":reload", ":do", ":sudo", ":copy", ":encrypt", ":decrypt"}
 	setopts  = []string{"group=", "address="}
-	showopts = []string{"address"}
+	showopts = []string{"address", "env"}
+)
+
+var (
+	GOOS = runtime.GOOS
 )

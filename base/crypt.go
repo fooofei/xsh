@@ -11,15 +11,30 @@ import (
 
 func GetPlainPassword(pass string) string {
 	if XConfig.Crypt.Key == "" {
+		Warn.Print("crypt key empty.")
 		return pass
 	}
 
-	plaintext, err := AesDecrypt(pass)
+	txt, err := AesDecrypt(pass)
 	if err != nil {
 		Error.Printf("password [%s] decrypt error [%v].", pass, err)
 	}
 
-	return plaintext
+	return txt
+}
+
+func GetMaskPassword(pass string) string {
+	if XConfig.Crypt.Key == "" {
+		Warn.Print("crypt key empty.")
+		return pass
+	}
+
+	tst, err := AesEncrypt(pass)
+	if err != nil {
+		Error.Printf("password [%s] encrypt error [%v].", pass, err)
+	}
+
+	return tst
 }
 
 func AesEncrypt(plaintext string) (string, error) {

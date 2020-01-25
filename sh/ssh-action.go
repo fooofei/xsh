@@ -2,42 +2,134 @@ package sh
 
 import (
 	"context"
+	"fmt"
 	. "github.com/xied5531/xsh/base"
 	"time"
 )
 
-// TargetType: group/Address
+type SubAction struct {
+	ActionType string // command/copy
+
+	// for ssh
+	Commands []string
+	Su       bool
+
+	// for sftp/scp
+	Direction string // upload/download
+	Local     string
+	Remote    string
+}
+
 type SshAction struct {
 	Name       string
-	TargetType string
+	TargetType string // group/Address
 	HostGroup  string
-	Commands   []string
 	HostDetail HostDetail
-	Su         bool
+	SubActions []SubAction
 }
 
 type SshActionResult struct {
 	Name   string
 	Target string
-	Result []sshResponse
+	Result map[string][]sshResponse
+	Err    error
+}
+
+func (s *SshAction) checkAction() error {
+	if len(s.SubActions) == 0 {
+		return ActionEmptyErr
+	}
+
+	su := false
+	for _, action := range s.SubActions {
+		if action.ActionType == "command" {
+			if len(action.Commands) == 0 {
+				return CommandEmptyErr
+			}
+			if err := checkCommands(action.Commands); err != nil {
+				return err
+			}
+			if action.Su {
+				su = true
+			}
+		} else {
+			if action.Direction != "upload" && action.Direction != "download" {
+				return CopyInfoErr
+			}
+			if action.Local == "" || action.Remote == "" {
+				return CopyInfoErr
+			}
+		}
+	}
+
+	if su {
+		if s.TargetType == "group" {
+			a := XAuthMap[XHostMap[s.HostGroup].Authentication]
+			if a.SuType == "" {
+				return CommandSuErr
+			}
+		} else {
+			if s.HostDetail.SuType == "" {
+				return CommandSuErr
+			}
+		}
+	}
+
+	return nil
 }
 
 func (s *SshAction) Do() SshActionResult {
-	result := SshActionResult{
+	sshActionResult := SshActionResult{
 		Name: s.Name,
+	}
+
+	if err := s.checkAction(); err != nil {
+		sshActionResult.Err = err
+		return sshActionResult
 	}
 
 	ctx, _ := context.WithTimeout(context.Background(), time.Duration(XConfig.Timeout.ActionTimeoutS)*time.Second)
 
 	if s.TargetType == "group" {
-		result.Target = s.HostGroup
-		result.Result = s.do4group(ctx)
+		sshActionResult.Target = s.HostGroup
+
+		responseCh := make(chan map[string][]sshResponse, 1)
+		defer close(responseCh)
+		s.do4group(ctx, responseCh)
+
+		sshActionResult.Result = <-responseCh
 	} else {
-		result.Target = s.HostDetail.Address
-		result.Result = s.do4host(ctx)
+		sshActionResult.Target = s.HostDetail.Address
+
+		responseCh := make(chan []sshResponse, 1)
+		defer close(responseCh)
+		s.do4host(ctx, s.HostDetail, responseCh)
+
+		sshActionResult.Result[s.HostDetail.Address] = <-responseCh
 	}
 
-	return result
+	return sshActionResult
+}
+
+func (s *SshAction) newSshCopy(hostDetail HostDetail) sshCopy {
+	resut := sshCopy{
+		Session: copySession{
+			Client: sshClient{
+				Host:       hostDetail.Address,
+				Port:       hostDetail.Port,
+				UserName:   hostDetail.Username,
+				PassWord:   hostDetail.Password,
+				PrivateKey: hostDetail.PrivateKey,
+				PassPhrase: hostDetail.Passphrase,
+			},
+		},
+	}
+
+	if hostDetail.Port <= 0 {
+		resut.Session.Client.Port = XConfig.Command.Port
+	}
+
+	return resut
 }
 
 func (s *SshAction) newSshCommand(hostDetail HostDetail) sshCommand {
@@ -52,61 +144,73 @@ func (s *SshAction) newSshCommand(hostDetail HostDetail) sshCommand {
 				PassPhrase: hostDetail.Passphrase,
 			},
 		},
-		Commands: s.Commands,
-		SuType:   "",
-		SuPass:   "",
+		SuType: hostDetail.SuType,
+		SuPass: hostDetail.SuPass,
 	}
 
 	if hostDetail.Port <= 0 {
-		resut.Session.Client.Port = XConfig.Ssh.Port
-	}
-
-	if s.Su {
-		if hostDetail.SuType != "" {
-			resut.SuType = hostDetail.SuType
-			resut.SuPass = hostDetail.SuPass
-		} else {
-			resut.SuType = "XXX"
-			resut.SuPass = "XXX"
-		}
+		resut.Session.Client.Port = XConfig.Command.Port
 	}
 
 	return resut
 }
 
-func (s *SshAction) do4host(ctx context.Context) []sshResponse {
-	resultCh := make(chan sshResponse, 1)
-	defer close(resultCh)
+func (s *SshAction) do4host(ctx context.Context, hostDetail HostDetail, resultCh chan []sshResponse) {
+	responseCh := make(chan sshResponse, 1)
+	defer close(responseCh)
 
-	go s.doCommands(ctx, resultCh, s.newSshCommand(s.HostDetail))
+	result := make([]sshResponse, 0)
 
-	results := make([]sshResponse, 1)
-	results = append(results, <-resultCh)
+	for _, action := range s.SubActions {
+		switch action.ActionType {
+		case "command":
+			sc := s.newSshCommand(hostDetail)
+			sc.Commands = action.Commands
+			if !action.Su {
+				sc.SuType = ""
+				sc.SuPass = ""
+			}
 
-	return results
+			s.doCommand(ctx, responseCh, sc)
+			result = append(result, <-responseCh)
+		case "copy":
+			sc := s.newSshCopy(hostDetail)
+			sc.Direction = action.Direction
+			sc.Local = action.Local
+			sc.Remote = action.Remote
+
+			s.doCopy(ctx, responseCh, sc)
+			result = append(result, <-responseCh)
+		}
+	}
+
+	resultCh <- result
 }
 
-func (s *SshAction) do4group(ctx context.Context) []sshResponse {
-	resultCh := make(chan sshResponse, XConfig.Concurrency)
-	defer close(resultCh)
+func (s *SshAction) do4group(ctx context.Context, resultCh chan map[string][]sshResponse) {
+	responseCh := make(chan []sshResponse, XConfig.Concurrency)
+	defer close(responseCh)
 
 	xHost, _ := XHostMap[s.HostGroup]
 	go func() {
 		for _, hostDetail := range xHost.AllHost {
-			go s.doCommands(ctx, resultCh, s.newSshCommand(hostDetail))
+			go s.do4host(ctx, hostDetail, responseCh)
 		}
 	}()
 
 	size := len(xHost.AllHost)
-	results := make([]sshResponse, 0)
+	result := make(map[string][]sshResponse)
 	for i := 0; i < size; i++ {
-		results = append(results, <-resultCh)
+		response := <-responseCh
+		result[response[0].Address] = response
+		printProgress(false)
 	}
+	printProgress(true)
 
-	return results
+	resultCh <- result
 }
 
-func (s *SshAction) doCommands(ctx context.Context, resultCh chan sshResponse, sc sshCommand) {
+func (s *SshAction) doCommand(ctx context.Context, resultCh chan sshResponse, sc sshCommand) {
 	rc := make(chan sshResponse, 1)
 	go func() {
 		defer close(rc)
@@ -122,6 +226,36 @@ func (s *SshAction) doCommands(ctx context.Context, resultCh chan sshResponse, s
 	case r := <-rc:
 		resultCh <- r
 	case <-ctx.Done():
-		resultCh <- sshResponse{Err: ActionTimeoutErr}
+		resultCh <- sshResponse{Address: sc.Session.Client.Host, Err: ActionTimeoutErr}
+	}
+}
+
+func (s *SshAction) doCopy(ctx context.Context, resultCh chan sshResponse, sc sshCopy) {
+	rc := make(chan sshResponse, 1)
+	go func() {
+		defer close(rc)
+		select {
+		case <-ctx.Done():
+			return
+		default:
+			rc <- sc.run()
+		}
+	}()
+
+	select {
+	case r := <-rc:
+		resultCh <- r
+	case <-ctx.Done():
+		resultCh <- sshResponse{Address: sc.Session.Client.Host, Err: ActionTimeoutErr}
+	}
+}
+
+func printProgress(end bool) {
+	if XConfig.Output.Type == "text" && XConfig.Output.Progress {
+		if end {
+			fmt.Println()
+		} else {
+			fmt.Print(".")
+		}
 	}
 }

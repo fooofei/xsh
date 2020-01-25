@@ -3,9 +3,9 @@ package base
 func init() {
 	initFlag()
 	initLog()
-	initXConfig()
-	initXAuth()
-	initXHost()
+	InitXConfig()
+	InitXAuth()
+	InitXHost()
 	initXTask()
 	initEnv()
 }

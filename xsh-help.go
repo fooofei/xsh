@@ -1,27 +1,32 @@
 package main
 
-import "fmt"
-
-const version = "1.0.0"
+import (
+	"fmt"
+	. "github.com/xied5531/xsh/base"
+)
 
 func help() {
 	fmt.Println(`NAME:
    xsh - A simple command line tool to run commands on remote host addresses.
 
-USAGE:
-   xsh [OPTIONS|COMMANDS] [arguments...] 
+SYNOPSIS:
+   xsh [COMMANDS] [arguments...] 
 
 VERSION:
-` + version + `
+` + Version + `
 
-OPTIONS:
-   :help                                  show help info
-   :set [group=xxx|address=x.x.x.x]       load environment
-   :show                                  show address list of current group
-   :exit                                  quit
+DESCRIPTION:
+   Please report a issue at ` + XConfig.IssueUrl + ` if possible.
 
-COMMANDS:
-   :do                    run ssh command as normal user, default.
-   :sudo                  run ssh command as su user from normal user
+   :help or :h                         Show help info
+   :set [group=xxx|address=x.x.x.x]    Load environment
+   :show                               Show address list of current group
+
+   :do                                 Run ssh command as normal user, default.
+   :sudo                               Run ssh command as su user from normal user
+   :encrypt passwd                     Encrypt passwd
+   :decrypt passwd                     Decrypt passwd
+
+   :exit or :quit or :q                Stop xsh
 `)
 }

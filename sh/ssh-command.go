@@ -16,19 +16,15 @@ type sshCommand struct {
 }
 
 func (s sshCommand) run() sshResponse {
-	if len(s.Commands) == 0 {
-		return sshResponse{Address: s.Session.Client.Host, Err: CommandEmptyErr}
-	}
-
-	if s.SuType == "XXX" {
-		return sshResponse{Address: s.Session.Client.Host, Err: CommandSuErr}
-	}
-
 	if s.SuType != "" {
-		return s.sudo()
+		result := s.sudo()
+		result.Address = s.Session.Client.Host
+		return result
 	}
 
-	return s.do()
+	result := s.do()
+	result.Address = s.Session.Client.Host
+	return result
 }
 
 func (s sshCommand) do() sshResponse {
@@ -40,7 +36,7 @@ func (s sshCommand) do() sshResponse {
 func (s sshCommand) sudo() sshResponse {
 	cmd := "set -e;set +o history;" + strings.Join(s.Commands, ";")
 
-	if XConfig.Ssh.Pty.Term == "" {
+	if XConfig.Command.Pty.Term == "" {
 		cmd := "echo '" + s.SuPass + "'|" + s.SuType + " -c '" + strings.Replace(cmd, "'", "\\'", -1) + "'"
 		return withTimeout(s.Session.run, cmd, time.Duration(XConfig.Timeout.CommandTimeoutS)*time.Second)
 	}
@@ -53,23 +49,23 @@ func (s sshCommand) sudoWithPty() sshResponse {
 
 	res := withTimeout(s.Session.shell, func(stdin io.WriteCloser) sshResponse {
 		if _, err := stdin.Write([]byte("set +o history;stty -echo;" + s.SuType + " || exit 110 \n")); err != nil {
-			return sshResponse{Address: s.Session.Client.Host, Err: err}
+			return sshResponse{Err: err}
 		}
-		time.Sleep(time.Millisecond * time.Duration(XConfig.Ssh.Pty.IntervalMS))
+		time.Sleep(time.Millisecond * time.Duration(XConfig.Command.Pty.IntervalMS))
 		if _, err := stdin.Write([]byte(s.SuPass + "\n")); err != nil {
-			return sshResponse{Address: s.Session.Client.Host, Err: err}
+			return sshResponse{Err: err}
 		}
-		time.Sleep(time.Millisecond * time.Duration(XConfig.Ssh.Pty.IntervalMS))
+		time.Sleep(time.Millisecond * time.Duration(XConfig.Command.Pty.IntervalMS))
 
 		commands := s.preProcessCmd4Pty(s.Commands, randName)
 
 		for _, cmd := range commands {
 			if _, err := stdin.Write([]byte(cmd + "\n")); err != nil {
-				return sshResponse{Address: s.Session.Client.Host, Err: err}
+				return sshResponse{Err: err}
 			}
-			time.Sleep(time.Millisecond * time.Duration(XConfig.Ssh.Pty.IntervalMS))
+			time.Sleep(time.Millisecond * time.Duration(XConfig.Command.Pty.IntervalMS))
 		}
-		return sshResponse{Address: s.Session.Client.Host}
+		return sshResponse{}
 	}, time.Duration(XConfig.Timeout.CommandTimeoutS)*time.Second)
 
 	return s.postProcessOutput4Pty(res, randName)

@@ -37,15 +37,28 @@ func runCommand(line string) bool {
 	if line == "" {
 		return false
 	}
-	if line == ":exit" {
+	if line == ":exit" || line == ":quit" || line == ":q" {
 		return true
 	}
-	if line == ":help" {
+	if line == ":help" || line == ":h" {
 		help()
+		return false
+	}
+	if line == ":reload" {
+		reload()
+		return false
+	}
+	if strings.HasPrefix(line, ":encrypt") {
+		encrypt(line)
+		return false
+	}
+	if strings.HasPrefix(line, ":decrypt") {
+		decrypt(line)
 		return false
 	}
 	if strings.HasPrefix(line, ":set") {
 		set(line)
+		return false
 	}
 	if !CheckEnv() {
 		fmt.Println("please :set group= first")
@@ -70,26 +83,27 @@ func runCommand(line string) bool {
 			SaveEnv()
 			return false
 		}
+	case ":copy":
+		if CurEnv.ActionType != ":copy" {
+			CurEnv.ActionType = ":copy"
+			SaveEnv()
+			return false
+		}
 	}
 
 	if strings.HasPrefix(line, ":") {
-		Error.Printf("command not support, line= %s", line)
-		return false
-	}
-
-	cmds := strings.Split(line, XConfig.CommandSep)
-	if len(cmds) == 0 {
+		Error.Printf("command[%s] not support", line)
 		return false
 	}
 
 	sshAction := newSshAction()
-	sshAction.Commands = cmds
-
 	switch CurEnv.ActionType {
 	case ":do":
-		do(sshAction)
+		do(sshAction, line, false)
 	case ":sudo":
-		sudo(sshAction)
+		do(sshAction, line, true)
+	case ":copy":
+		copy(sshAction, line)
 	}
 
 	return false
@@ -99,11 +113,11 @@ func newSshAction() SshAction {
 	result := SshAction{
 		Name:       "Default",
 		TargetType: CurEnv.TargetType,
+		SubActions: make([]SubAction, 1),
 	}
 
 	if result.TargetType == "group" {
 		result.HostGroup = CurEnv.HostGroup
-
 	} else {
 		authentication := XAuthMap[CurEnv.Authentication]
 		result.HostDetail = HostDetail{

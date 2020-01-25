@@ -24,7 +24,7 @@ type xAuth struct {
 var XAuth = xAuth{}
 var XAuthMap = make(map[string]Authentication)
 
-func initXAuth() {
+func InitXAuth() {
 	var filePath = path.Join(ConfigRootPath, AuthenticationsFile)
 
 	a, err := ioutil.ReadFile(filePath)
@@ -37,7 +37,7 @@ func initXAuth() {
 	}
 
 	if len(XAuth.Authentications) == 0 {
-		log.Fatal("The authentications empty.")
+		Warn.Printf("The authentications empty.")
 	}
 
 	for _, value := range XAuth.Authentications {

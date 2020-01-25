@@ -12,7 +12,7 @@ type sshSession struct {
 	Client sshClient
 }
 
-func (s *sshSession) newSession() (*xSshSession, error) {
+func (s sshSession) newSession() (*xSshSession, error) {
 	client, err := s.Client.NewClient()
 	if err != nil {
 		return nil, err
@@ -23,8 +23,8 @@ func (s *sshSession) newSession() (*xSshSession, error) {
 		return nil, err
 	}
 
-	if XConfig.Ssh.Pty.Term != "" {
-		if err := session.RequestPty(XConfig.Ssh.Pty.Term, XConfig.Ssh.Pty.Height, XConfig.Ssh.Pty.Width, ssh.TerminalModes{ssh.TTY_OP_ISPEED: uint32(XConfig.Ssh.Pty.Ispeed), ssh.TTY_OP_OSPEED: uint32(XConfig.Ssh.Pty.Ospeed)}); err != nil {
+	if XConfig.Command.Pty.Term != "" {
+		if err := session.RequestPty(XConfig.Command.Pty.Term, XConfig.Command.Pty.Height, XConfig.Command.Pty.Width, ssh.TerminalModes{ssh.TTY_OP_ISPEED: uint32(XConfig.Command.Pty.Ispeed), ssh.TTY_OP_OSPEED: uint32(XConfig.Command.Pty.Ospeed)}); err != nil {
 			return nil, err
 		}
 	}
@@ -34,18 +34,18 @@ func (s *sshSession) newSession() (*xSshSession, error) {
 	}, nil
 }
 
-func (s *sshSession) run(arg interface{}) sshResponse {
+func (s sshSession) run(arg interface{}) sshResponse {
 	command := arg.(string)
 
 	session, err := s.newSession()
 	if err != nil {
-		return sshResponse{Address: s.Client.Host, Err: err}
+		return sshResponse{Err: err}
 	}
 	defer session.Close()
 
 	stdout, stderr, err := session.OutputStdoutStderr(command)
 	if err != nil {
-		return sshResponse{Address: s.Client.Host, Err: err}
+		return sshResponse{Err: err}
 	}
 
 	return sshResponse{
@@ -58,18 +58,18 @@ func (s *sshSession) run(arg interface{}) sshResponse {
 
 type Callback func(stdin io.WriteCloser) error
 
-func (s *sshSession) shell(arg interface{}) sshResponse {
+func (s sshSession) shell(arg interface{}) sshResponse {
 	callback := arg.(Callback)
 
 	session, err := s.newSession()
 	if err != nil {
-		return sshResponse{Address: s.Client.Host, Err: err}
+		return sshResponse{Err: err}
 	}
 	defer session.Close()
 
 	stdin, err := session.StdinPipe()
 	if err != nil {
-		return sshResponse{Address: s.Client.Host, Err: err}
+		return sshResponse{Err: err}
 	}
 
 	var stdoutBuf bytes.Buffer
@@ -80,16 +80,16 @@ func (s *sshSession) shell(arg interface{}) sshResponse {
 
 	err = session.Shell()
 	if err != nil {
-		return sshResponse{Address: s.Client.Host, Err: err}
+		return sshResponse{Err: err}
 	}
 
 	if err = callback(stdin); err != nil {
-		return sshResponse{Address: s.Client.Host, Err: err}
+		return sshResponse{Err: err}
 	}
 
 	err = session.Wait()
 	if err != nil {
-		return sshResponse{Address: s.Client.Host, Err: err}
+		return sshResponse{Err: err}
 	}
 
 	return sshResponse{
@@ -104,7 +104,7 @@ type xSshSession struct {
 	ssh.Session
 }
 
-func (x *xSshSession) OutputStdoutStderr(cmd string) (string, string, error) {
+func (x xSshSession) OutputStdoutStderr(cmd string) (string, string, error) {
 	if x.Stdout != nil {
 		return "", "", errors.New("ssh: Stdout already set")
 	}

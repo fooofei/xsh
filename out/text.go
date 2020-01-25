@@ -3,7 +3,6 @@ package out
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/fatih/color"
 	. "github.com/xied5531/xsh/base"
 	. "github.com/xied5531/xsh/sh"
 	"gopkg.in/yaml.v2"
@@ -21,18 +20,36 @@ func Print(v interface{}) {
 
 func printText(v interface{}) {
 	if ar, ok := v.(SshActionResult); ok {
-		for _, c := range ar.Result {
-			color.Green("[%-18s] ---------------------------------------------------------\n", c.Address)
-			if c.Stdout != "" {
-				fmt.Printf("%s\n", c.Stdout)
+		if ar.Err != nil {
+			fmt.Printf("%s\n", ar.Err.Error())
+			return
+		}
+		for address, response := range ar.Result {
+			fmt.Printf("[%-18s] ---------------------------------------------------------\n", address)
+			for _, r := range response {
+				if r.Stdout != "" {
+					fmt.Printf("%s\n", r.Stdout)
+				}
+				if r.Stderr != "" {
+					fmt.Printf("%s\n", "Warn =>")
+					fmt.Printf("%s\n", r.Stderr)
+				}
+				if r.Err != nil {
+					fmt.Printf("%s ", "Error =>")
+					fmt.Printf("%s\n", r.Err.Error())
+				}
+				if r.Status != nil {
+					for _, s := range r.Status {
+						fmt.Printf("%s\n", s)
+					}
+				}
+
+				if r.Stdout == "" && r.Stderr == "" && r.Err == nil && r.Status == nil {
+					fmt.Println()
+				}
 			}
-			if c.Stderr != "" {
-				color.Red("%s\n", "Warn =>")
-				fmt.Printf("%s\n", c.Stderr)
-			}
-			if c.Err != nil {
-				color.Red("%s\n", "Error =>")
-				fmt.Printf("%s\n", c.Err.Error())
+			if len(response) > 1 {
+				fmt.Printf("%s\n", "------")
 			}
 		}
 	} else {

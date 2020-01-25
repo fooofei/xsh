@@ -6,6 +6,7 @@ import (
 	. "github.com/xied5531/xsh/out"
 	. "github.com/xied5531/xsh/sh"
 	"log"
+	"sort"
 	"strings"
 )
 
@@ -195,11 +196,14 @@ func show(line string) {
 		switch fields[1] {
 		case "address":
 			group, _ := XHostMap[CurEnv.HostGroup]
+			addresses := make([]string, len(group.AllHost))
 			for i, v := range group.AllHost {
-				fmt.Printf("[%d] %s\n", i, v.Address)
+				addresses[i] = v.Address
 			}
+			sort.Strings(addresses)
+			PrintYaml(addresses)
 		case "env":
-			fmt.Printf("%+v\n", CurEnv)
+			PrintYaml(CurEnv)
 		}
 	} else {
 		fmt.Println(":show argument not enough, please :help first.")

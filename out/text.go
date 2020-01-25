@@ -10,9 +10,9 @@ import (
 
 func Out(v interface{}) {
 	if CurEnv.OutputType == "json" {
-		printJson(v)
+		PrintJson(v)
 	} else if CurEnv.OutputType == "yaml" {
-		printYaml(v)
+		PrintYaml(v)
 	} else {
 		printText(v)
 	}
@@ -57,12 +57,12 @@ func printText(v interface{}) {
 	}
 }
 
-func printJson(v interface{}) {
+func PrintJson(v interface{}) {
 	d, _ := json.MarshalIndent(&v, "", "  ")
 	fmt.Println(string(d))
 }
 
-func printYaml(v interface{}) {
+func PrintYaml(v interface{}) {
 	d, _ := yaml.Marshal(&v)
 	fmt.Println(string(d))
 }

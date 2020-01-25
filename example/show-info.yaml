@@ -8,7 +8,7 @@ actions:
           - free -h
           - df -h
   - name: show user info
-    group: alpha02
+    group: alpha03
     steps:
       - type: command
         commands:

@@ -49,7 +49,7 @@ func (s sshCopy) upload() SshResponse {
 	}
 	defer xs.Close()
 
-	if !IsRemoteDirEmpty(xs, s.Remote) && XConfig.Copy.PathEmptyCheck {
+	if !IsRemoteDirEmpty(xs, s.Remote) && XConfig.Copy.DirEmptyCheck {
 		response.Err = RemoteDirNotEmptyErr
 		return response
 	}
@@ -69,7 +69,7 @@ func (s sshCopy) upload() SshResponse {
 func (s sshCopy) download() SshResponse {
 	response := SshResponse{}
 
-	if !IsLocalDirEmpty(s.Local) && XConfig.Copy.PathEmptyCheck {
+	if !IsLocalDirEmpty(s.Local) && XConfig.Copy.DirEmptyCheck {
 		response.Err = LocalDirNotEmptyErr
 		return response
 	}

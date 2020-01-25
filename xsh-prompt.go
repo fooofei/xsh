@@ -99,9 +99,9 @@ func runCommand(line string) bool {
 		}
 	case ":copy":
 		if action, err := newCopyAction(line); err != nil {
-			Out(action.Do())
-		} else {
 			Error.Println(err.Error())
+		} else {
+			Out(action.Do())
 		}
 	}
 

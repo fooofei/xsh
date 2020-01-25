@@ -7,12 +7,14 @@ import (
 )
 
 var (
-	taskFile  = flag.String("t", "", "The tasks yaml.")
-	valueFile = flag.String("v", "", "The values yaml.")
-	authName  = flag.String("A", "", "The auth name.")
-	hostName  = flag.String("H", "", "The host name.")
-	sshport   = flag.Int("P", 22, "The ssh port.")
-	cmdline   = flag.String("L", "", "The command line.")
+	RunMode = flag.String("m", "interaction", "The run mode. value ranges: task/command/interaction(default)")
+
+	TaskFile  = flag.String("t", "", "The task yaml when run task")
+	ValueFile = flag.String("v", "", "The value yaml when run task")
+
+	GroupName = flag.String("g", "", "The group name when run command")
+	SshPort   = flag.Int("p", 22, "The ssh port when run command, default: 22")
+	Cmdline   = flag.String("c", "", "The command line when run command")
 )
 
 func initFlag() {

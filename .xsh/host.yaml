@@ -1,24 +1,25 @@
-hostgroups:
+hosts:
   - name: alpha01
-    authentication: alpha
-    hostaddresses:
+    auth: alpha
+    addresses:
       - 192.168.162.65
       - 192.168.173.132
+      - 192.168.173.134-192.168.173.135
 
   - name: alpha02
-    authentication: alpha
-    hostaddresses:
+    auth: alpha
+    addresses:
       - 192.168.170.109
       - 192.168.165.37
 
   - name: alpha-123
-    authentication: alpha
-    hostaddresses:
+    auth: alpha
+    addresses:
       - 192.168.187.117
-    hostgroups:
+    groups:
       - alpha01
       - alpha02
-    hostdetails:
+    details:
       - address: 192.168.184.236
         username: root
         password: XXXXXX

@@ -8,24 +8,24 @@ import (
 )
 
 type SubAction struct {
-	ActionType string // command/copy
+	ActionType string `yaml:"action_type"` // command/copy
 
-	// for ssh
-	Commands []string
-	Su       bool
+	// for command
+	Commands []string `yaml:"commands"`
+	Su       bool     `yaml:"su"`
 
-	// for sftp/scp
-	Direction string // upload/download
-	Local     string
-	Remote    string
+	// for copy
+	Direction string `yaml:"direction"` // upload/download
+	Local     string `yaml:"local"`
+	Remote    string `yaml:"remote"`
 }
 
 type SshAction struct {
-	Name       string
-	TargetType string // group/Address
-	HostGroup  string
-	HostDetail HostDetail
-	SubActions []SubAction
+	Name       string      `yaml:"name"`
+	Target     string      `yaml:"target"` // group/Address
+	Group      string      `yaml:"group"`
+	Detail     HostDetail  `yaml:"detail"`
+	SubActions []SubAction `yaml:"sub_actions"`
 }
 
 type SshActionResult struct {
@@ -63,13 +63,13 @@ func (s *SshAction) checkAction() error {
 	}
 
 	if su {
-		if s.TargetType == "group" {
-			a := XAuthMap[XHostMap[s.HostGroup].Authentication]
+		if s.Target == "group" {
+			a := XAuthMap[XHostMap[s.Group].Auth]
 			if a.SuType == "" {
 				return CommandSuErr
 			}
 		} else {
-			if s.HostDetail.SuType == "" {
+			if s.Detail.SuType == "" {
 				return CommandSuErr
 			}
 		}
@@ -90,8 +90,8 @@ func (s *SshAction) Do() SshActionResult {
 
 	ctx, _ := context.WithTimeout(context.Background(), time.Duration(XConfig.Timeout.ActionTimeoutS)*time.Second)
 
-	if s.TargetType == "group" {
-		sshActionResult.Target = s.HostGroup
+	if s.Target == "group" {
+		sshActionResult.Target = s.Group
 
 		responseCh := make(chan map[string][]sshResponse, 1)
 		defer close(responseCh)
@@ -99,13 +99,13 @@ func (s *SshAction) Do() SshActionResult {
 
 		sshActionResult.Result = <-responseCh
 	} else {
-		sshActionResult.Target = s.HostDetail.Address
+		sshActionResult.Target = s.Detail.Address
 
 		responseCh := make(chan []sshResponse, 1)
 		defer close(responseCh)
-		s.do4host(ctx, s.HostDetail, responseCh)
+		s.do4host(ctx, s.Detail, responseCh)
 
-		sshActionResult.Result[s.HostDetail.Address] = <-responseCh
+		sshActionResult.Result[s.Detail.Address] = <-responseCh
 	}
 
 	return sshActionResult
@@ -191,7 +191,7 @@ func (s *SshAction) do4group(ctx context.Context, resultCh chan map[string][]ssh
 	responseCh := make(chan []sshResponse, XConfig.Concurrency)
 	defer close(responseCh)
 
-	xHost, _ := XHostMap[s.HostGroup]
+	xHost, _ := XHostMap[s.Group]
 	go func() {
 		for _, hostDetail := range xHost.AllHost {
 			go s.do4host(ctx, hostDetail, responseCh)

@@ -7,42 +7,42 @@ import (
 	"path"
 )
 
-type Authentication struct {
-	Name       string `yaml:"name,omitempty"`
-	Username   string `yaml:"username,omitempty"`
+type Auth struct {
+	Name       string `yaml:"name"`
+	Username   string `yaml:"username"`
 	Password   string `yaml:"password,omitempty"`
-	PrivateKey string `yaml:"privatekey,omitempty"`
+	PrivateKey string `yaml:"private_key,omitempty"`
 	Passphrase string `yaml:"passphrase,omitempty"`
-	SuType     string `yaml:"sutype,omitempty"`
-	SuPass     string `yaml:"supass,omitempty"`
+	SuType     string `yaml:"su_type,omitempty"`
+	SuPass     string `yaml:"su_pass,omitempty"`
 }
 
 type xAuth struct {
-	Authentications []Authentication `yaml:"authentications,omitempty"`
+	Auths []Auth `yaml:"auths"`
 }
 
 var XAuth = xAuth{}
-var XAuthMap = make(map[string]Authentication)
+var XAuthMap = make(map[string]Auth)
 
 func InitXAuth() {
-	var filePath = path.Join(ConfigRootPath, AuthenticationsFile)
+	var filePath = path.Join(ConfigRootPath, AuthFile)
 
 	a, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		log.Fatalf("Can not read authentications file[%s].", filePath)
+		log.Fatalf("Can not read auth file[%s].", filePath)
 	}
 	err = yaml.Unmarshal(a, &XAuth)
 	if err != nil {
-		log.Fatalf("Authentications[%s] unmarshal error: %v", filePath, err)
+		log.Fatalf("Auths[%s] unmarshal error: %v", filePath, err)
 	}
 
-	if len(XAuth.Authentications) == 0 {
-		Warn.Printf("The authentications empty.")
+	if len(XAuth.Auths) == 0 {
+		Warn.Printf("The auth empty.")
 	}
 
-	for _, value := range XAuth.Authentications {
+	for _, value := range XAuth.Auths {
 		if !CheckName(value.Name) {
-			log.Fatalf("Authentication name [%s] illegal", value.Name)
+			log.Fatalf("Auth name [%s] illegal", value.Name)
 		}
 		value.Password = GetPlainPassword(value.Password)
 		value.Passphrase = GetPlainPassword(value.Passphrase)
@@ -50,7 +50,7 @@ func InitXAuth() {
 		XAuthMap[value.Name] = value
 	}
 
-	if len(XAuth.Authentications) != len(XAuthMap) {
-		log.Fatal("Authentication duplicate")
+	if len(XAuth.Auths) != len(XAuthMap) {
+		log.Fatal("Auth duplicate")
 	}
 }

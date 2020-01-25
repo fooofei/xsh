@@ -1,8 +1,0 @@
-authentications:
-  - name: alpha
-    username: root
-    password: XXXXXX
-    sutype: ""
-    supass: ""
-    privatekey: ""
-    passphrase: ""

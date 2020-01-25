@@ -17,7 +17,7 @@ var (
 	Warn  *log.Logger
 	Error *log.Logger
 
-	logfileprefix = ConfigRootPath + "/logs/xsh-"
+	logfileprefix = LogPath + "/xsh-"
 	logfilesuffix = ".log"
 )
 

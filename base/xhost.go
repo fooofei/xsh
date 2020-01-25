@@ -15,31 +15,31 @@ type HostDetail struct {
 	Port       int    `yaml:"port,omitempty"`
 	Username   string `yaml:"username,omitempty"`
 	Password   string `yaml:"password,omitempty"`
-	PrivateKey string `yaml:"privatekey,omitempty"`
+	PrivateKey string `yaml:"private_key,omitempty"`
 	Passphrase string `yaml:"passphrase,omitempty"`
-	SuType     string `yaml:"sutype,omitempty"`
-	SuPass     string `yaml:"supass,omitempty"`
+	SuType     string `yaml:"su_type,omitempty"`
+	SuPass     string `yaml:"su_pass,omitempty"`
 }
 
-type HostGroup struct {
-	Name           string       `yaml:"name,omitempty"`
-	Authentication string       `yaml:"authentication,omitempty"`
-	HostAddresses  []string     `yaml:"hostaddresses,omitempty"`
-	HostGroups     []string     `yaml:"hostgroups,omitempty"`
-	HostDetails    []HostDetail `yaml:"hostdetails,omitempty"`
-	Port           int          `yaml:"port,omitempty"`
-	AllHost        []HostDetail
+type Host struct {
+	Name      string       `yaml:"name"`
+	Auth      string       `yaml:"auth,omitempty"`
+	Addresses []string     `yaml:"addresses,omitempty"`
+	Groups    []string     `yaml:"groups,omitempty"`
+	Details   []HostDetail `yaml:"details,omitempty"`
+	Port      int          `yaml:"port,omitempty"`
+	AllHost   []HostDetail
 }
 
 type xHost struct {
-	HostsGroups []HostGroup `yaml:"hostgroups,omitempty"`
+	Hosts []Host `yaml:"hosts,omitempty"`
 }
 
 var XHost = xHost{}
-var XHostMap = make(map[string]HostGroup)
+var XHostMap = make(map[string]Host)
 
 func InitXHost() {
-	var filePath = path.Join(ConfigRootPath, HostgroupsFile)
+	var filePath = path.Join(ConfigRootPath, HostFile)
 
 	h, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -50,26 +50,26 @@ func InitXHost() {
 		log.Fatalf("Hostgroups[%s] unmarshal error: %v", filePath, err)
 	}
 
-	if len(XHost.HostsGroups) == 0 {
+	if len(XHost.Hosts) == 0 {
 		log.Fatal("The hostgroups empty.")
 	}
 
-	for _, value := range XHost.HostsGroups {
+	for _, value := range XHost.Hosts {
 		if !CheckName(value.Name) {
 			log.Fatalf("Hostgroup name [%s] illegal", value.Name)
 		}
 		XHostMap[value.Name] = value
 	}
 
-	if len(XHost.HostsGroups) != len(XHostMap) {
+	if len(XHost.Hosts) != len(XHostMap) {
 		log.Fatal("Hostgroup duplicate")
 	}
 
 	postProcessHostGroup()
 }
 
-func newHostDetail(address string, hostGroup HostGroup) HostDetail {
-	authentication := XAuthMap[hostGroup.Authentication]
+func newHostDetail(address string, hostGroup Host) HostDetail {
+	authentication := XAuthMap[hostGroup.Auth]
 
 	result := HostDetail{
 		Address:    address,
@@ -95,9 +95,9 @@ func checkHostDetail(hostDetail HostDetail) bool {
 func postProcessHostGroup() {
 	for name, xHost := range XHostMap {
 		allHost := make([]HostDetail, 0)
-		for _, v := range xHost.HostDetails {
+		for _, v := range xHost.Details {
 			if !checkHostDetail(v) {
-				log.Fatalf("Hostgroup[%s] HostDetails[%s] illegal", name, v.Address)
+				log.Fatalf("Hostgroup[%s] Details[%s] illegal", name, v.Address)
 			}
 			v.Password = GetPlainPassword(v.Password)
 			v.SuPass = GetPlainPassword(v.SuPass)
@@ -105,11 +105,11 @@ func postProcessHostGroup() {
 			allHost = append(allHost, v)
 		}
 
-		if len(xHost.HostAddresses) != 0 {
-			for _, address := range xHost.HostAddresses {
+		if len(xHost.Addresses) != 0 {
+			for _, address := range xHost.Addresses {
 				if strings.Contains(address, "-") {
 					if ips, err := processIpRange(address); err != nil {
-						log.Fatalf("Hostgroup[%s] HostAddresses[%s] illegal, err: %v", name, address, err)
+						log.Fatalf("Hostgroup[%s] Addresses[%s] illegal, err: %v", name, address, err)
 					} else {
 						for _, ip := range ips {
 							allHost = append(allHost, newHostDetail(ip, xHost))
@@ -130,8 +130,8 @@ func postProcessHostGroup() {
 	}
 
 	for name, xHost := range XHostMap {
-		if len(xHost.HostGroups) != 0 {
-			for _, hostGroup := range xHost.HostGroups {
+		if len(xHost.Groups) != 0 {
+			for _, hostGroup := range xHost.Groups {
 				h, ok := XHostMap[hostGroup]
 				if !ok {
 					log.Fatalf("Hostgroup[%s] -> Hostgroup[%s] not found", name, hostGroup)
@@ -144,15 +144,15 @@ func postProcessHostGroup() {
 			return xHost.AllHost[i].Address < xHost.AllHost[j].Address
 		})
 		if !checkHostDetail(xHost.AllHost[0]) {
-			log.Fatalf("Hostgroup[%s] HostAddresses[%s] illegal", name, xHost.AllHost[0].Address)
+			log.Fatalf("Hostgroup[%s] Addresses[%s] illegal", name, xHost.AllHost[0].Address)
 		}
 
 		for i := 1; i < len(xHost.AllHost); i++ {
 			if xHost.AllHost[i] == xHost.AllHost[i-1] {
-				log.Fatalf("Hostgroup[%s] HostAddresses[%s] duplicate", name, xHost.AllHost[i].Address)
+				log.Fatalf("Hostgroup[%s] Addresses[%s] duplicate", name, xHost.AllHost[i].Address)
 			}
 			if !checkHostDetail(xHost.AllHost[i]) {
-				log.Fatalf("Hostgroup[%s] HostAddresses[%s] illegal", name, xHost.AllHost[i].Address)
+				log.Fatalf("Hostgroup[%s] Addresses[%s] illegal", name, xHost.AllHost[i].Address)
 			}
 		}
 

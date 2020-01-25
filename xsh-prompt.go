@@ -58,6 +58,10 @@ func runCommand(line string) bool {
 		decrypt(line)
 		return false
 	}
+	if strings.HasPrefix(line, ":show") {
+		show(line)
+		return false
+	}
 	if strings.HasPrefix(line, ":set") {
 		set(line)
 		return false
@@ -67,27 +71,22 @@ func runCommand(line string) bool {
 		return false
 	}
 
-	if strings.HasPrefix(line, ":show") {
-		show(line)
-		return false
-	}
-
 	switch line {
 	case ":do":
-		if CurEnv.ActionType != ":do" {
-			CurEnv.ActionType = ":do"
+		if CurEnv.Action != ":do" {
+			CurEnv.Action = ":do"
 			SaveEnv()
 		}
 		return false
 	case ":sudo":
-		if CurEnv.ActionType != ":sudo" {
-			CurEnv.ActionType = ":sudo"
+		if CurEnv.Action != ":sudo" {
+			CurEnv.Action = ":sudo"
 			SaveEnv()
 		}
 		return false
 	case ":copy":
-		if CurEnv.ActionType != ":copy" {
-			CurEnv.ActionType = ":copy"
+		if CurEnv.Action != ":copy" {
+			CurEnv.Action = ":copy"
 			SaveEnv()
 		}
 		return false
@@ -98,7 +97,7 @@ func runCommand(line string) bool {
 		return false
 	}
 
-	switch CurEnv.ActionType {
+	switch CurEnv.Action {
 	case ":do":
 		if action := newCommandAction(line, false); action != nil {
 			Out(action.Do())
@@ -125,8 +124,8 @@ func newCommandAction(line string, su bool) *SshAction {
 	}
 
 	action := &SshAction{
-		Name:       "Default",
-		TargetType: CurEnv.TargetType,
+		Name:   "Default",
+		Target: CurEnv.Target,
 		SubActions: []SubAction{{
 			ActionType: "command",
 			Commands:   cmds,
@@ -159,8 +158,8 @@ func newCopyAction(line string) (*SshAction, error) {
 	}
 
 	action := &SshAction{
-		Name:       "Default",
-		TargetType: CurEnv.TargetType,
+		Name:   "Default",
+		Target: CurEnv.Target,
 		SubActions: []SubAction{{
 			ActionType: "copy",
 			Direction:  direction,
@@ -174,12 +173,12 @@ func newCopyAction(line string) (*SshAction, error) {
 }
 
 func setupActionTaget(action *SshAction) {
-	if action.TargetType == "group" {
-		action.HostGroup = CurEnv.HostGroup
+	if action.Target == "group" {
+		action.Group = CurEnv.Group
 	} else {
-		authentication := XAuthMap[CurEnv.Authentication]
-		action.HostDetail = HostDetail{
-			Address:    CurEnv.HostAddress,
+		authentication := XAuthMap[CurEnv.Auth]
+		action.Detail = HostDetail{
+			Address:    CurEnv.Address,
 			Username:   authentication.Username,
 			Password:   authentication.Password,
 			PrivateKey: authentication.PrivateKey,
@@ -194,8 +193,19 @@ func show(line string) {
 	fields := strings.Fields(line)
 	if len(fields) > 1 {
 		switch fields[1] {
+		case "group":
+			var groups []string
+			for k, _ := range XHostMap {
+				groups = append(groups, k)
+			}
+			sort.Strings(groups)
+			PrintYaml(groups)
 		case "address":
-			group, _ := XHostMap[CurEnv.HostGroup]
+			group, ok := XHostMap[CurEnv.Group]
+			if !ok {
+				fmt.Printf("current group[%s] not found\n", CurEnv.Group)
+				return
+			}
 			addresses := make([]string, len(group.AllHost))
 			for i, v := range group.AllHost {
 				addresses[i] = v.Address
@@ -225,25 +235,25 @@ func set(line string) {
 					fmt.Printf("group[%s] not found\n", currFields[1])
 					return
 				} else {
-					CurEnv.TargetType = currFields[0]
-					CurEnv.HostGroup = group.Name
-					CurEnv.Authentication = group.Authentication
+					CurEnv.Target = currFields[0]
+					CurEnv.Group = group.Name
+					CurEnv.Auth = group.Auth
 				}
 			case "address":
 				if !CheckIp(currFields[1]) {
 					fmt.Printf("address[%s] illegal\n", currFields[1])
 					return
 				}
-				if CurEnv.Authentication == "" {
+				if CurEnv.Auth == "" {
 					fmt.Println("authentication empty, please :set group= first.")
 					return
 				}
-				if !ContainsAddress(currFields[1], XHostMap[CurEnv.HostGroup].AllHost) {
-					fmt.Printf("address[%s] not found in group [%s]\n", currFields[1], CurEnv.HostGroup)
+				if !ContainsAddress(currFields[1], XHostMap[CurEnv.Group].AllHost) {
+					fmt.Printf("address[%s] not found in group [%s]\n", currFields[1], CurEnv.Group)
 					return
 				}
-				CurEnv.TargetType = currFields[0]
-				CurEnv.HostAddress = currFields[1]
+				CurEnv.Target = currFields[0]
+				CurEnv.Address = currFields[1]
 			}
 		}
 		SaveEnv()

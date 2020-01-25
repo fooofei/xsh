@@ -126,7 +126,7 @@ func NewLiner() (*liner.State, error) {
 }
 
 func Prompt(l *liner.State) (string, error) {
-	name, err := l.Prompt(CurEnv.PromptStr)
+	name, err := l.Prompt(CurEnv.Prompt)
 	if err == nil {
 		l.AppendHistory(name)
 	} else if err == liner.ErrPromptAborted {

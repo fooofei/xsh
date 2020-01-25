@@ -1,0 +1,8 @@
+auths:
+  - name: alpha
+    username: abc
+    password: Test@1qaz
+    su_type: "sudo -S su -"
+    su_pass: XXXXXX
+    private_key: ""
+    passphrase: ""

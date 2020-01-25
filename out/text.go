@@ -21,6 +21,10 @@ func Print(v interface{}) {
 
 func printText(v interface{}) {
 	if ar, ok := v.(SshActionResult); ok {
+		if ar.Err != nil {
+			color.Red("%s\n", ar.Err.Error())
+			return
+		}
 		for _, c := range ar.Result {
 			color.Green("[%-18s] ---------------------------------------------------------\n", c.Address)
 			if c.Stdout != "" {

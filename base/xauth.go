@@ -37,7 +37,7 @@ func initXAuth() {
 	}
 
 	if len(XAuth.Authentications) == 0 {
-		log.Fatal("The authentications empty.")
+		Warn.Printf("The authentications empty.")
 	}
 
 	for _, value := range XAuth.Authentications {

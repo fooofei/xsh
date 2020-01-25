@@ -73,3 +73,21 @@ func sudo(action SshAction) {
 	action.Su = true
 	Print(action.Do())
 }
+
+func encrypt(line string) {
+	fields := strings.Fields(line)
+	if len(fields) == 2 {
+		fmt.Println(GetMaskPassword(fields[1]))
+	} else {
+		Error.Printf("line[%s] illegal", line)
+	}
+}
+
+func decrypt(line string) {
+	fields := strings.Fields(line)
+	if len(fields) == 2 {
+		fmt.Println(GetPlainPassword(fields[1]))
+	} else {
+		Error.Printf("line[%s] illegal", line)
+	}
+}

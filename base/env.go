@@ -56,6 +56,11 @@ func SaveEnv() {
 }
 
 func initEnv() {
+	CurEnv.TargetType = ""
+	CurEnv.PromptStr = PromptStr
+	CurEnv.ActionType = ":do"
+	CurEnv.OutputType = XConfig.Output.Type
+
 	e, err := ioutil.ReadFile(path.Join(ConfigRootPath, EnvFile))
 	if err != nil {
 		Warn.Printf("read current env error: %v", err)
@@ -73,10 +78,5 @@ func initEnv() {
 		} else {
 			CurEnv.PromptStr = "[" + CurEnv.Authentication + "@" + CurEnv.HostAddress + CurEnv.ActionType + "]# "
 		}
-	} else {
-		CurEnv.TargetType = ""
-		CurEnv.PromptStr = PromptStr
-		CurEnv.ActionType = ":do"
-		CurEnv.OutputType = XConfig.Output.Type
 	}
 }

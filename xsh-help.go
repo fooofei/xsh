@@ -18,10 +18,12 @@ OPTIONS:
    :help                                  show help info
    :set [group=xxx|address=x.x.x.x]       load environment
    :show                                  show address list of current group
-   :exit                                  quit
+   :exit                                  exit
 
 COMMANDS:
    :do                    run ssh command as normal user, default.
    :sudo                  run ssh command as su user from normal user
+   :encrypt passwd        encrypt passwd
+   :decrypt passwd        decrypt passwd
 `)
 }

@@ -44,8 +44,17 @@ func runCommand(line string) bool {
 		help()
 		return false
 	}
+	if strings.HasPrefix(line, ":encrypt") {
+		encrypt(line)
+		return false
+	}
+	if strings.HasPrefix(line, ":decrypt") {
+		decrypt(line)
+		return false
+	}
 	if strings.HasPrefix(line, ":set") {
 		set(line)
+		return false
 	}
 	if !CheckEnv() {
 		fmt.Println("please :set group= first")

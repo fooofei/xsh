@@ -20,11 +20,17 @@ type SshActionResult struct {
 	Name   string
 	Target string
 	Result []sshResponse
+	Err    error
 }
 
 func (s *SshAction) Do() SshActionResult {
 	result := SshActionResult{
 		Name: s.Name,
+	}
+
+	if err := checkCommands(s.Commands); err != nil {
+		result.Err = err
+		return result
 	}
 
 	ctx, _ := context.WithTimeout(context.Background(), time.Duration(XConfig.Timeout.ActionTimeoutS)*time.Second)

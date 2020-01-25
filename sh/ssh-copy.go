@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -127,9 +128,9 @@ func (s sshCopy) download() sshResponse {
 		localName := local + filepath.Base(s.Remote)
 		e := s.downloadFile(session, localName, s.Remote)
 		if e != nil {
-			response.Status = []string{s.Remote + " :ERROR: " + e.Error()}
+			response.Status = []string{localName + " <- " + s.Remote + " :ERROR: " + e.Error()}
 		} else {
-			response.Status = []string{s.Remote + " :OK"}
+			response.Status = []string{localName + " <- " + s.Remote + " :OK"}
 		}
 	}
 
@@ -137,7 +138,7 @@ func (s sshCopy) download() sshResponse {
 }
 
 func (s sshCopy) downloadFile(session *sftp.Client, local, remote string) error {
-	if _, err := os.Stat(local + remote); err == nil {
+	if _, err := os.Stat(local); err == nil {
 		return LocalFileExistErr
 	}
 
@@ -168,7 +169,6 @@ func (s sshCopy) downloadFile(session *sftp.Client, local, remote string) error 
 
 func (s sshCopy) downloadDir(session *sftp.Client, local, remote string) ([]string, error) {
 	status := make([]string, 0)
-	status = append(status, "remote root: "+remote)
 
 	w := session.Walk(s.Remote)
 	if w == nil {
@@ -184,30 +184,36 @@ func (s sshCopy) downloadDir(session *sftp.Client, local, remote string) ([]stri
 		}
 
 		if stat.Mode().IsRegular() {
-			localName := local + strings.Replace(remoteName, remote, "", 1)
+			remoteTmp := strings.Replace(remoteName, remote, "", 1)
+			remoteTmp = strings.Replace(remoteTmp, "\\", "+", -1)
+			if runtime.GOOS == "windows" {
+				remoteTmp = strings.Replace(remoteTmp, "/", "\\", -1)
+			}
+
+			localName := local + remoteTmp
 			if e := s.downloadFile(session, localName, remoteName); e != nil {
 				if !XConfig.Copy.Override && e == LocalFileExistErr {
-					status = append(status, remote+" :WARN: skip because exist")
+					status = append(status, localName+" <- "+remoteName+" :WARN: skip because exist")
 				} else {
-					status = append(status, remote+" :ERROR: "+e.Error())
+					status = append(status, localName+" <- "+remoteName+" :ERROR: "+e.Error())
 				}
 			} else {
-				status = append(status, remote+" :OK")
+				status = append(status, localName+" <- "+remoteName+" :OK")
 			}
 		} else if stat.IsDir() {
-			e := os.Mkdir(strings.Replace(remoteName, remote, "", 1), os.ModeDir|0755)
+			localName := local + strings.Replace(remoteName, remote, "", 1)
+			e := os.Mkdir(localName, os.ModeDir|0755)
 			if e != nil && !os.IsExist(e) {
-				status = append(status, remote+" :ERROR: "+e.Error())
+				status = append(status, localName+" <- "+remoteName+" :ERROR: "+e.Error())
 			} else {
-				status = append(status, remote+" :OK")
+				status = append(status, localName+" <- "+remoteName+" :OK")
 			}
 		} else {
-			status = append(status, remote+" :ERROR: file type not support")
+			status = append(status, remoteName+" :ERROR: file type not support")
 		}
 	}
 
 	return status, nil
-
 }
 
 type copySession struct {

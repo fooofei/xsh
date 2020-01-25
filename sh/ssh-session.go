@@ -3,7 +3,7 @@ package sh
 import (
 	"bytes"
 	"errors"
-	. "github.com/luckywinds/xsh/base"
+	. "github.com/xied5531/xsh/base"
 	"golang.org/x/crypto/ssh"
 	"io"
 )

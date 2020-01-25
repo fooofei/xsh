@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	. "github.com/luckywinds/xsh/base"
-	. "github.com/luckywinds/xsh/sh"
+	. "github.com/xied5531/xsh/base"
+	. "github.com/xied5531/xsh/sh"
 	"log"
 	"strings"
 )

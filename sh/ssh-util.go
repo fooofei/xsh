@@ -1,7 +1,7 @@
 package sh
 
 import (
-	"github.com/luckywinds/xsh/base"
+	"github.com/xied5531/xsh/base"
 	"time"
 )
 

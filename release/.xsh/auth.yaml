@@ -8,7 +8,7 @@ auths:
     passphrase: ""
   - name: alpha-root
     username: root
-    password: CdBmLlZd@0126
+    password: XXXXXX
   - name: alpha-key
     username: abc
     password: ""

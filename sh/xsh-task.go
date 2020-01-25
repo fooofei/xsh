@@ -1,6 +1,6 @@
 package sh
 
-import . "github.com/luckywinds/xsh/base"
+import . "github.com/xied5531/xsh/base"
 
 type SshTask struct {
 	Task

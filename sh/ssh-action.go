@@ -2,7 +2,7 @@ package sh
 
 import (
 	"context"
-	. "github.com/luckywinds/xsh/base"
+	. "github.com/xied5531/xsh/base"
 	"time"
 )
 

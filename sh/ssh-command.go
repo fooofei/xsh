@@ -2,7 +2,7 @@ package sh
 
 import (
 	"fmt"
-	. "github.com/luckywinds/xsh/base"
+	. "github.com/xied5531/xsh/base"
 	"io"
 	"strings"
 	"time"

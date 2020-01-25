@@ -2,8 +2,8 @@ package sh
 
 import (
 	"fmt"
-	. "github.com/luckywinds/xsh/base"
 	"github.com/patrickmn/go-cache"
+	. "github.com/xied5531/xsh/base"
 	"golang.org/x/crypto/ssh"
 	"sync"
 	"time"

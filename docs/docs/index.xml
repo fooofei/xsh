@@ -47,11 +47,29 @@
     
     <item>
       <title></title>
+      <link>https://xied5531.github.io/xsh/docs/example/task/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://xied5531.github.io/xsh/docs/example/task/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://xied5531.github.io/xsh/docs/example/value/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://xied5531.github.io/xsh/docs/example/value/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>https://xied5531.github.io/xsh/docs/overview/build/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/overview/build/</guid>
-      <description>构建 </description>
+      <description>构建 git clone https://github.com/xied5531/xsh.gitcd xshgo build软件包  Windows：xsh.exe Linux：xsh  </description>
     </item>
     
     <item>

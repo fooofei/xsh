@@ -37,7 +37,7 @@ func runCommand(line string) bool {
 	if line == "" {
 		return false
 	}
-	if line == ":exit" || line == ":quit" {
+	if line == ":exit" || line == ":quit" || line == ":q" {
 		return true
 	}
 	if line == ":help" || line == ":h" {
@@ -83,10 +83,16 @@ func runCommand(line string) bool {
 			SaveEnv()
 			return false
 		}
+	case ":copy":
+		if CurEnv.ActionType != ":copy" {
+			CurEnv.ActionType = ":copy"
+			SaveEnv()
+			return false
+		}
 	}
 
 	if strings.HasPrefix(line, ":") {
-		ErrLogf("command[%s] not support", line)
+		Error.Printf("command[%s] not support", line)
 		return false
 	}
 
@@ -96,6 +102,8 @@ func runCommand(line string) bool {
 		do(sshAction, line, false)
 	case ":sudo":
 		do(sshAction, line, true)
+	case ":copy":
+		copy(sshAction, line)
 	}
 
 	return false

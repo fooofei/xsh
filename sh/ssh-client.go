@@ -84,7 +84,7 @@ func (s *sshClient) dial() (*ssh.Client, error) {
 		Auth:    authMethods,
 		Timeout: time.Duration(XConfig.Timeout.DialTimeoutS) * time.Second,
 		Config: ssh.Config{
-			Ciphers: XConfig.Ssh.Ciphers,
+			Ciphers: XConfig.Command.Ciphers,
 		},
 		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 			return nil

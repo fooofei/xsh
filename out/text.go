@@ -38,8 +38,13 @@ func printText(v interface{}) {
 					fmt.Printf("%s ", "Error =>")
 					fmt.Printf("%s\n", r.Err.Error())
 				}
+				if r.Status != nil {
+					for _, s := range r.Status {
+						fmt.Printf("%s\n", s)
+					}
+				}
 
-				if r.Stdout == "" && r.Stderr == "" && r.Err == nil {
+				if r.Stdout == "" && r.Stderr == "" && r.Err == nil && r.Status == nil {
 					fmt.Println()
 				}
 			}
@@ -48,7 +53,7 @@ func printText(v interface{}) {
 			}
 		}
 	} else {
-		ErrLogf("text error for result: %+v\n", ar)
+		Error.Printf("text error for result: %+v\n", ar)
 	}
 }
 

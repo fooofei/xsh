@@ -1,5 +1,7 @@
 package base
 
+import "runtime"
+
 const (
 	ConfigRootPath      = ".xsh"
 	ConfigsFile         = "configs.yaml"
@@ -14,7 +16,11 @@ const (
 )
 
 var (
-	Keywords = []string{":help", ":show", ":set", ":reload", ":do", ":sudo", ":encrypt", ":decrypt"}
+	Keywords = []string{":help", ":show", ":set", ":reload", ":do", ":sudo", ":copy", ":encrypt", ":decrypt"}
 	setopts  = []string{"group=", "address="}
 	showopts = []string{"address", "env"}
+)
+
+var (
+	GOOS = runtime.GOOS
 )

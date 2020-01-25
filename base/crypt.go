@@ -17,7 +17,7 @@ func GetPlainPassword(pass string) string {
 
 	txt, err := AesDecrypt(pass)
 	if err != nil {
-		ErrLogf("password [%s] decrypt error [%v].", pass, err)
+		Error.Printf("password [%s] decrypt error [%v].", pass, err)
 	}
 
 	return txt
@@ -31,7 +31,7 @@ func GetMaskPassword(pass string) string {
 
 	tst, err := AesEncrypt(pass)
 	if err != nil {
-		ErrLogf("password [%s] encrypt error [%v].", pass, err)
+		Error.Printf("password [%s] encrypt error [%v].", pass, err)
 	}
 
 	return tst

@@ -73,10 +73,54 @@ func do(action SshAction, line string, su bool) {
 		return
 	}
 
-	action.SubActions[0].ActionType = "ssh"
+	action.SubActions[0].ActionType = "command"
 	action.SubActions[0].Commands = cmds
 	action.SubActions[0].Su = su
 
+	Print(action.Do())
+}
+
+func copy(action SshAction, line string) {
+	fields := strings.Fields(line)
+	if len(fields) == 0 {
+		return
+	}
+	if len(fields) != 3 {
+		Error.Printf("line[%s] illegal", line)
+		return
+	}
+
+	if fields[0] == "upload" {
+		action.SubActions[0].Direction = "upload"
+	} else if fields[0] == "download" {
+		action.SubActions[0].Direction = "download"
+	} else {
+		Error.Printf("line[%s] illegal", line)
+		return
+	}
+
+	for _, v := range fields[1:] {
+		subFields := strings.Split(v, "=")
+		if len(subFields) != 2 {
+			Error.Printf("line[%s] illegal", line)
+			return
+		}
+		if subFields[0] == "local" {
+			action.SubActions[0].Local = subFields[1]
+		} else if subFields[0] == "remote" {
+			action.SubActions[0].Remote = subFields[1]
+		} else {
+			Error.Printf("line[%s] illegal", line)
+			return
+		}
+	}
+
+	if action.SubActions[0].Local == "" || action.SubActions[0].Remote == "" {
+		Error.Printf("line[%s] illegal", line)
+		return
+	}
+
+	action.SubActions[0].ActionType = "copy"
 	Print(action.Do())
 }
 
@@ -85,7 +129,7 @@ func encrypt(line string) {
 	if len(fields) == 2 {
 		fmt.Println(GetMaskPassword(fields[1]))
 	} else {
-		ErrLogf("line[%s] illegal", line)
+		Error.Printf("line[%s] illegal", line)
 	}
 }
 
@@ -94,7 +138,7 @@ func decrypt(line string) {
 	if len(fields) == 2 {
 		fmt.Println(GetPlainPassword(fields[1]))
 	} else {
-		ErrLogf("line[%s] illegal", line)
+		Error.Printf("line[%s] illegal", line)
 	}
 }
 

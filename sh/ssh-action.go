@@ -8,7 +8,7 @@ import (
 )
 
 type SubAction struct {
-	ActionType string // ssh/sftp/scp
+	ActionType string // command/copy
 
 	// for ssh
 	Commands []string
@@ -43,11 +43,21 @@ func (s *SshAction) checkAction() error {
 	su := false
 	for _, action := range s.SubActions {
 		if action.ActionType == "command" {
+			if len(action.Commands) == 0 {
+				return CommandEmptyErr
+			}
 			if err := checkCommands(action.Commands); err != nil {
 				return err
 			}
 			if action.Su {
 				su = true
+			}
+		} else {
+			if action.Direction != "upload" && action.Direction != "download" {
+				return CopyInfoErr
+			}
+			if action.Local == "" || action.Remote == "" {
+				return CopyInfoErr
 			}
 		}
 	}
@@ -101,6 +111,27 @@ func (s *SshAction) Do() SshActionResult {
 	return sshActionResult
 }
 
+func (s *SshAction) newSshCopy(hostDetail HostDetail) sshCopy {
+	resut := sshCopy{
+		Session: copySession{
+			Client: sshClient{
+				Host:       hostDetail.Address,
+				Port:       hostDetail.Port,
+				UserName:   hostDetail.Username,
+				PassWord:   hostDetail.Password,
+				PrivateKey: hostDetail.PrivateKey,
+				PassPhrase: hostDetail.Passphrase,
+			},
+		},
+	}
+
+	if hostDetail.Port <= 0 {
+		resut.Session.Client.Port = XConfig.Command.Port
+	}
+
+	return resut
+}
+
 func (s *SshAction) newSshCommand(hostDetail HostDetail) sshCommand {
 	resut := sshCommand{
 		Session: sshSession{
@@ -118,7 +149,7 @@ func (s *SshAction) newSshCommand(hostDetail HostDetail) sshCommand {
 	}
 
 	if hostDetail.Port <= 0 {
-		resut.Session.Client.Port = XConfig.Ssh.Port
+		resut.Session.Client.Port = XConfig.Command.Port
 	}
 
 	return resut
@@ -132,7 +163,7 @@ func (s *SshAction) do4host(ctx context.Context, hostDetail HostDetail, resultCh
 
 	for _, action := range s.SubActions {
 		switch action.ActionType {
-		case "ssh":
+		case "command":
 			sc := s.newSshCommand(hostDetail)
 			sc.Commands = action.Commands
 			if !action.Su {
@@ -140,7 +171,15 @@ func (s *SshAction) do4host(ctx context.Context, hostDetail HostDetail, resultCh
 				sc.SuPass = ""
 			}
 
-			s.doCommands(ctx, responseCh, sc)
+			s.doCommand(ctx, responseCh, sc)
+			result = append(result, <-responseCh)
+		case "copy":
+			sc := s.newSshCopy(hostDetail)
+			sc.Direction = action.Direction
+			sc.Local = action.Local
+			sc.Remote = action.Remote
+
+			s.doCopy(ctx, responseCh, sc)
 			result = append(result, <-responseCh)
 		}
 	}
@@ -171,7 +210,27 @@ func (s *SshAction) do4group(ctx context.Context, resultCh chan map[string][]ssh
 	resultCh <- result
 }
 
-func (s *SshAction) doCommands(ctx context.Context, resultCh chan sshResponse, sc sshCommand) {
+func (s *SshAction) doCommand(ctx context.Context, resultCh chan sshResponse, sc sshCommand) {
+	rc := make(chan sshResponse, 1)
+	go func() {
+		defer close(rc)
+		select {
+		case <-ctx.Done():
+			return
+		default:
+			rc <- sc.run()
+		}
+	}()
+
+	select {
+	case r := <-rc:
+		resultCh <- r
+	case <-ctx.Done():
+		resultCh <- sshResponse{Address: sc.Session.Client.Host, Err: ActionTimeoutErr}
+	}
+}
+
+func (s *SshAction) doCopy(ctx context.Context, resultCh chan sshResponse, sc sshCopy) {
 	rc := make(chan sshResponse, 1)
 	go func() {
 		defer close(rc)

@@ -27,6 +27,6 @@ DESCRIPTION:
    :encrypt passwd                     Encrypt passwd
    :decrypt passwd                     Decrypt passwd
 
-   :exit or :quit                      Stop xsh
+   :exit or :quit or :q                Stop xsh
 `)
 }

@@ -9,4 +9,5 @@ type sshResponse struct {
 	Stdout  string
 	Stderr  string
 	Err     error
+	Status  []string
 }

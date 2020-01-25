@@ -15,7 +15,7 @@ var (
 	Debug *log.Logger
 	Info  *log.Logger
 	Warn  *log.Logger
-	_err  *log.Logger
+	Error *log.Logger
 
 	logfileprefix = ConfigRootPath + "/logs/xsh-"
 	logfilesuffix = ".log"
@@ -37,7 +37,7 @@ func initLog() {
 	Debug = log.New(lf, "D: ", log.Ldate|log.Ltime|log.Lshortfile)
 	Info = log.New(lf, "I: ", log.Ldate|log.Ltime|log.Lshortfile)
 	Warn = log.New(lf, "W: ", log.Ldate|log.Ltime|log.Lshortfile)
-	_err = log.New(io.MultiWriter(os.Stderr, lf), "E: ", log.Ldate|log.Ltime|log.Lshortfile)
+	Error = log.New(io.MultiWriter(os.Stderr, lf), "E: ", log.Ldate|log.Ltime|log.Lshortfile)
 }
 
 func rotate() {
@@ -57,14 +57,4 @@ func rotate() {
 			os.Remove(value)
 		}
 	}
-}
-
-func ErrLogf(format string, v ...interface{}) {
-	_err.Printf(format, v...)
-	fmt.Printf("Please report a issue at %s if possible\n", XConfig.IssueUrl)
-}
-
-func ErrLog(v ...interface{}) {
-	_err.Print(v...)
-	fmt.Printf("Please report a issue at %s if possible\n", XConfig.IssueUrl)
 }

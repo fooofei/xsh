@@ -11,10 +11,10 @@ type Auth struct {
 	Name       string `yaml:"name"`
 	Username   string `yaml:"username"`
 	Password   string `yaml:"password,omitempty"`
-	PrivateKey string `yaml:"private_key,omitempty"`
+	PrivateKey string `yaml:"privatekey,omitempty"`
 	Passphrase string `yaml:"passphrase,omitempty"`
-	SuType     string `yaml:"su_type,omitempty"`
-	SuPass     string `yaml:"su_pass,omitempty"`
+	SuType     string `yaml:"sutype,omitempty"`
+	SuPass     string `yaml:"supass,omitempty"`
 }
 
 type xAuth struct {

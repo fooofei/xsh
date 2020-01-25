@@ -15,10 +15,10 @@ type HostDetail struct {
 	Port       int    `yaml:"port,omitempty"`
 	Username   string `yaml:"username,omitempty"`
 	Password   string `yaml:"password,omitempty"`
-	PrivateKey string `yaml:"private_key,omitempty"`
+	PrivateKey string `yaml:"privatekey,omitempty"`
 	Passphrase string `yaml:"passphrase,omitempty"`
-	SuType     string `yaml:"su_type,omitempty"`
-	SuPass     string `yaml:"su_pass,omitempty"`
+	SuType     string `yaml:"sutype,omitempty"`
+	SuPass     string `yaml:"supass,omitempty"`
 }
 
 type Host struct {

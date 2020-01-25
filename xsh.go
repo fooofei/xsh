@@ -10,7 +10,7 @@ func main() {
 		runCmd()
 	case "copy":
 		runCopy()
-	case "interaction":
+	case "prompt":
 		runPrompt()
 	default:
 		Error.Printf("run mode[%s] not support", *Mode)

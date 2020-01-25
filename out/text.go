@@ -3,7 +3,6 @@ package out
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/fatih/color"
 	. "github.com/xied5531/xsh/base"
 	. "github.com/xied5531/xsh/sh"
 	"gopkg.in/yaml.v2"
@@ -22,20 +21,20 @@ func Print(v interface{}) {
 func printText(v interface{}) {
 	if ar, ok := v.(SshActionResult); ok {
 		if ar.Err != nil {
-			color.Red("%s\n", ar.Err.Error())
+			fmt.Printf("%s\n", ar.Err.Error())
 			return
 		}
 		for _, c := range ar.Result {
-			color.Green("[%-18s] ---------------------------------------------------------\n", c.Address)
+			fmt.Printf("[%-18s] ---------------------------------------------------------\n", c.Address)
 			if c.Stdout != "" {
 				fmt.Printf("%s\n", c.Stdout)
 			}
 			if c.Stderr != "" {
-				color.Red("%s\n", "Warn =>")
+				fmt.Printf("%s\n", "Warn =>")
 				fmt.Printf("%s\n", c.Stderr)
 			}
 			if c.Err != nil {
-				color.Red("%s\n", "Error =>")
+				fmt.Printf("%s\n", "Error =>")
 				fmt.Printf("%s\n", c.Err.Error())
 			}
 		}

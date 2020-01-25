@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	Mode = flag.String("mode", "interaction", "The run mode. value ranges: task/cmd/copy/interaction(default)")
+	Mode = flag.String("mode", "interaction", "The run mode. value ranges: task/cmd/copy/interaction")
 
 	Task  = flag.String("task", "", "The task yaml when run task")
 	Value = flag.String("value", "", "The value yaml when run task")

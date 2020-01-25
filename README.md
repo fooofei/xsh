@@ -33,3 +33,13 @@
 - 任务编排：支持行为组合；支持自定义变量
 - 结果输出：支持text、json、yaml
 - 安全性：支持配置命令黑名单、密码加密保存、密码和私钥认证、超时控制
+
+# 依赖
+
+| 第三方包 | License |
+| ------ | ------ |
+| github.com/patrickmn/go-cache | MIT |
+| github.com/peterh/liner | X11 |
+| github.com/pkg/sftp | BSD |
+| golang.org/x/crypto | BSD |
+| gopkg.in/yaml.v2 | Apache |

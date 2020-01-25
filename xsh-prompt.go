@@ -50,14 +50,6 @@ func runCommand(line string) bool {
 		reload()
 		return false
 	}
-	if strings.HasPrefix(line, ":encrypt") {
-		encrypt(line)
-		return false
-	}
-	if strings.HasPrefix(line, ":decrypt") {
-		decrypt(line)
-		return false
-	}
 	if strings.HasPrefix(line, ":show") {
 		show(line)
 		return false
@@ -176,15 +168,15 @@ func setupActionTaget(action *SshAction) {
 	if !action.Single {
 		action.Group = CurEnv.Group
 	} else {
-		authentication := XAuthMap[CurEnv.Auth]
+		auth := XAuthMap[CurEnv.Auth]
 		action.Detail = HostDetail{
 			Address:    CurEnv.Address,
-			Username:   authentication.Username,
-			Password:   authentication.Password,
-			PrivateKey: authentication.PrivateKey,
-			Passphrase: authentication.Passphrase,
-			SuType:     authentication.SuType,
-			SuPass:     authentication.SuPass,
+			Username:   auth.Username,
+			Password:   auth.Password,
+			PrivateKey: auth.PrivateKey,
+			Passphrase: auth.Passphrase,
+			SuType:     auth.SuType,
+			SuPass:     auth.SuPass,
 		}
 	}
 }
@@ -245,7 +237,7 @@ func set(line string) {
 					return
 				}
 				if CurEnv.Auth == "" {
-					fmt.Println("authentication empty, please :set group= first.")
+					fmt.Println("auth empty, please :set group= first.")
 					return
 				}
 				if !ContainsAddress(currFields[1], XHostMap[CurEnv.Group].AllHost) {
@@ -259,24 +251,6 @@ func set(line string) {
 		SaveEnv()
 	} else {
 		fmt.Println(":set argument not enough, please :help first.")
-	}
-}
-
-func encrypt(line string) {
-	fields := strings.Fields(line)
-	if len(fields) == 2 {
-		fmt.Println(GetMaskPassword(fields[1]))
-	} else {
-		Error.Printf("line[%s] illegal", line)
-	}
-}
-
-func decrypt(line string) {
-	fields := strings.Fields(line)
-	if len(fields) == 2 {
-		fmt.Println(GetPlainPassword(fields[1]))
-	} else {
-		Error.Printf("line[%s] illegal", line)
 	}
 }
 
@@ -300,17 +274,15 @@ DESCRIPTION:
    Please report a issue at ` + XConfig.IssueUrl + ` if possible.
 
    :help or :h                         Show help info
-   :set [group=xxx|address=x.x.x.x]    Set environment
+   :set [group=xxx|address=x.x.x.x]    Set current target hosts
    :show                               Show address list of current host group
+   :reload                             Reload config auth and host information
 
-   :do                                 Run ssh command as normal user, default.
+   :do                                 Run ssh command as normal user
    :sudo                               Run ssh command as su user from normal user
    :copy                               Upload or download files between local and remote
-       local -> remote                 -> means upload, remote must be directory
-       local <- remote                 <- means download, local must be directory
-
-   :encrypt password                   Encrypt password
-   :decrypt password                   Decrypt password
+     local -> remote                   -> means upload, remote must be directory
+     local <- remote                   <- means download, local must be directory
 
    :exit or :quit or :q                Exit xsh
 `)

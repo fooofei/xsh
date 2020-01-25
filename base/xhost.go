@@ -43,43 +43,43 @@ func InitXHost() {
 
 	h, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		log.Fatalf("Can not read hostgroups file[%s].", filePath)
+		log.Fatalf("Can not read host file[%s].", filePath)
 	}
 	err = yaml.Unmarshal(h, &XHost)
 	if err != nil {
-		log.Fatalf("Hostgroups[%s] unmarshal error: %v", filePath, err)
+		log.Fatalf("host file[%s] unmarshal error: %v", filePath, err)
 	}
 
 	if len(XHost.Hosts) == 0 {
-		log.Fatal("The hostgroups empty.")
+		log.Fatal("The hosts empty.")
 	}
 
 	for _, value := range XHost.Hosts {
 		if !CheckName(value.Name) {
-			log.Fatalf("Hostgroup name [%s] illegal", value.Name)
+			log.Fatalf("Host name [%s] illegal", value.Name)
 		}
 		XHostMap[value.Name] = value
 	}
 
 	if len(XHost.Hosts) != len(XHostMap) {
-		log.Fatal("Hostgroup duplicate")
+		log.Fatal("Host duplicate")
 	}
 
 	postProcessHostGroup()
 }
 
 func newHostDetail(address string, hostGroup Host) HostDetail {
-	authentication := XAuthMap[hostGroup.Auth]
+	auth := XAuthMap[hostGroup.Auth]
 
 	result := HostDetail{
 		Address:    address,
 		Port:       0,
-		Username:   authentication.Username,
-		Password:   authentication.Password,
-		PrivateKey: authentication.PrivateKey,
-		Passphrase: authentication.Passphrase,
-		SuType:     authentication.SuType,
-		SuPass:     authentication.SuPass,
+		Username:   auth.Username,
+		Password:   auth.Password,
+		PrivateKey: auth.PrivateKey,
+		Passphrase: auth.Passphrase,
+		SuType:     auth.SuType,
+		SuPass:     auth.SuPass,
 	}
 	if hostGroup.Port > 0 {
 		result.Port = hostGroup.Port

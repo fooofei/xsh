@@ -46,6 +46,11 @@ func (s sshCopy) upload() sshResponse {
 	}
 
 	remote := s.Remote
+	if e := sftpMakeDir(session, "", remote); e != nil {
+		response.Err = fmt.Errorf("make remote directory[%s] error: %v", remote, e)
+		return response
+	}
+
 	if err := filepath.Walk(s.Local, func(local string, info os.FileInfo, err error) error {
 		s := local
 		if err != nil {
@@ -53,10 +58,6 @@ func (s sshCopy) upload() sshResponse {
 		} else if info == nil {
 			s = s + " :ERROR: file info nil"
 		} else {
-			if e := sftpMakeDir(session, "", remote); e != nil {
-				return fmt.Errorf("make remote directory[%s] error: %v", remote, e)
-			}
-
 			if info.IsDir() {
 				if local != "." && local != ".." {
 					if e := sftpMakeDir(session, local, remote); e != nil {
@@ -90,7 +91,65 @@ func (s sshCopy) upload() sshResponse {
 }
 
 func (s sshCopy) download() sshResponse {
-	return sshResponse{}
+	response := sshResponse{
+		Status: make([]string, 0),
+	}
+
+	session, err := s.Session.newSftpSession()
+	if err != nil {
+		response.Err = err
+		return response
+	}
+
+	local := s.Local
+	if e := localMakeDir(local, "", ""); e != nil {
+		response.Err = fmt.Errorf("make local directory[%s] error: %v", local, e)
+		return response
+	}
+
+	local = local + string(os.PathSeparator) + s.Session.Client.Host
+	if e := localMakeDir(local, "", ""); e != nil {
+		response.Err = fmt.Errorf("make local directory[%s] error: %v", local, e)
+		return response
+	}
+
+	w := session.Walk(s.Remote)
+	if w == nil {
+		response.Err = RemoteWalkErr
+		return response
+	}
+
+	for w.Step() {
+		stat := w.Stat()
+		remote := w.Path()
+		res := remote
+		if stat.IsDir() {
+			if remote == s.Remote {
+				continue
+			}
+			if e := localMakeDir(local, remote, s.Remote); e != nil {
+				res = res + " :ERROR: " + e.Error()
+			} else {
+				res = res + " :OK"
+			}
+		} else if stat.Mode().IsRegular() {
+			if e := localMakeFile(session, local, remote, s.Remote); e != nil {
+				if XConfig.Copy.Skip && e == LocalFileExistErr {
+					res = res + " :WARN:skip file: " + e.Error()
+				} else {
+					res = res + " :ERROR: " + e.Error()
+				}
+			} else {
+				res = res + " :OK"
+			}
+		} else {
+			res = res + " :ERROR: file type not support"
+		}
+
+		response.Status = append(response.Status, res)
+	}
+
+	return response
 }
 
 type copySession struct {
@@ -111,8 +170,78 @@ func (s copySession) newSftpSession() (*sftp.Client, error) {
 	return session, nil
 }
 
+func localMakeDir(local string, remote string, prefix string) error {
+	if prefix != "" {
+		remote = strings.Replace(remote, prefix, "", 1)
+	}
+	if strings.HasPrefix(remote, "/") {
+		remote = strings.Replace(remote, "/", "", 1)
+	}
+
+	if GOOS == "windows" {
+		remote = strings.Replace(remote, "\\", "+", -1)
+		remote = strings.Replace(remote, "/", "\\", -1)
+	}
+
+	if !strings.HasSuffix(local, string(os.PathSeparator)) {
+		local = local + string(os.PathSeparator)
+	}
+
+	err := os.Mkdir(local+remote, os.ModeDir|0755)
+	if !os.IsExist(err) {
+		return err
+	}
+
+	return nil
+}
+
+func localMakeFile(client *sftp.Client, local string, remote string, prefix string) error {
+	oldRemote := remote
+	if prefix != "" {
+		remote = strings.Replace(remote, prefix, "", 1)
+	}
+	if strings.HasPrefix(remote, "/") {
+		remote = strings.Replace(remote, "/", "", 1)
+	}
+
+	if GOOS == "windows" {
+		remote = strings.Replace(remote, "\\", "+", -1)
+		remote = strings.Replace(remote, "/", "\\", -1)
+	}
+
+	if !strings.HasSuffix(local, string(os.PathSeparator)) {
+		local = local + string(os.PathSeparator)
+	}
+
+	if !XConfig.Copy.Override {
+		if _, err := os.Stat(local + remote); err == nil {
+			return LocalFileExistErr
+		}
+	}
+
+	rf, err := client.Open(oldRemote)
+	if err != nil {
+		return err
+	}
+	defer rf.Close()
+
+	lf, err := os.Create(local + remote)
+	if err != nil {
+		return err
+	}
+	defer lf.Close()
+
+	_, err = io.Copy(lf, rf)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func sftpMakeDir(client *sftp.Client, local string, remote string) error {
 	if GOOS == "windows" {
+		local = strings.Replace(local, "/", "+", -1)
 		local = strings.Replace(local, "\\", "/", -1)
 	}
 	if !strings.HasSuffix(remote, "/") {
@@ -124,6 +253,7 @@ func sftpMakeDir(client *sftp.Client, local string, remote string) error {
 
 func sftpMakeFile(client *sftp.Client, local string, remote string) error {
 	if GOOS == "windows" {
+		local = strings.Replace(local, "/", "+", -1)
 		local = strings.Replace(local, "\\", "/", -1)
 	}
 	if !strings.HasSuffix(remote, "/") {

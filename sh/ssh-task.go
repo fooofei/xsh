@@ -87,12 +87,58 @@ func (s SshTask) applyValue() error {
 	return nil
 }
 
+func (s SshTask) checkTask() error {
+	if xTask.Name == "" {
+		return fmt.Errorf("task name empty")
+	}
+	if len(xTask.SshActions) == 0 {
+		return fmt.Errorf("task actions empty")
+	}
+	for _, action := range xTask.SshActions {
+		if action.Name == "" {
+			return fmt.Errorf("action name empty")
+		}
+		if _, ok := XHostMap[action.Group]; !ok {
+			return fmt.Errorf("action[%s] group[%s] not found", action.Name, action.Group)
+		}
+		if len(action.Steps) == 0 {
+			return fmt.Errorf("action[%s] steps empty", action.Name)
+		}
+		for _, step := range action.Steps {
+			if step.Type != "command" && step.Type != "copy" {
+				return fmt.Errorf("action[%s] step type illegal", action.Name)
+			}
+			if step.Type == "command" {
+				if len(step.Commands) == 0 {
+					return fmt.Errorf("action[%s] step commands empty", action.Name)
+				}
+			}
+			if step.Type == "copy" {
+				if step.Direction != "upload" && step.Direction != "download" {
+					return fmt.Errorf("action[%s] step direction illegal", action.Name)
+				}
+				if step.Local == "" || step.Remote == "" {
+					return fmt.Errorf("action[%s] step local or remote empty", action.Name)
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
 func (s SshTask) Do() SshTaskResult {
 	result := SshTaskResult{}
 	if err := s.applyValue(); err != nil {
 		result.Err = err
 		return result
 	}
+
+	if err := s.checkTask(); err != nil {
+		result.Err = err
+		return result
+	}
+
 	result.Name = xTask.Name
 
 	for _, action := range xTask.SshActions {

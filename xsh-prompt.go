@@ -237,10 +237,13 @@ func set(line string) {
 					fmt.Printf("address[%s] illegal\n", currFields[1])
 					return
 				}
-				if CurEnv.Auth == "" {
-					fmt.Println("auth empty, please :set group= first.")
+				if CurEnv.Group == "" {
+					fmt.Println("group empty, please :set group= first.")
 					return
 				}
+				group := XHostMap[CurEnv.Group]
+				CurEnv.Auth = group.Auth
+
 				if !ContainsAddress(currFields[1], XHostMap[CurEnv.Group].AllHost) {
 					fmt.Printf("address[%s] not found in group [%s]\n", currFields[1], CurEnv.Group)
 					return

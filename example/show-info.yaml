@@ -1,14 +1,14 @@
 name: show info
 actions:
-  - name: show mem and disk
-    group: alpha02
+  - name: show mem and system
+    group: alpha01
     steps:
       - type: command
         commands:
           - free -h
-          - df -h
+          - uptime
   - name: show user info
-    group: alpha03
+    group: alpha02
     steps:
       - type: command
         commands:

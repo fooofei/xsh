@@ -85,7 +85,7 @@ func setupXConfigDefault() {
 		XConfig.Timeout.CommandTimeoutS = 300
 	}
 	if XConfig.Timeout.DialTimeoutS <= 0 {
-		XConfig.Timeout.DialTimeoutS = 5
+		XConfig.Timeout.DialTimeoutS = 10
 	}
 
 	if XConfig.Ssh.Port <= 0 {

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	. "github.com/xied5531/xsh/base"
-	. "github.com/xied5531/xsh/out"
 	. "github.com/xied5531/xsh/sh"
 	"log"
 	"sort"

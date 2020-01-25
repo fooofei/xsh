@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>xsh</title>
+    <link>https://xied5531.github.io/xsh/docs/</link>
+    <description>Recent content on xsh</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="https://xied5531.github.io/xsh/docs/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title></title>
+      <link>https://xied5531.github.io/xsh/docs/overview/architecture/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://xied5531.github.io/xsh/docs/overview/architecture/</guid>
+      <description>架构 </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://xied5531.github.io/xsh/docs/overview/introduction/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://xied5531.github.io/xsh/docs/overview/introduction/</guid>
+      <description>介绍 </description>
+    </item>
+    
+  </channel>
+</rss>

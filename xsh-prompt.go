@@ -288,7 +288,7 @@ func reload() {
 
 func help() {
 	fmt.Println(`NAME:
-   xsh - A simple command line tool to run commands on remote host addresses.
+   xsh - A command line tool that can execute commands on remote hosts or upload and download files.
 
 SYNOPSIS:
    [KEYWORD] [ARG]... 

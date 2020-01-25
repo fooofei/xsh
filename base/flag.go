@@ -36,7 +36,10 @@ func initFlag() {
 
 	cmd := os.Args[0]
 	flag.Usage = func() {
-		fmt.Println(`SYNOPSIS:`, cmd, `[OPTION]... [ARG]...
+		fmt.Println(`NAME:
+   xsh - A command line tool that can execute commands on remote hosts or upload and download files.
+
+SYNOPSIS:`, cmd, `[OPTION]... [ARG]...
 
 VERSION:
 `+Version+`

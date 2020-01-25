@@ -50,8 +50,8 @@ func runCopy() {
 		return
 	}
 
-	local, le := GetLocalPath(*Direction, *Local)
-	remote, re := GetRemotePath(*Direction, *Remote)
+	local, le := GetLocalDir(*Direction, *Local)
+	remote, re := GetRemoteDir(*Direction, *Remote)
 	if le != nil || re != nil {
 		Error.Printf("path illegal, local: %v; remote: %v", le, re)
 		return

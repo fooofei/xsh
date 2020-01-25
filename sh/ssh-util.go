@@ -3,6 +3,7 @@ package sh
 import (
 	"fmt"
 	. "github.com/xied5531/xsh/base"
+	"io"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -39,15 +40,19 @@ func checkCommands(commands []string) error {
 	return nil
 }
 
-func GetLocalPath(direction string, path string) (string, error) {
+func GetLocalDir(direction string, path string) (string, error) {
 	path = strings.Trim(path, " ")
 	if runtime.GOOS == "windows" {
+		if strings.Contains(path, "/") {
+			return "", LocalDirFormatIllegal
+		}
+
 		if !strings.HasSuffix(filepath.VolumeName(path), ":") {
-			return "", fmt.Errorf("local path must be full path")
+			return "", LocalDirTypeIllegal
 		}
 	} else {
-		if !strings.HasPrefix(path, "/") {
-			return "", fmt.Errorf("local path must be full path")
+		if strings.Contains(path, "\\") {
+			return "", LocalDirFormatIllegal
 		}
 	}
 
@@ -63,10 +68,15 @@ func GetLocalPath(direction string, path string) (string, error) {
 	return p, nil
 }
 
-func GetRemotePath(direction string, path string) (string, error) {
+func GetRemoteDir(direction string, path string) (string, error) {
 	path = strings.Trim(path, " ")
+
+	if strings.Contains(path, "\\") {
+		return "", RemoteDirFormatIllegal
+	}
+
 	if !strings.HasPrefix(path, "/") {
-		return "", fmt.Errorf("remote path must be full path")
+		return "", RemoteDirTypeIllegal
 	}
 
 	if direction == "upload" && !strings.HasSuffix(path, "/") {
@@ -74,4 +84,31 @@ func GetRemotePath(direction string, path string) (string, error) {
 	}
 
 	return path, nil
+}
+
+func IsLocalDirEmpty(path string) bool {
+	me := os.MkdirAll(path, 0755)
+	f, err := os.Open(path)
+	if err != nil || me != nil {
+		return false
+	}
+	defer f.Close()
+
+	_, err = f.Readdirnames(1)
+	return err == io.EOF
+}
+
+func IsRemoteDirEmpty(session *xSshSession, path string) bool {
+	stdout, _, _ := session.OutputStdoutStderr(fmt.Sprintf("mkdir -p \"%s\" ;ls -A \"%s\"", path, path))
+	return stdout == ""
+}
+
+func CleanPath4Winows(path string) string {
+	return strings.Replace(path, "/", "+", -1)
+}
+
+func CleanPath4Linux(path string) string {
+	path = strings.Replace(path, "\\", "+", -1)
+	path = strings.Replace(path, ":", "=", -1)
+	return path
 }

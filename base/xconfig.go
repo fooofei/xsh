@@ -62,8 +62,6 @@ type config struct {
 var XConfig = config{}
 
 func InitXConfig() {
-	setupXConfigDefault()
-
 	var filePath = path.Join(RootPath, ConfigFile)
 	c, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -74,6 +72,9 @@ func InitXConfig() {
 	if err != nil {
 		log.Fatalf("Configs[%s] unmarshal error: %v", filePath, err)
 	}
+
+	setupXConfigDefault()
+	checkXConfig()
 
 	Debug.Printf("XConfig: %+v", XConfig)
 }
@@ -167,5 +168,21 @@ func setupXConfigDefault() {
 
 	for _, commonCommand := range XConfig.CommonCommands {
 		XCommonCommandSet[commonCommand] = true
+	}
+}
+
+func checkXConfig() {
+	if !(XConfig.Timeout.TaskTimeoutS > XConfig.Timeout.ActionTimeoutS) {
+		log.Fatalf("condition check failed: timeout.task_timeout_s > timeout.action_timeout_s")
+	}
+	if !(XConfig.Timeout.ActionTimeoutS > XConfig.Timeout.CommandTimeoutS && XConfig.Timeout.ActionTimeoutS > XConfig.Timeout.CopyTimeoutS) {
+		log.Fatalf("condition check failed: timeout.action_timeout_s > timeout.command_timeout_s && timeout.action_timeout_s > timeout.copy_timeout_s")
+	}
+	if !(XConfig.Timeout.CommandTimeoutS > XConfig.Timeout.DialTimeoutS && XConfig.Timeout.CopyTimeoutS > XConfig.Timeout.DialTimeoutS) {
+		log.Fatalf("condition check failed: timeout.command_timeout_s > timeout.dial_timeout_s && timeout.copy_timeout_s > timeout.dial_timeout_s")
+	}
+
+	if !(XConfig.Command.Port <= 65535) {
+		log.Fatalf("condition check failed: command.port <= 65535")
 	}
 }

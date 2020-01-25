@@ -5,12 +5,13 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Copy"><meta property="og:title" content="" />
-<meta property="og:description" content="上传现在 前提  已设置好配置项：系统配置、认证配置、主机配置 已切换到目标主机组环境 已切换至目标动作环境   以group=alpha02为例
- 上传  将本地节点上的内容上传至远端目标主机组的每个主机上
+<meta property="og:description" content="上传下载 前提  已设置好配置项：系统配置、认证配置、主机配置 已切换到目标主机组环境   以group=alpha02为例
+ 切换上下文 命令：:copy
+[alpha02:do]# :copy[alpha02:copy]#上传  将本地节点上的内容上传至远端目标主机组的每个主机上
  用法：local -&gt; remote
 约束：
  local和remote必须是全路径，例如：D:\tmp\LICENSE（Windows）或/tmp/abc（Linux） local可以是文件或文件夹，以\（Windows）或/（Linux）结尾代表文件夹 remote必须是文件夹，如果不存在将自动在远端新建文件夹  上传文件 [alpha02:copy]# D:\tmp\LICENSE -&gt; /tmp/abc..[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&gt; /tmp/abc/LICENSE :OK[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&gt; /tmp/abc/LICENSE :OK检查结果（任一目标节点）：
-# find /tmp/abc/tmp/abc/tmp/abc/LICENSE上传文件夹 [alpha02:copy]# D:\tmp\ -&gt; /tmp/abc1..[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&gt; /tmp/abc1/LICENSE :OKD:\tmp\hello -&gt; /tmp/abc1/hello :OKD:\tmp\hello\README.md -&gt; /tmp/abc1/hello/README.md :OK[192." />
+# find /tmp/abc/tmp/abc/tmp/abc/LICENSE上传文件夹 [alpha02:copy]# D:\tmp\ -&gt; /tmp/abc1..[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&gt; /tmp/abc1/LICENSE :OKD:\tmp\hello -&gt; /tmp/abc1/hello :OKD:\tmp\hello\README." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/copy/" />
 
@@ -154,9 +155,10 @@ https://github.com/alex-shpak/hugo-book
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#上传现在">上传现在</a>
+    <li><a href="#上传下载">上传下载</a>
       <ul>
         <li><a href="#前提">前提</a></li>
+        <li><a href="#切换上下文">切换上下文</a></li>
         <li><a href="#上传">上传</a>
           <ul>
             <li><a href="#上传文件">上传文件</a></li>
@@ -182,17 +184,20 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-<article class="markdown"><h1 id="上传现在">上传现在</h1>
+<article class="markdown"><h1 id="上传下载">上传下载</h1>
 <h2 id="前提">前提</h2>
 <ul>
 <li>已设置好配置项：系统配置、认证配置、主机配置</li>
 <li>已切换到目标主机组环境</li>
-<li>已切换至目标动作环境</li>
 </ul>
 <blockquote>
 <p>以group=alpha02为例</p>
 </blockquote>
-<h2 id="上传">上传</h2>
+<h2 id="切换上下文">切换上下文</h2>
+<p>命令：<code>:copy</code></p>
+<pre><code>[alpha02:do]# :copy
+[alpha02:copy]#
+</code></pre><h2 id="上传">上传</h2>
 <blockquote>
 <p>将本地节点上的内容上传至远端目标主机组的每个主机上</p>
 </blockquote>
@@ -305,9 +310,10 @@ D:\HELLO1
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#上传现在">上传现在</a>
+    <li><a href="#上传下载">上传下载</a>
       <ul>
         <li><a href="#前提">前提</a></li>
+        <li><a href="#切换上下文">切换上下文</a></li>
         <li><a href="#上传">上传</a>
           <ul>
             <li><a href="#上传文件">上传文件</a></li>

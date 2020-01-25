@@ -11,7 +11,6 @@ import (
 
 func GetPlainPassword(pass string) (string, error) {
 	if XConfig.Crypt.Key == "" {
-		Warn.Print("crypt key empty.")
 		return pass, nil
 	}
 
@@ -25,7 +24,6 @@ func GetPlainPassword(pass string) (string, error) {
 
 func GetMaskPassword(pass string) (string, error) {
 	if XConfig.Crypt.Key == "" {
-		Warn.Print("crypt key empty.")
 		return pass, nil
 	}
 

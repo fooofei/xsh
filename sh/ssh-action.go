@@ -91,7 +91,8 @@ func (s *SshAction) checkAction() error {
 
 func (s *SshAction) Do() SshActionResult {
 	sshActionResult := SshActionResult{
-		Name: s.Name,
+		Name:       s.Name,
+		StepResult: make(map[string][]SshResponse),
 	}
 
 	if err := s.checkAction(); err != nil {

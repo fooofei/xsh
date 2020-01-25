@@ -1,0 +1,24 @@
+hosts:
+  - name: alpha01
+    auth: alpha-root
+    addresses:
+      - 192.168.162.65
+      - 192.168.173.132
+
+  - name: alpha02
+    auth: alpha-key
+    addresses:
+      - 192.168.170.109
+      - 192.168.165.37
+
+  - name: alpha-123
+    auth: alpha
+    addresses:
+      - 192.168.187.117
+    groups:
+      - alpha01
+      - alpha02
+    details:
+      - address: 192.168.184.236
+        username: root
+        password: XXXXXX

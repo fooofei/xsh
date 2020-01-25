@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	. "github.com/xied5531/xsh/base"
-	. "github.com/xied5531/xsh/out"
 	. "github.com/xied5531/xsh/sh"
 	"strings"
 )
@@ -79,19 +78,24 @@ func runCrypt() {
 		return
 	}
 
+	if *Plain == "" && *Cipher == "" {
+		Error.Println("crypt plain or cipher text not found")
+		return
+	}
+
 	if *Plain != "" {
 		if c, e := GetMaskPassword(*Plain); e != nil {
 			fmt.Printf("%s -> error: %s\n", *Plain, e.Error())
 		} else {
 			fmt.Printf("%s -> %s\n", *Plain, c)
 		}
-	} else if *Cipher != "" {
+	}
+
+	if *Cipher != "" {
 		if p, e := GetPlainPassword(*Cipher); e != nil {
 			fmt.Printf("%s -> error: %s\n", *Cipher, e.Error())
 		} else {
 			fmt.Printf("%s -> %s\n", *Cipher, p)
 		}
-	} else {
-		Error.Println("crypt plain or cipher text not found")
 	}
 }

@@ -32,7 +32,6 @@ type config struct {
 	Copy struct {
 		SftpMaxPacketSize int  `yaml:"sftp_max_package_size,omitempty"`
 		Override          bool `yaml:"override,omitempty"`
-		Skip              bool `yaml:"skip,omitempty"`
 	} `yaml:"copy,omitempty"`
 
 	Cache struct {
@@ -65,11 +64,11 @@ func InitXConfig() {
 	c, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		Warn.Printf("Can not find configs file[%s].", filePath)
-	}
-
-	err = yaml.Unmarshal(c, &XConfig)
-	if err != nil {
-		log.Fatalf("Configs[%s] unmarshal error: %v", filePath, err)
+	} else {
+		err = yaml.Unmarshal(c, &XConfig)
+		if err != nil {
+			log.Fatalf("Configs[%s] unmarshal error: %v", filePath, err)
+		}
 	}
 
 	setupXConfigDefault()

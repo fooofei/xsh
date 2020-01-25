@@ -1,10 +1,9 @@
-package out
+package sh
 
 import (
 	"encoding/json"
 	"fmt"
 	. "github.com/xied5531/xsh/base"
-	. "github.com/xied5531/xsh/sh"
 	"gopkg.in/yaml.v2"
 )
 

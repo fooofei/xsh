@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	. "github.com/xied5531/xsh/base"
-	. "github.com/xied5531/xsh/out"
 	. "github.com/xied5531/xsh/sh"
 	"log"
 	"sort"
@@ -100,9 +99,9 @@ func runCommand(line string) bool {
 		}
 	case ":copy":
 		if action, err := newCopyAction(line); err != nil {
-			Out(action.Do())
-		} else {
 			Error.Println(err.Error())
+		} else {
+			Out(action.Do())
 		}
 	}
 

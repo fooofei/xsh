@@ -85,11 +85,7 @@ func (s sshCopy) upload() SshResponse {
 				}
 
 				if e := sftpUploadFile(session, local, remote); e != nil {
-					if XConfig.Copy.Skip && e == RemoteFileExistErr {
-						status = append(status, local+" -> "+remote+" :WARN: skip because exist")
-					} else {
-						status = append(status, local+" -> "+remote+" :ERROR: "+e.Error())
-					}
+					status = append(status, local+" -> "+remote+" :ERROR: "+e.Error())
 				} else {
 					status = append(status, local+" -> "+remote+" :OK")
 				}
@@ -150,7 +146,7 @@ func (s sshCopy) download() SshResponse {
 }
 
 func (s sshCopy) downloadFile(session *sftp.Client, local, remote string) error {
-	if _, err := os.Stat(local); err == nil {
+	if _, err := os.Stat(local); err == nil && !XConfig.Copy.Override {
 		return LocalFileExistErr
 	}
 
@@ -204,11 +200,7 @@ func (s sshCopy) downloadDir(session *sftp.Client, local, remote string) ([]stri
 
 			localName := local + localTmp
 			if e := s.downloadFile(session, localName, remoteName); e != nil {
-				if !XConfig.Copy.Override && e == LocalFileExistErr {
-					status = append(status, localName+" <- "+remoteName+" :WARN: skip because exist")
-				} else {
-					status = append(status, localName+" <- "+remoteName+" :ERROR: "+e.Error())
-				}
+				status = append(status, localName+" <- "+remoteName+" :ERROR: "+e.Error())
 			} else {
 				status = append(status, localName+" <- "+remoteName+" :OK")
 			}
@@ -247,7 +239,7 @@ func (s copySession) newSftpSession() (*sftp.Client, error) {
 }
 
 func sftpUploadFile(client *sftp.Client, local string, remote string) error {
-	if _, err := client.Stat(remote); err == nil {
+	if _, err := client.Stat(remote); err == nil && !XConfig.Copy.Override {
 		return RemoteFileExistErr
 	}
 

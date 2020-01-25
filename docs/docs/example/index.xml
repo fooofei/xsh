@@ -17,8 +17,8 @@
       <guid>https://xied5531.github.io/xsh/docs/example/cli/command/</guid>
       <description>执行命令 前提  已设置好配置项：系统配置、认证配置、主机配置  执行方式：普通用户 单条：
 $ xsh.exe -mode cmd -group alpha02 -cmd whoami[192.168.165.37 ] ---------------------------------------------------------abc[192.168.170.109 ] ---------------------------------------------------------abc多条：
-$ xsh.exe -mode cmd -group alpha02 -cmd whoami;date[192.168.170.109 ] ---------------------------------------------------------abcTue May 5 13:58:42 CST 2020[192.168.165.37 ] ---------------------------------------------------------abcTue May 5 13:58:33 CST 2020多条（含空格）：
-$ xsh.exe -mode cmd -group alpha02 -cmd &amp;quot;whoami; date; free -h&amp;quot;[192.168.170.109 ] ---------------------------------------------------------abcTue May 5 14:01:04 CST 2020total used free shared buff/cache availableMem: 15G 2.</description>
+$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd &amp;quot;whoami; date -u; pwd&amp;quot;[192.168.165.37 ] ---------------------------------------------------------abcFri May 8 07:00:13 UTC 2020/home/abc[192.168.170.109 ] ---------------------------------------------------------abcFri May 8 07:00:22 UTC 2020/home/abc执行方式：从普通用户切换至其他用户 单条：
+$ xsh.exe -mode cmd -group alpha02 -su -cmd whoami[192.168.170.109 ] ---------------------------------------------------------rootWarn =&amp;gt;[sudo] password for root:[192.</description>
     </item>
     
     <item>
@@ -27,10 +27,10 @@ $ xsh.exe -mode cmd -group alpha02 -cmd &amp;quot;whoami; date; free -h&amp;quot
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/example/cli/copy/</guid>
-      <description>上传下载 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  以\（Windows）或/（Linux）结尾代表文件夹 上传时，local可以是文件或文件夹，remote默认是文件夹 下载时，remote可以是文件或文件夹，local默认是文件夹  上传  将本地节点上的内容上传至远端目标主机组的每个主机上
+      <description>上传下载 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  上传时，local可以是文件或文件夹，remote默认是文件夹 下载时，remote可以是文件或文件夹，local默认是文件夹 仅支持以默认用户执行，不支持切换用户执行  上传  将本地节点上的内容上传至远端目标主机组的每个主机上
  文件：
-$ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\LICENSE -remote /tmp/xyz[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/xyz/LICENSE :OK[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/xyz/LICENSE :OK文件夹：
-$ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\ -remote /tmp/xyz1[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/xyz1/LICENSE :OKD:\tmp\hello -&amp;gt; /tmp/xyz1/hello :OKD:\tmp\hello\README.md -&amp;gt; /tmp/xyz1/hello/README.md :OK[192.</description>
+$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tmp\LICENSE -remote /home/abc/cli/copy[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /home/abc/cli/copy/LICENSE :OK[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /home/abc/cli/copy/LICENSE :OK文件夹：
+$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tmp -remote /home/abc/cli/copy/folder[192.168.165.37 ] ---------------------------------------------------------D:\tmp -&amp;gt; /home/abc/cli/copy/folder/tmp :OKD:\tmp\LICENSE -&amp;gt; /home/abc/cli/copy/folder/tmp/LICENSE :OKD:\tmp\hello -&amp;gt; /home/abc/cli/copy/folder/tmp/hello :OKD:\tmp\hello\README.</description>
     </item>
     
     <item>
@@ -48,8 +48,8 @@ $ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\ -remote /tm
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/example/cli/task/</guid>
-      <description>任务编排 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  example\show-info.yaml
- name: show infoactions:- name: show mem and diskgroup: alpha02steps:- type: commandcommands:- free -h- df -h- name: show user infogroup: alpha03steps:- type: commandcommands:- id 在alpha02上查看内存和磁盘信息 在alpha03上查看用户信息  执行 $ xsh.exe -mode task -task example\show-info.yaml[show info ] +++++++++++++++++++++++++++++++++++++++[alpha02: show mem and disk ] =======================================[192.168.165.37 ] ---------------------------------------------------------total used free shared buff/cache availableMem: 7.</description>
+      <description>任务编排 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  ..\example\show-info.yaml
+ name: show infoactions:- name: show mem and systemgroup: alpha01steps:- type: commandcommands:- free -h- uptime- name: show user infogroup: alpha02steps:- type: commandcommands:- id 在alpha01上查看内存和系统信息 在alpha02上查看用户信息  执行 $ xsh-windows-amd64.exe -mode task -task ..\example\show-info.yaml[show info ] +++++++++++++++++++++++++++++++++++++++[alpha01: show mem and system ] =======================================[192.168.162.65 ] ---------------------------------------------------------total used free shared buff/cache availableMem: 15G 2.</description>
     </item>
     
     <item>
@@ -58,11 +58,11 @@ $ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\ -remote /tm
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/example/cli/value/</guid>
-      <description>带变量的任务 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  example\add-user\add-user.yaml
- name: add new useractions:- name: add user and set passwdgroup: alpha03steps:- type: commandcommands:- useradd -m {{.alpha.test.username}}- echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}- id {{.alpha.test.username}} 变量采用text/template语法
-  example\add-user\user-info.yaml
- alpha:test:username: hello3passwd: Tst@1qaz 变量单独定义文件
- 执行 $ xsh.exe -mode task -task example\add-user\add-user.yaml -value example\add-user\user-info.yaml[add new user ] +++++++++++++++++++++++++++++++++++++++[alpha03: add user and set passwd ] =======================================[192.</description>
+      <description>带变量的任务 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  ..\example\add-user\add-user.yaml
+ name: add new useractions:- name: add user and set passwdgroup: alpha02steps:- type: commandsu: truecommands:- useradd -m {{.alpha.test.username}}- echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}- id {{.alpha.test.username}} 变量采用text/template语法
+  ..\example\add-user\user-info.yaml
+ alpha:test:username: hello22passwd: Tst@1qaz 变量单独定义文件
+ 执行 $ xsh-windows-amd64.exe -mode task -task ..\example\add-user\add-user.yaml -value ..\example\add-user\user-info.yaml[add new user ] +++++++++++++++++++++++++++++++++++++++[alpha02: add user and set passwd ] =======================================[192.</description>
     </item>
     
     <item>
@@ -73,8 +73,8 @@ $ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\ -remote /tm
       <guid>https://xied5531.github.io/xsh/docs/example/command/</guid>
       <description>执行命令 前提  已设置好配置项：系统配置、认证配置、主机配置 已切换到目标主机组环境   以group=alpha02为例
  执行方式：普通用户 切换上下文 命令：:do
-[alpha02:do]# :do[alpha02:do]#执行单条命令 [alpha02:do]# whoami..[192.168.170.109 ] ---------------------------------------------------------abc[192.168.165.37 ] ---------------------------------------------------------abc执行多条命令 [alpha02:do]# whoami;date;pwd..[192.168.165.37 ] ---------------------------------------------------------abcMon May 4 10:47:46 CST 2020/home/abc[192.168.170.109 ] ---------------------------------------------------------abcMon May 4 10:47:55 CST 2020/home/abc执行方式：从普通用户切换至其他用户 切换上下文 命令：:sudo
-[alpha02:do]# :sudo[alpha02:sudo]#执行单条命令 [alpha02:sudo]# whoami..[192.168.165.37 ] ---------------------------------------------------------rootWarn =&amp;gt;[sudo] password for root:[192.</description>
+[alpha02:do]# :do[alpha02:do]#执行单条命令 [alpha02:do]# whoami[192.168.170.109 ] ---------------------------------------------------------abc[192.168.165.37 ] ---------------------------------------------------------abc执行多条命令 [alpha02:do]# whoami;date -u;pwd[192.168.170.109 ] ---------------------------------------------------------abcFri May 8 06:42:29 UTC 2020/home/abc[192.168.165.37 ] ---------------------------------------------------------abcFri May 8 06:42:20 UTC 2020/home/abc执行方式：从普通用户切换至其他用户 切换上下文 命令：:sudo
+[alpha02:do]# :sudo[alpha02:sudo]#执行单条命令 [alpha02:sudo]# whoami[192.168.165.37 ] ---------------------------------------------------------rootWarn =&amp;gt;[sudo] password for root:[192.</description>
     </item>
     
     <item>
@@ -88,9 +88,9 @@ $ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\ -remote /tm
 [alpha02:do]# :copy[alpha02:copy]#上传  将本地节点上的内容上传至远端目标主机组的每个主机上
  用法：local -&amp;gt; remote
 约束：
- local和remote必须是全路径，例如：D:\tmp\LICENSE（Windows）或/tmp/abc（Linux） local可以是文件或文件夹，以\（Windows）或/（Linux）结尾代表文件夹 remote必须是文件夹，如果不存在将自动在远端新建文件夹  文件：
-[alpha02:copy]# D:\tmp\LICENSE -&amp;gt; /tmp/abc..[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/abc/LICENSE :OK[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/abc/LICENSE :OK# find /tmp/abc/tmp/abc/tmp/abc/LICENSE文件夹：
-[alpha02:copy]# D:\tmp\ -&amp;gt; /tmp/abc1..[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/abc1/LICENSE :OKD:\tmp\hello -&amp;gt; /tmp/abc1/hello :OKD:\tmp\hello\README.md -&amp;gt; /tmp/abc1/hello/README.</description>
+ local和remote必须是全路径，例如：D:\tmp\LICENSE（Windows）或/tmp/abc（Linux） local可以是文件或文件夹 remote必须是文件夹，如果不存在将自动在远端新建文件夹  文件：
+[alpha02:copy]# D:\tmp\LICENSE -&amp;gt; /home/abc/copy/tmp[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /home/abc/copy/tmp/LICENSE :OK[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /home/abc/copy/tmp/LICENSE :OK[alpha02:copy]# :do[alpha02:do]# find /home/abc/copy/tmp[192.168.170.109 ] ---------------------------------------------------------/home/abc/copy/tmp/home/abc/copy/tmp/LICENSE[192.168.165.37 ] ---------------------------------------------------------/home/abc/copy/tmp/home/abc/copy/tmp/LICENSE[alpha02:do]# :copy[alpha02:copy]#文件夹：
+[alpha02:copy]# D:\tmp -&amp;gt; /home/abc/copy/folder[192.168.170.109 ] ---------------------------------------------------------D:\tmp -&amp;gt; /home/abc/copy/folder/tmp :OKD:\tmp\LICENSE -&amp;gt; /home/abc/copy/folder/tmp/LICENSE :OKD:\tmp\hello -&amp;gt; /home/abc/copy/folder/tmp/hello :OKD:\tmp\hello\README.</description>
     </item>
     
     <item>

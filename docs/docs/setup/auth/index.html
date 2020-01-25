@@ -7,7 +7,9 @@
 <meta name="description" content="Auth"><meta property="og:title" content="" />
 <meta property="og:description" content="认证配置  .xsh/auth.yaml
  auths:- name: alphausername: abcpassword: Test@1qazsutype: &quot;sudo -S su -&quot;supass: XXXXXXprivatekey: &quot;&quot;passphrase: &quot;&quot; 无默认值，auths为列表类型
- 配置说明  - name: alpha # 名称username: abc # 用户名password: Test@1qaz # 密码sutype: &quot;sudo -S su -&quot; # 切换用户方法，可选supass: XXXXXX # 切换用户时需要的密码，可选privatekey: &quot;&quot; # 私钥地址，可选passphrase: &quot;&quot; # 私钥密码，可选" />
+ 配置说明  - name: alpha # 名称username: abc # 用户名password: Test@1qaz # 密码sutype: &quot;sudo -S su -&quot; # 切换用户方法，可选supass: XXXXXX # 切换用户时需要的密码，可选privatekey: &quot;&quot; # 私钥地址，可选passphrase: &quot;&quot; # 私钥密码，可选 password和privatekey，可同时提供，至少存在一项
+  sutype和supass，需要切换用户时提供即可
+ " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/setup/auth/" />
 
@@ -84,7 +86,7 @@ https://github.com/alex-shpak/hugo-book
 <li><a href="/xsh/docs/example/cli/command/">执行命令</a></li>
 <li><a href="/xsh/docs/example/cli/copy/">上传下载</a></li>
 <li><a href="/xsh/docs/example/cli/task/">任务编排</a></li>
-<li><a href="/xsh/docs/example/cli/value/">带变量的任务</a></li>
+<li><a href="/xsh/docs/example/cli/value/">带变量的任务编排</a></li>
 </ul>
 </li>
 </ul>
@@ -186,7 +188,13 @@ https://github.com/alex-shpak/hugo-book
     supass: XXXXXX             # 切换用户时需要的密码，可选
     privatekey: &quot;&quot;             # 私钥地址，可选
     passphrase: &quot;&quot;             # 私钥密码，可选
-</code></pre></article>
+</code></pre><blockquote>
+<p>password和privatekey，可同时提供，至少存在一项</p>
+</blockquote>
+<blockquote>
+<p>sutype和supass，需要切换用户时提供即可</p>
+</blockquote>
+</article>
  
       
 

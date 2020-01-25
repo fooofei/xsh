@@ -7,8 +7,8 @@
 <meta name="description" content="Command"><meta property="og:title" content="" />
 <meta property="og:description" content="执行命令 前提  已设置好配置项：系统配置、认证配置、主机配置 已切换到目标主机组环境   以group=alpha02为例
  执行方式：普通用户 切换上下文 命令：:do
-[alpha02:do]# :do[alpha02:do]#执行单条命令 [alpha02:do]# whoami..[192.168.170.109 ] ---------------------------------------------------------abc[192.168.165.37 ] ---------------------------------------------------------abc执行多条命令 [alpha02:do]# whoami;date;pwd..[192.168.165.37 ] ---------------------------------------------------------abcMon May 4 10:47:46 CST 2020/home/abc[192.168.170.109 ] ---------------------------------------------------------abcMon May 4 10:47:55 CST 2020/home/abc执行方式：从普通用户切换至其他用户 切换上下文 命令：:sudo
-[alpha02:do]# :sudo[alpha02:sudo]#执行单条命令 [alpha02:sudo]# whoami..[192.168.165.37 ] ---------------------------------------------------------rootWarn =&gt;[sudo] password for root:[192." />
+[alpha02:do]# :do[alpha02:do]#执行单条命令 [alpha02:do]# whoami[192.168.170.109 ] ---------------------------------------------------------abc[192.168.165.37 ] ---------------------------------------------------------abc执行多条命令 [alpha02:do]# whoami;date -u;pwd[192.168.170.109 ] ---------------------------------------------------------abcFri May 8 06:42:29 UTC 2020/home/abc[192.168.165.37 ] ---------------------------------------------------------abcFri May 8 06:42:20 UTC 2020/home/abc执行方式：从普通用户切换至其他用户 切换上下文 命令：:sudo
+[alpha02:do]# :sudo[alpha02:sudo]#执行单条命令 [alpha02:sudo]# whoami[192.168.165.37 ] ---------------------------------------------------------rootWarn =&gt;[sudo] password for root:[192." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/command/" />
 
@@ -85,7 +85,7 @@ https://github.com/alex-shpak/hugo-book
 <li><a href="/xsh/docs/example/cli/command/">执行命令</a></li>
 <li><a href="/xsh/docs/example/cli/copy/">上传下载</a></li>
 <li><a href="/xsh/docs/example/cli/task/">任务编排</a></li>
-<li><a href="/xsh/docs/example/cli/value/">带变量的任务</a></li>
+<li><a href="/xsh/docs/example/cli/value/">带变量的任务编排</a></li>
 </ul>
 </li>
 </ul>
@@ -194,7 +194,6 @@ https://github.com/alex-shpak/hugo-book
 [alpha02:do]#
 </code></pre><h3 id="执行单条命令">执行单条命令</h3>
 <pre><code>[alpha02:do]# whoami
-..
 [192.168.170.109   ] ---------------------------------------------------------
 abc
 
@@ -202,16 +201,15 @@ abc
 abc
 
 </code></pre><h3 id="执行多条命令">执行多条命令</h3>
-<pre><code>[alpha02:do]# whoami;date;pwd
-..
-[192.168.165.37    ] ---------------------------------------------------------
-abc
-Mon May  4 10:47:46 CST 2020
-/home/abc
-
+<pre><code>[alpha02:do]# whoami;date -u;pwd
 [192.168.170.109   ] ---------------------------------------------------------
 abc
-Mon May  4 10:47:55 CST 2020
+Fri May  8 06:42:29 UTC 2020
+/home/abc
+
+[192.168.165.37    ] ---------------------------------------------------------
+abc
+Fri May  8 06:42:20 UTC 2020
 /home/abc
 
 </code></pre><h2 id="执行方式从普通用户切换至其他用户">执行方式：从普通用户切换至其他用户</h2>
@@ -221,7 +219,6 @@ Mon May  4 10:47:55 CST 2020
 [alpha02:sudo]#
 </code></pre><h3 id="执行单条命令-1">执行单条命令</h3>
 <pre><code>[alpha02:sudo]# whoami
-..
 [192.168.165.37    ] ---------------------------------------------------------
 root
 
@@ -233,17 +230,18 @@ root
 Warn =&gt;
 [sudo] password for root:
 </code></pre><h3 id="执行多条命令-1">执行多条命令</h3>
-<pre><code>[alpha02:sudo]# whoami;date
-..
-[192.168.165.37    ] ---------------------------------------------------------
+<pre><code>[alpha02:sudo]# whoami;date -u;pwd
+[192.168.170.109   ] ---------------------------------------------------------
 root
-Mon May  4 10:49:08 CST 2020
+Fri May  8 06:43:43 UTC 2020
+/root
 
 Warn =&gt;
 [sudo] password for root:
-[192.168.170.109   ] ---------------------------------------------------------
+[192.168.165.37    ] ---------------------------------------------------------
 root
-Mon May  4 10:49:17 CST 2020
+Fri May  8 06:43:34 UTC 2020
+/root
 
 Warn =&gt;
 [sudo] password for root:

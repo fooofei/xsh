@@ -8,7 +8,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func Print(v interface{}) {
+func Out(v interface{}) {
 	if CurEnv.OutputType == "json" {
 		printJson(v)
 	} else if CurEnv.OutputType == "yaml" {

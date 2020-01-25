@@ -37,11 +37,15 @@ func runCommand(line string) bool {
 	if line == "" {
 		return false
 	}
-	if line == ":exit" {
+	if line == ":exit" || line == ":quit" {
 		return true
 	}
-	if line == ":help" {
+	if line == ":help" || line == ":h" {
 		help()
+		return false
+	}
+	if line == ":reload" {
+		reload()
 		return false
 	}
 	if strings.HasPrefix(line, ":encrypt") {
@@ -82,7 +86,7 @@ func runCommand(line string) bool {
 	}
 
 	if strings.HasPrefix(line, ":") {
-		Error.Printf("command not support, line= %s", line)
+		ErrLogf("command[%s] not support", line)
 		return false
 	}
 

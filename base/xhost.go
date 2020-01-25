@@ -40,7 +40,7 @@ type xHost struct {
 var XHost = xHost{}
 var XHostMap = make(map[string]HostGroup)
 
-func initXHost() {
+func InitXHost() {
 	var filePath = path.Join(ConfigRootPath, HostgroupsFile)
 
 	h, err := ioutil.ReadFile(filePath)

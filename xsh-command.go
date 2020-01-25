@@ -17,6 +17,8 @@ func show(line string) {
 			for i, v := range group.AllHost {
 				fmt.Printf("[%d] %s\n", i, v.Address)
 			}
+		case "env":
+			fmt.Printf("%+v\n", CurEnv)
 		}
 	} else {
 		fmt.Println(":show argument not enough, please :help first.")
@@ -79,7 +81,7 @@ func encrypt(line string) {
 	if len(fields) == 2 {
 		fmt.Println(GetMaskPassword(fields[1]))
 	} else {
-		Error.Printf("line[%s] illegal", line)
+		ErrLogf("line[%s] illegal", line)
 	}
 }
 
@@ -88,6 +90,12 @@ func decrypt(line string) {
 	if len(fields) == 2 {
 		fmt.Println(GetPlainPassword(fields[1]))
 	} else {
-		Error.Printf("line[%s] illegal", line)
+		ErrLogf("line[%s] illegal", line)
 	}
+}
+
+func reload() {
+	InitXConfig()
+	InitXAuth()
+	InitXHost()
 }

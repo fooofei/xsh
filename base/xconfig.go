@@ -49,11 +49,12 @@ type config struct {
 	CommonCommands      []string `yaml:"common_commands,omitempty"`
 	BlackCommandRegexps []string `yaml:"black_command_regexps,omitempty"`
 	CommandSep          string   `yaml:"command_sep,omitempty"`
+	IssueUrl            string   `yaml:"issue_url,omitempty"`
 }
 
 var XConfig = config{}
 
-func initXConfig() {
+func InitXConfig() {
 	setupXConfigDefault()
 
 	var filePath = path.Join(ConfigRootPath, ConfigsFile)
@@ -135,6 +136,10 @@ func setupXConfigDefault() {
 
 	if XConfig.CommandSep == "" {
 		XConfig.CommandSep = ";"
+	}
+
+	if XConfig.IssueUrl == "" {
+		XConfig.IssueUrl = "https://github.com/xied5531/xsh/issues"
 	}
 
 	for _, blackCommandRegexp := range XConfig.BlackCommandRegexps {

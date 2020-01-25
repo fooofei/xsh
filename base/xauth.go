@@ -24,7 +24,7 @@ type xAuth struct {
 var XAuth = xAuth{}
 var XAuthMap = make(map[string]Authentication)
 
-func initXAuth() {
+func InitXAuth() {
 	var filePath = path.Join(ConfigRootPath, AuthenticationsFile)
 
 	a, err := ioutil.ReadFile(filePath)

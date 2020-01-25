@@ -60,37 +60,45 @@ func wordCompleter(line string, pos int) (head string, completions []string, tai
 		fields := strings.Fields(head)
 		switch fields[0] {
 		case ":set":
-			if strings.HasSuffix(head, " ") {
-				return head, setoptsCompleter(""), tail
-			}
-
 			if len(fields) == 1 {
-				return head + " ", setoptsCompleter(""), tail
+				if strings.HasSuffix(head, " ") {
+					return head, setoptsCompleter(""), ""
+				}
 			}
 
-			newHead := strings.Join(fields[:len(fields)-1], " ")
-			lastField := fields[len(fields)-1]
-			if !strings.Contains(lastField, "=") {
-				return newHead + " ", setoptsCompleter(lastField), tail
-			}
+			if len(fields) > 1 {
+				if strings.HasSuffix(head, " ") {
+					return head, setoptsCompleter(""), ""
+				}
 
-			lastFields := strings.Split(lastField, "=")
-			switch lastFields[0] {
-			case "group":
-				return newHead + " group=", groupCompleter(lastFields[1]), tail
+				newHead := strings.Join(fields[:len(fields)-1], " ")
+				lastField := fields[len(fields)-1]
+				if !strings.Contains(lastField, "=") {
+					return newHead + " ", setoptsCompleter(lastField), ""
+				} else {
+					lastFields := strings.Split(lastField, "=")
+					switch lastFields[0] {
+					case "group":
+						return newHead + " group=", groupCompleter(lastFields[1]), tail
+					}
+				}
 			}
 		case ":show":
-			if strings.HasSuffix(head, " ") {
-				return head, showoptsCompleter(""), tail
+			if len(fields) == 1 {
+				if strings.HasSuffix(head, " ") {
+					return head, showoptsCompleter(""), ""
+				}
 			}
 
-			if len(fields) == 1 {
-				return head, showoptsCompleter(head), tail
+			if len(fields) == 2 {
+				if !strings.HasSuffix(head, " ") {
+					return fields[0] + " ", showoptsCompleter(fields[1]), ""
+				}
 			}
 		default:
 			if len(fields) == 1 {
 				if !strings.HasSuffix(head, " ") {
-					return "", keywordCompleter(head), tail
+					return "", keywordCompleter(head), ""
 				}
 			}
 		}
@@ -98,9 +106,9 @@ func wordCompleter(line string, pos int) (head string, completions []string, tai
 
 	i := strings.LastIndex(head, XConfig.CommandSep)
 	if i > 0 {
-		return head[:i] + XConfig.CommandSep, cmdCompleter(head[i+1:]), tail
+		return head[:i] + XConfig.CommandSep, cmdCompleter(head[i+1:]), ""
 	} else {
-		return "", cmdCompleter(head), tail
+		return "", cmdCompleter(head), ""
 	}
 }
 

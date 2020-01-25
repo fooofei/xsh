@@ -40,7 +40,7 @@ func printText(v interface{}) {
 			}
 		}
 	} else {
-		Error.Printf("text error for result: %+v\n", ar)
+		ErrLogf("text error for result: %+v\n", ar)
 	}
 }
 

@@ -291,7 +291,7 @@ func help() {
    xsh - A simple command line tool to run commands on remote host addresses.
 
 SYNOPSIS:
-   [KEYWORD]... [ARG]... 
+   [KEYWORD] [ARG]... 
 
 VERSION:
 ` + Version + `

@@ -10,7 +10,6 @@ import (
 
 type config struct {
 	Timeout struct {
-		TaskTimeoutS    int `yaml:"task_timeout_s,omitempty"`
 		ActionTimeoutS  int `yaml:"action_timeout_s,omitempty"`
 		CommandTimeoutS int `yaml:"command_timeout_s,omitempty"`
 		CopyTimeoutS    int `yaml:"copy_timeout_s,omitempty"`
@@ -28,13 +27,13 @@ type config struct {
 			Ospeed     int    `yaml:"ospeed,omitempty"`
 			IntervalMS int    `yaml:"interval_ms,omitempty"`
 		} `yaml:"pty,omitempty"`
-	} `yaml:"ssh,omitempty"`
+	} `yaml:"command,omitempty"`
 
 	Copy struct {
 		SftpMaxPacketSize int  `yaml:"sftp_max_package_size,omitempty"`
 		Override          bool `yaml:"override,omitempty"`
 		Skip              bool `yaml:"skip,omitempty"`
-	} `yaml:"sftp,omitempty"`
+	} `yaml:"copy,omitempty"`
 
 	Cache struct {
 		ExpirationS      int `yaml:"expiration_s,omitempty"`
@@ -62,8 +61,6 @@ type config struct {
 var XConfig = config{}
 
 func InitXConfig() {
-	setupXConfigDefault()
-
 	var filePath = path.Join(RootPath, ConfigFile)
 	c, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -75,6 +72,9 @@ func InitXConfig() {
 		log.Fatalf("Configs[%s] unmarshal error: %v", filePath, err)
 	}
 
+	setupXConfigDefault()
+	checkXConfig()
+
 	Debug.Printf("XConfig: %+v", XConfig)
 }
 
@@ -82,9 +82,6 @@ var XBlackCommandRegexps = make([]*regexp.Regexp, 0)
 var XCommonCommandSet = make(map[string]bool)
 
 func setupXConfigDefault() {
-	if XConfig.Timeout.TaskTimeoutS <= 0 {
-		XConfig.Timeout.TaskTimeoutS = 21600
-	}
 	if XConfig.Timeout.ActionTimeoutS <= 0 {
 		XConfig.Timeout.ActionTimeoutS = 3600
 	}
@@ -167,5 +164,18 @@ func setupXConfigDefault() {
 
 	for _, commonCommand := range XConfig.CommonCommands {
 		XCommonCommandSet[commonCommand] = true
+	}
+}
+
+func checkXConfig() {
+	if !(XConfig.Timeout.ActionTimeoutS > XConfig.Timeout.CommandTimeoutS && XConfig.Timeout.ActionTimeoutS > XConfig.Timeout.CopyTimeoutS) {
+		log.Fatalf("condition check failed: timeout.action_timeout_s > timeout.command_timeout_s && timeout.action_timeout_s > timeout.copy_timeout_s")
+	}
+	if !(XConfig.Timeout.CommandTimeoutS > XConfig.Timeout.DialTimeoutS && XConfig.Timeout.CopyTimeoutS > XConfig.Timeout.DialTimeoutS) {
+		log.Fatalf("condition check failed: timeout.command_timeout_s > timeout.dial_timeout_s && timeout.copy_timeout_s > timeout.dial_timeout_s")
+	}
+
+	if !(XConfig.Command.Port <= 65535) {
+		log.Fatalf("condition check failed: command.port <= 65535")
 	}
 }

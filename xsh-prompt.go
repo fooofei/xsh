@@ -206,6 +206,8 @@ func show(line string) {
 			PrintYaml(addresses)
 		case "env":
 			PrintYaml(CurEnv)
+		case "config":
+			PrintYaml(XConfig)
 		}
 	} else {
 		fmt.Println(":show argument not enough, please :help first.")
@@ -275,7 +277,7 @@ DESCRIPTION:
 
    :help or :h                         Show help info
    :set [group=xxx|address=x.x.x.x]    Set current target hosts
-   :show                               Show address list of current host group
+   :show                               Show current information
    :reload                             Reload config auth and host information
 
    :do                                 Run ssh command as normal user

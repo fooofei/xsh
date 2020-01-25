@@ -1,0 +1,15 @@
+name: show info
+actions:
+  - name: show mem and disk
+    group: alpha02
+    steps:
+      - type: command
+        commands:
+          - free -h
+          - df -h
+  - name: show user info
+    group: alpha03
+    steps:
+      - type: command
+        commands:
+          - id

@@ -9,32 +9,32 @@ import (
 	"io"
 )
 
-func GetPlainPassword(pass string) string {
+func GetPlainPassword(pass string) (string, error) {
 	if XConfig.Crypt.Key == "" {
 		Warn.Print("crypt key empty.")
-		return pass
+		return pass, nil
 	}
 
 	txt, err := AesDecrypt(pass)
 	if err != nil {
-		Error.Printf("password [%s] decrypt error [%v].", pass, err)
+		return pass, err
 	}
 
-	return txt
+	return txt, nil
 }
 
-func GetMaskPassword(pass string) string {
+func GetMaskPassword(pass string) (string, error) {
 	if XConfig.Crypt.Key == "" {
 		Warn.Print("crypt key empty.")
-		return pass
+		return pass, nil
 	}
 
-	tst, err := AesEncrypt(pass)
+	txt, err := AesEncrypt(pass)
 	if err != nil {
-		Error.Printf("password [%s] encrypt error [%v].", pass, err)
+		return pass, err
 	}
 
-	return tst
+	return txt, nil
 }
 
 func AesEncrypt(plaintext string) (string, error) {

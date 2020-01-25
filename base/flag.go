@@ -8,22 +8,24 @@ import (
 )
 
 var (
-	Mode = flag.String("mode", "prompt", "The running mode. value ranges: task/cmd/copy/crypt/prompt")
+	Mode = flag.String("mode", "prompt", "running mode. value ranges: task/cmd/copy/crypt/prompt")
 
-	Task  = flag.String("task", "", "The task yaml file in task mode")
-	Value = flag.String("value", "", "The value yaml file in task mode")
+	Output = flag.String("o", "text", "output mode in task cmd and copy mode. value ranges: text/json/yaml")
 
-	Group = flag.String("group", "", "The group name in cmd or copy mode")
+	Task  = flag.String("task", "", "task yaml file in task mode")
+	Value = flag.String("value", "", "value yaml file in task mode")
 
-	Cmd = flag.String("cmd", "", "The command line in cmd mode")
-	Su  = flag.Bool("su", false, "Su or not in cmd mode")
+	Group = flag.String("group", "", "group name in cmd and copy mode")
 
-	Direction = flag.String("direction", "", "The direction upload/download in copy mode")
-	Local     = flag.String("local", "", "The local path in copy mode")
-	Remote    = flag.String("remote", "", "The remote path in copy mode")
+	Cmd = flag.String("cmd", "", "command line in cmd mode")
+	Su  = flag.Bool("su", false, "su or not in cmd mode")
 
-	Plain  = flag.String("plain", "", "The plain text to encrypt in crypt mode")
-	Cipher = flag.String("cipher", "", "The cipher text to decrypt in crypt mode")
+	Direction = flag.String("direction", "", "upload or download in copy mode")
+	Local     = flag.String("local", "", "local path in copy mode")
+	Remote    = flag.String("remote", "", "remote path in copy mode")
+
+	Plain  = flag.String("plain", "", "plain text to encrypt in crypt mode")
+	Cipher = flag.String("cipher", "", "cipher text to decrypt in crypt mode")
 )
 
 func initFlag() {
@@ -51,4 +53,20 @@ DESCRIPTION:`)
 		flag.PrintDefaults()
 	}
 	flag.Parse()
+
+	checkFlag()
+}
+
+func checkFlag() {
+	if *Mode != "task" && *Mode != "cmd" && *Mode != "copy" && *Mode != "crypt" && *Mode != "prompt" {
+		log.Fatalf("mode[%s] illegal", *Mode)
+	}
+
+	if *Output != "text" && *Output != "json" && *Output != "yaml" {
+		log.Fatalf("o[%s] illegal", *Output)
+	}
+
+	if *Direction != "" && *Direction != "upload" && *Direction != "download" {
+		log.Fatalf("direction[%s] illegal", *Direction)
+	}
 }

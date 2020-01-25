@@ -18,7 +18,7 @@ const (
 var (
 	Keywords = []string{":help", ":show", ":set", ":reload", ":do", ":sudo", ":copy"}
 	setopts  = []string{"group=", "address="}
-	showopts = []string{"group", "address", "env"}
+	showopts = []string{"group", "address", "env", "config"}
 )
 
 var (

@@ -9,7 +9,7 @@ var (
 	ActionEmptyErr   = errors.New("action empty")
 
 	CommandEmptyErr = errors.New("command can not empty")
-	CommandSuErr    = errors.New("command su info illegal")
+	CommandSuErr    = errors.New("su info illegal")
 
 	CopyInfoErr        = errors.New("copy info illegal")
 	RemoteFileExistErr = errors.New("remote file existed")

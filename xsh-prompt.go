@@ -41,7 +41,7 @@ func runCommand(line string) bool {
 	if line == ":exit" || line == ":quit" || line == ":q" {
 		return true
 	}
-	if line == ":help" || line == ":h" {
+	if line == ":help" || line == ":h" || line == ":?" {
 		help()
 		return false
 	}
@@ -277,7 +277,7 @@ VERSION:
 DESCRIPTION:
    Please report a issue at ` + XConfig.IssueUrl + ` if possible.
 
-   :help or :h                         Show help info
+   :help or :h or :?                   Show help info
    :set [group=xxx|address=x.x.x.x]    Set current target hosts
    :show                               Show current information
    :reload                             Reload config auth and host information

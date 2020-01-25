@@ -67,6 +67,11 @@ func runCopy() {
 }
 
 func runCrypt() {
+	if XConfig.Crypt.Type == "" || XConfig.Crypt.Key == "" {
+		Error.Println("crypt type or key not found")
+		return
+	}
+
 	if *Plain != "" {
 		fmt.Printf("%s -> %s\n", *Plain, GetMaskPassword(*Plain))
 	} else if *Cipher != "" {

@@ -5,7 +5,11 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Start"><meta property="og:title" content="" />
-<meta property="og:description" content="快速开始 构建 git clone https://github.com/xied5531/xsh.gitcd xshgo build帮助 $ xsh.exe -h准备  配置认证信息 配置主机组信息  开始  临时在主机组上执行命令 临时往主机组上传输文件 通过任务脚本化在主机组上执行组合动作 需要常驻在主机组上长时间执行命令或传输文件  " />
+<meta property="og:description" content="快速开始 构建 Windows:
+build.ps1Linux:
+build.sh 发布路径：release/
+ 后续章节示例说明：
+ Windows平台 进入release/目录 将xsh-windows-amd64.exe重命名为xsh.exe  帮助 $ xsh.exe -h准备  配置认证信息 配置主机组信息  开始  临时在主机组上执行命令 临时往主机组上传输文件 通过任务脚本化在主机组上执行组合动作 需要常驻在主机组上长时间执行命令或传输文件  " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/start/" />
 
@@ -166,10 +170,20 @@ https://github.com/alex-shpak/hugo-book
       
 <article class="markdown"><h1 id="快速开始">快速开始</h1>
 <h2 id="构建">构建</h2>
-<pre><code>git clone https://github.com/xied5531/xsh.git
-cd xsh
-go build
-</code></pre><h2 id="帮助">帮助</h2>
+<p>Windows:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PowerShell" data-lang="PowerShell">build.ps1
+</code></pre></div><p>Linux:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Shell" data-lang="Shell">build.sh
+</code></pre></div><blockquote>
+<p>发布路径：<code>release/</code></p>
+</blockquote>
+<p>后续章节示例说明：</p>
+<ul>
+<li>Windows平台</li>
+<li>进入<code>release/</code>目录</li>
+<li>将<code>xsh-windows-amd64.exe</code>重命名为<code>xsh.exe</code></li>
+</ul>
+<h2 id="帮助">帮助</h2>
 <pre><code>$ xsh.exe -h
 </code></pre><h2 id="准备">准备</h2>
 <ul>

@@ -10,6 +10,8 @@ import (
 
 func runTask() {
 	task := SshTask{}
+
+	CurEnv.Output = *Output
 	Out(task.Do())
 }
 
@@ -34,6 +36,7 @@ func runCmd() {
 		}},
 	}
 
+	CurEnv.Output = *Output
 	Out(action.Do())
 }
 
@@ -59,6 +62,7 @@ func runCopy() {
 		}},
 	}
 
+	CurEnv.Output = *Output
 	Out(action.Do())
 }
 

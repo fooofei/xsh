@@ -24,6 +24,10 @@ DESCRIPTION:
 
    :do                                 Run ssh command as normal user, default.
    :sudo                               Run ssh command as su user from normal user
+   :copy                               Upload or download file or directory between local and remote
+       local -> remote                 -> means upload, remote must be directory
+       local <- remote                 <- means download, local must be directory
+
    :encrypt passwd                     Encrypt passwd
    :decrypt passwd                     Decrypt passwd
 

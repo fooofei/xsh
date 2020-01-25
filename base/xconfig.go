@@ -28,13 +28,13 @@ type config struct {
 			Ospeed     int    `yaml:"ospeed,omitempty"`
 			IntervalMS int    `yaml:"interval_ms,omitempty"`
 		} `yaml:"pty,omitempty"`
-	} `yaml:"ssh,omitempty"`
+	} `yaml:"command,omitempty"`
 
 	Copy struct {
 		SftpMaxPacketSize int  `yaml:"sftp_max_package_size,omitempty"`
 		Override          bool `yaml:"override,omitempty"`
 		Skip              bool `yaml:"skip,omitempty"`
-	} `yaml:"sftp,omitempty"`
+	} `yaml:"copy,omitempty"`
 
 	Cache struct {
 		ExpirationS      int `yaml:"expiration_s,omitempty"`

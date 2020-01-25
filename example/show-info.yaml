@@ -1,4 +1,4 @@
-name: show infor
+name: show info
 actions:
   - name: show mem and disk
     group: alpha02

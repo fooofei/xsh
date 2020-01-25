@@ -55,7 +55,7 @@ func (s sftpCopy) Download(local, remote string) ([]string, error) {
 		stat := w.Stat()
 		remoteName := w.Path()
 
-		baseName := CleanPath4Linux(strings.Replace(remoteName, remoteDir, "", 1))
+		baseName := CleanPath4Download(strings.Replace(remoteName, remoteDir, "", 1))
 		if strings.HasPrefix(baseName, "/") {
 			baseName = strings.Replace(baseName, "/", "", 1)
 		}
@@ -105,7 +105,7 @@ func (s sftpCopy) Upload(local, remote string) ([]string, error) {
 			return nil
 		}
 
-		baseName := CleanPath4Winows(strings.Replace(path, localDir, "", 1))
+		baseName := CleanPath4Upload(strings.Replace(path, localDir, "", 1))
 		if strings.HasPrefix(baseName, string(os.PathSeparator)) {
 			baseName = strings.Replace(baseName, string(os.PathSeparator), "", 1)
 		}

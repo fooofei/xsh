@@ -103,11 +103,15 @@ func IsRemoteDirEmpty(session *xSshSession, path string) bool {
 	return stdout == ""
 }
 
-func CleanPath4Winows(path string) string {
-	return strings.Replace(path, "/", "+", -1)
+func CleanPath4Upload(path string) string {
+	if runtime.GOOS == "windows" {
+		return strings.Replace(path, "/", "+", -1)
+	} else {
+		return path
+	}
 }
 
-func CleanPath4Linux(path string) string {
+func CleanPath4Download(path string) string {
 	path = strings.Replace(path, "\\", "+", -1)
 	path = strings.Replace(path, ":", "=", -1)
 	return path

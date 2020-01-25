@@ -151,7 +151,7 @@ $ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\ -remote /tm
       <guid>https://xied5531.github.io/xsh/docs/setup/host/</guid>
       <description>主机组配置  .xsh/host.yaml
  hosts:- name: alpha-123auth: alphaport: 22addresses:- 192.168.187.117groups:- alpha01- alpha02details:- address: 192.168.184.236port: 22username: rootpassword: XXXXXXsutype: &amp;quot;sudo -S su -&amp;quot;supass: XXXXXXprivatekey: &amp;quot;&amp;quot;passphrase: &amp;quot;&amp;quot; 无默认值，hosts为列表类型
- 配置说明  - name: alpha-123 # 名称auth: alpha # 认证名称，需要和auth.yaml中名称配置项一致port: 22 # 端口，可选，默认：22addresses: # 地址列表- 192.168.187.117groups: # 主机组列表，名称需要和host.yaml中名称配置项一致- alpha01- alpha02details: # 特殊配置项的主机列表信息，配置项和auth含义保持一致- address: 192.</description>
+ 配置说明  - name: alpha-123 # 名称auth: alpha # 认证名称，需要和auth.yaml中名称配置项一致port: 22 # 端口，可选，默认：22addresses: # 地址列表- 192.168.187.117groups: # 主机组列表，可选，名称需要和host.yaml中名称配置项一致- alpha01- alpha02details: # 特殊配置项的主机列表信息，可选，配置项和auth含义保持一致- address: 192.</description>
     </item>
     
     <item>

@@ -125,20 +125,26 @@ func (s *SshAction) Do() SshActionResult {
 
 func (s *SshAction) newSshCopy(hostDetail HostDetail) sshCopy {
 	resut := sshCopy{
-		Session: copySession{
-			Client: sshClient{
-				Host:       hostDetail.Address,
-				Port:       hostDetail.Port,
-				UserName:   hostDetail.Username,
-				PassWord:   hostDetail.Password,
-				PrivateKey: hostDetail.PrivateKey,
-				PassPhrase: hostDetail.Passphrase,
-			},
+		SshClient: sshClient{
+			Host:       hostDetail.Address,
+			Port:       hostDetail.Port,
+			UserName:   hostDetail.Username,
+			PassWord:   hostDetail.Password,
+			PrivateKey: hostDetail.PrivateKey,
+			PassPhrase: hostDetail.Passphrase,
 		},
 	}
 
 	if hostDetail.Port <= 0 {
-		resut.Session.Client.Port = XConfig.Command.Port
+		resut.SshClient.Port = XConfig.Command.Port
+	}
+
+	if XConfig.Copy.Protocol == "sftp" {
+		resut.Copy = sftpCopy{
+			SshClient: resut.SshClient,
+		}
+	} else {
+		//
 	}
 
 	return resut
@@ -258,7 +264,7 @@ func (s *SshAction) doCopy(ctx context.Context, resultCh chan SshResponse, sc ss
 	case r := <-rc:
 		resultCh <- r
 	case <-ctx.Done():
-		resultCh <- SshResponse{Address: sc.Session.Client.Host, Err: ActionTimeoutErr}
+		resultCh <- SshResponse{Address: sc.SshClient.Host, Err: ActionTimeoutErr}
 	}
 }
 

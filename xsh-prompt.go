@@ -142,8 +142,8 @@ func newCopyAction(line string) (*SshAction, error) {
 		return nil, fmt.Errorf("line[%s] format illegal", line)
 	}
 
-	local, le := GetLocalPath(direction, fields[0])
-	remote, re := GetRemotePath(direction, fields[1])
+	local, le := GetLocalDir(direction, fields[0])
+	remote, re := GetRemoteDir(direction, fields[1])
 	if le != nil || re != nil {
 		return nil, fmt.Errorf("line[%s] path illegal, local: %v; remote: %v", line, le, re)
 	}

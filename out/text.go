@@ -47,8 +47,11 @@ func printTaskResult(result SshTaskResult) {
 
 	for _, result := range result.SshActionResults {
 		fmt.Printf("[%-36s] =======================================\n", result.Name)
-		printActionResult(result)
-		fmt.Println()
+		if result.Err != nil {
+			fmt.Printf("error: %s\n", result.Err.Error())
+		} else {
+			printActionResult(result)
+		}
 	}
 }
 

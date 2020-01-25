@@ -51,14 +51,21 @@ func runCopy() {
 		return
 	}
 
+	local, le := GetLocalPath(*Direction, *Local)
+	remote, re := GetRemotePath(*Direction, *Remote)
+	if le != nil || re != nil {
+		Error.Printf("path illegal, local: %v; remote: %v", le, re)
+		return
+	}
+
 	action := SshAction{
 		Name:  "Default",
 		Group: *Group,
 		Steps: []Step{{
 			Type:      "copy",
 			Direction: *Direction,
-			Local:     *Local,
-			Remote:    *Remote,
+			Local:     local,
+			Remote:    remote,
 		}},
 	}
 

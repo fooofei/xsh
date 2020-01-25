@@ -29,10 +29,19 @@
     
     <item>
       <title></title>
-      <link>https://xied5531.github.io/xsh/docs/example/run/</link>
+      <link>https://xied5531.github.io/xsh/docs/example/crypt/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://xied5531.github.io/xsh/docs/example/run/</guid>
+      <guid>https://xied5531.github.io/xsh/docs/example/crypt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://xied5531.github.io/xsh/docs/example/env/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://xied5531.github.io/xsh/docs/example/env/</guid>
       <description></description>
     </item>
     
@@ -52,6 +61,15 @@
       
       <guid>https://xied5531.github.io/xsh/docs/overview/features/</guid>
       <description>特性 </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://xied5531.github.io/xsh/docs/overview/start/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://xied5531.github.io/xsh/docs/overview/start/</guid>
+      <description></description>
     </item>
     
     <item>

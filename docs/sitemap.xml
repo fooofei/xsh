@@ -19,7 +19,11 @@
   </url>
   
   <url>
-    <loc>https://xied5531.github.io/xsh/docs/example/run/</loc>
+    <loc>https://xied5531.github.io/xsh/docs/example/crypt/</loc>
+  </url>
+  
+  <url>
+    <loc>https://xied5531.github.io/xsh/docs/example/env/</loc>
   </url>
   
   <url>
@@ -28,6 +32,10 @@
   
   <url>
     <loc>https://xied5531.github.io/xsh/docs/overview/features/</loc>
+  </url>
+  
+  <url>
+    <loc>https://xied5531.github.io/xsh/docs/overview/start/</loc>
   </url>
   
   <url>

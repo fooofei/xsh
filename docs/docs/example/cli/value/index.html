@@ -5,11 +5,11 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Value"><meta property="og:title" content="" />
-<meta property="og:description" content="带变量的任务 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  example\add-user\add-user.yaml
- name: add new useractions:- name: add user and set passwdgroup: alpha03steps:- type: commandcommands:- useradd -m {{.alpha.test.username}}- echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}- id {{.alpha.test.username}} 变量采用text/template语法
-  example\add-user\user-info.yaml
- alpha:test:username: hello3passwd: Tst@1qaz 变量单独定义文件
- 执行 $ xsh.exe -mode task -task example\add-user\add-user.yaml -value example\add-user\user-info.yaml[add new user ] &#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;[alpha03: add user and set passwd ] =======================================[192." />
+<meta property="og:description" content="带变量的任务 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  ..\example\add-user\add-user.yaml
+ name: add new useractions:- name: add user and set passwdgroup: alpha02steps:- type: commandsu: truecommands:- useradd -m {{.alpha.test.username}}- echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}- id {{.alpha.test.username}} 变量采用text/template语法
+  ..\example\add-user\user-info.yaml
+ alpha:test:username: hello22passwd: Tst@1qaz 变量单独定义文件
+ 执行 $ xsh-windows-amd64.exe -mode task -task ..\example\add-user\add-user.yaml -value ..\example\add-user\user-info.yaml[add new user ] &#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;[alpha02: add user and set passwd ] =======================================[192." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/cli/value/" />
 
@@ -86,7 +86,7 @@ https://github.com/alex-shpak/hugo-book
 <li><a href="/xsh/docs/example/cli/command/">执行命令</a></li>
 <li><a href="/xsh/docs/example/cli/copy/">上传下载</a></li>
 <li><a href="/xsh/docs/example/cli/task/">任务编排</a></li>
-<li><a href="/xsh/docs/example/cli/value/"class=active>带变量的任务</a></li>
+<li><a href="/xsh/docs/example/cli/value/"class=active>带变量的任务编排</a></li>
 </ul>
 </li>
 </ul>
@@ -177,14 +177,15 @@ https://github.com/alex-shpak/hugo-book
 </ul>
 <h1 id="说明">说明</h1>
 <blockquote>
-<p>example\add-user\add-user.yaml</p>
+<p>..\example\add-user\add-user.yaml</p>
 </blockquote>
 <pre><code>name: add new user
 actions:
   - name: add user and set passwd
-    group: alpha03
+    group: alpha02
     steps:
       - type: command
+        su: true
         commands:
           - useradd -m {{.alpha.test.username}}
           - echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}
@@ -194,35 +195,35 @@ actions:
 <p>变量采用<code>text/template</code>语法</p>
 </blockquote>
 <blockquote>
-<p>example\add-user\user-info.yaml</p>
+<p>..\example\add-user\user-info.yaml</p>
 </blockquote>
 <pre><code>alpha:
   test:
-    username: hello3
+    username: hello22
     passwd: Tst@1qaz
 
 </code></pre><blockquote>
 <p>变量单独定义文件</p>
 </blockquote>
 <h2 id="执行">执行</h2>
-<pre><code>$ xsh.exe -mode task -task example\add-user\add-user.yaml -value example\add-user\user-info.yaml
+<pre><code>$ xsh-windows-amd64.exe -mode task -task ..\example\add-user\add-user.yaml -value ..\example\add-user\user-info.yaml
 [add new user                        ] +++++++++++++++++++++++++++++++++++++++
-[alpha03: add user and set passwd    ] =======================================
-[192.168.184.236   ] ---------------------------------------------------------
-Changing password for user hello3.
+[alpha02: add user and set passwd    ] =======================================
+[192.168.165.37    ] ---------------------------------------------------------
+Changing password for user hello22.
 passwd: all authentication tokens updated successfully.
-uid=1004(hello3) gid=1004(hello3) groups=1004(hello3)
+uid=1004(hello22) gid=1004(hello22) groups=1004(hello22)
 
 Warn =&gt;
-configuration error - unknown item 'ALWAYS_SET_PATH' (notify administrator)
+[sudo] password for root: configuration error - unknown item 'ALWAYS_SET_PATH' (notify administrator)
 
-[192.168.187.117   ] ---------------------------------------------------------
-Changing password for user hello3.
+[192.168.170.109   ] ---------------------------------------------------------
+Changing password for user hello22.
 passwd: all authentication tokens updated successfully.
-uid=1004(hello3) gid=1005(hello3) groups=1005(hello3)
+uid=1005(hello22) gid=1005(hello22) groups=1005(hello22)
 
 Warn =&gt;
-configuration error - unknown item 'ALWAYS_SET_PATH' (notify administrator)
+[sudo] password for root: configuration error - unknown item 'ALWAYS_SET_PATH' (notify administrator)
 
 
 </code></pre></article>

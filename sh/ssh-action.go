@@ -203,9 +203,9 @@ func (s *SshAction) do4group(ctx context.Context, resultCh chan map[string][]ssh
 	for i := 0; i < size; i++ {
 		response := <-responseCh
 		result[response[0].Address] = response
-		printProgress(false)
+		printProgress(response, false)
 	}
-	printProgress(true)
+	printProgress(nil, true)
 
 	resultCh <- result
 }
@@ -250,12 +250,20 @@ func (s *SshAction) doCopy(ctx context.Context, resultCh chan sshResponse, sc ss
 	}
 }
 
-func printProgress(end bool) {
+func printProgress(response []sshResponse, end bool) {
 	if XConfig.Output.Type == "text" && XConfig.Output.Progress {
 		if end {
 			fmt.Println()
-		} else {
-			fmt.Print(".")
+			return
 		}
+
+		for _, res := range response {
+			if res.Err != nil {
+				fmt.Print("x")
+				return
+			}
+		}
+
+		fmt.Print(".")
 	}
 }

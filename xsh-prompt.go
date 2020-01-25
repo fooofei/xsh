@@ -75,20 +75,20 @@ func runCommand(line string) bool {
 		if CurEnv.ActionType != ":do" {
 			CurEnv.ActionType = ":do"
 			SaveEnv()
-			return false
 		}
+		return false
 	case ":sudo":
 		if CurEnv.ActionType != ":sudo" {
 			CurEnv.ActionType = ":sudo"
 			SaveEnv()
-			return false
 		}
+		return false
 	case ":copy":
 		if CurEnv.ActionType != ":copy" {
 			CurEnv.ActionType = ":copy"
 			SaveEnv()
-			return false
 		}
+		return false
 	}
 
 	if strings.HasPrefix(line, ":") {

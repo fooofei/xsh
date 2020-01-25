@@ -27,9 +27,12 @@ func initFlag() {
 
 	cmd := os.Args[0]
 	flag.Usage = func() {
-		fmt.Println(`Usage:`, cmd, `[<options>]
+		fmt.Println(`SYNOPSIS:`, cmd, `[OPTION]... [ARG]...
 
-Options:`)
+VERSION:
+`+Version+`
+
+DESCRIPTION:`)
 		flag.PrintDefaults()
 	}
 	flag.Parse()

@@ -35,8 +35,12 @@ func printText(v interface{}) {
 					fmt.Printf("%s\n", r.Stderr)
 				}
 				if r.Err != nil {
-					fmt.Printf("%s\n", "Error =>")
+					fmt.Printf("%s ", "Error =>")
 					fmt.Printf("%s\n", r.Err.Error())
+				}
+
+				if r.Stdout == "" && r.Stderr == "" && r.Err == nil {
+					fmt.Println()
 				}
 			}
 			if len(response) > 1 {

@@ -53,7 +53,7 @@ func printTaskResult(result SshTaskResult) {
 }
 
 func printActionResult(result SshActionResult) {
-	for address, response := range result.Result {
+	for address, response := range result.StepResult {
 		fmt.Printf("[%-18s] ---------------------------------------------------------\n", address)
 		for _, r := range response {
 			if r.Stdout != "" {
@@ -73,12 +73,9 @@ func printActionResult(result SshActionResult) {
 				}
 			}
 
-			if r.Stdout == "" && r.Stderr == "" && r.Err == nil && r.Status == nil {
-				fmt.Println()
+			if len(response) > 1 {
+				fmt.Printf("%s\n", "------")
 			}
-		}
-		if len(response) > 1 {
-			fmt.Printf("%s\n", "------")
 		}
 	}
 }

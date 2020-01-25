@@ -9,8 +9,8 @@ import (
 	"time"
 )
 
-func withTimeout(fn func(interface{}) sshResponse, arg interface{}, timeout time.Duration) sshResponse {
-	result := make(chan sshResponse, 1)
+func withTimeout(fn func(interface{}) SshResponse, arg interface{}, timeout time.Duration) SshResponse {
+	result := make(chan SshResponse, 1)
 	go func() {
 		defer close(result)
 		result <- fn(arg)
@@ -20,7 +20,7 @@ func withTimeout(fn func(interface{}) sshResponse, arg interface{}, timeout time
 	case r := <-result:
 		return r
 	case <-time.After(timeout):
-		return sshResponse{Err: TimeoutErr}
+		return SshResponse{Err: TimeoutErr}
 	}
 }
 

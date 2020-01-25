@@ -29,10 +29,10 @@ type SshAction struct {
 }
 
 type SshActionResult struct {
-	Name   string
-	Target string
-	Result map[string][]sshResponse
-	Err    error
+	Name       string
+	Target     string
+	StepResult map[string][]SshResponse
+	Err        error
 }
 
 func (s *SshAction) checkAction() error {
@@ -93,19 +93,19 @@ func (s *SshAction) Do() SshActionResult {
 	if !s.Single {
 		sshActionResult.Target = s.Group
 
-		responseCh := make(chan map[string][]sshResponse, 1)
+		responseCh := make(chan map[string][]SshResponse, 1)
 		defer close(responseCh)
 		s.do4group(ctx, responseCh)
 
-		sshActionResult.Result = <-responseCh
+		sshActionResult.StepResult = <-responseCh
 	} else {
 		sshActionResult.Target = s.Detail.Address
 
-		responseCh := make(chan []sshResponse, 1)
+		responseCh := make(chan []SshResponse, 1)
 		defer close(responseCh)
 		s.do4host(ctx, s.Detail, responseCh)
 
-		sshActionResult.Result[s.Detail.Address] = <-responseCh
+		sshActionResult.StepResult[s.Detail.Address] = <-responseCh
 	}
 
 	return sshActionResult
@@ -155,11 +155,11 @@ func (s *SshAction) newSshCommand(hostDetail HostDetail) sshCommand {
 	return resut
 }
 
-func (s *SshAction) do4host(ctx context.Context, hostDetail HostDetail, resultCh chan []sshResponse) {
-	responseCh := make(chan sshResponse, 1)
+func (s *SshAction) do4host(ctx context.Context, hostDetail HostDetail, resultCh chan []SshResponse) {
+	responseCh := make(chan SshResponse, 1)
 	defer close(responseCh)
 
-	result := make([]sshResponse, 0)
+	result := make([]SshResponse, 0)
 
 	for _, action := range s.Steps {
 		switch action.Type {
@@ -187,8 +187,8 @@ func (s *SshAction) do4host(ctx context.Context, hostDetail HostDetail, resultCh
 	resultCh <- result
 }
 
-func (s *SshAction) do4group(ctx context.Context, resultCh chan map[string][]sshResponse) {
-	responseCh := make(chan []sshResponse, XConfig.Concurrency)
+func (s *SshAction) do4group(ctx context.Context, resultCh chan map[string][]SshResponse) {
+	responseCh := make(chan []SshResponse, XConfig.Concurrency)
 	defer close(responseCh)
 
 	xHost, _ := XHostMap[s.Group]
@@ -199,7 +199,7 @@ func (s *SshAction) do4group(ctx context.Context, resultCh chan map[string][]ssh
 	}()
 
 	size := len(xHost.AllHost)
-	result := make(map[string][]sshResponse)
+	result := make(map[string][]SshResponse)
 	for i := 0; i < size; i++ {
 		response := <-responseCh
 		result[response[0].Address] = response
@@ -210,8 +210,8 @@ func (s *SshAction) do4group(ctx context.Context, resultCh chan map[string][]ssh
 	resultCh <- result
 }
 
-func (s *SshAction) doCommand(ctx context.Context, resultCh chan sshResponse, sc sshCommand) {
-	rc := make(chan sshResponse, 1)
+func (s *SshAction) doCommand(ctx context.Context, resultCh chan SshResponse, sc sshCommand) {
+	rc := make(chan SshResponse, 1)
 	go func() {
 		defer close(rc)
 		select {
@@ -226,12 +226,12 @@ func (s *SshAction) doCommand(ctx context.Context, resultCh chan sshResponse, sc
 	case r := <-rc:
 		resultCh <- r
 	case <-ctx.Done():
-		resultCh <- sshResponse{Address: sc.Session.Client.Host, Err: ActionTimeoutErr}
+		resultCh <- SshResponse{Address: sc.Session.Client.Host, Err: ActionTimeoutErr}
 	}
 }
 
-func (s *SshAction) doCopy(ctx context.Context, resultCh chan sshResponse, sc sshCopy) {
-	rc := make(chan sshResponse, 1)
+func (s *SshAction) doCopy(ctx context.Context, resultCh chan SshResponse, sc sshCopy) {
+	rc := make(chan SshResponse, 1)
 	go func() {
 		defer close(rc)
 		select {
@@ -246,11 +246,11 @@ func (s *SshAction) doCopy(ctx context.Context, resultCh chan sshResponse, sc ss
 	case r := <-rc:
 		resultCh <- r
 	case <-ctx.Done():
-		resultCh <- sshResponse{Address: sc.Session.Client.Host, Err: ActionTimeoutErr}
+		resultCh <- SshResponse{Address: sc.Session.Client.Host, Err: ActionTimeoutErr}
 	}
 }
 
-func printProgress(response []sshResponse, end bool) {
+func printProgress(response []SshResponse, end bool) {
 	if XConfig.Output.Type == "text" && XConfig.Output.Progress {
 		if end {
 			fmt.Println()

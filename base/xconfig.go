@@ -72,6 +72,7 @@ func InitXConfig() {
 }
 
 var XBlackCommandRegexps = make([]*regexp.Regexp, 0)
+var XCommonCommandSet = make(map[string]bool)
 
 func setupXConfigDefault() {
 	if XConfig.Timeout.TaskTimeoutS <= 0 {
@@ -128,10 +129,10 @@ func setupXConfigDefault() {
 	}
 
 	if len(XConfig.CommonCommands) == 0 {
-		XConfig.CommonCommands = []string{"ls", "mkdir", "pwd", "cd", "cp", "mv", "cat", "grep", "find", "ping", "df", "ps"}
+		XConfig.CommonCommands = []string{"cat", "cd", "cp", "df", "awk", "date", "du", "chown", "chmod", "curl", "dos2unix", "echo", "find", "free", "grep", "hostname", "kill", "ln", "ls", "man", "mkdir", "mount", "mv", "openssl", "ping", "ps", "pwd", "rpm", "sed", "scp", "tar", "umask", "uname", "unzip", "zip", "uptime", "wget", "which", "who", "whoami"}
 	}
 	if len(XConfig.BlackCommandRegexps) == 0 {
-		XConfig.BlackCommandRegexps = []string{"^\\s*(vi|vim)\\s+", "^\\s*top\\s*$"}
+		XConfig.BlackCommandRegexps = []string{"^\\s*(vi|vim)\\s+", "^\\s*top\\s*$", "^\\s*expect\\s*$", "^\\s*more\\s*$", "^\\s*less\\s*$", "^\\s*tailf\\s*$", "^\\s*tail\\s*f\\s*$"}
 	}
 
 	if XConfig.CommandSep == "" {
@@ -148,5 +149,9 @@ func setupXConfigDefault() {
 		} else {
 			XBlackCommandRegexps = append(XBlackCommandRegexps, blackCommand)
 		}
+	}
+
+	for _, commonCommand := range XConfig.CommonCommands {
+		XCommonCommandSet[commonCommand] = true
 	}
 }

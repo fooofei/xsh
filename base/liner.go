@@ -35,9 +35,9 @@ func showoptsCompleter(line string) (c []string) {
 }
 
 func cmdCompleter(line string) (c []string) {
-	for _, value := range XConfig.CommonCommands {
-		if strings.HasPrefix(value, strings.TrimLeft(line, " ")) {
-			c = append(c, value)
+	for command := range XCommonCommandSet {
+		if strings.HasPrefix(command, strings.TrimLeft(line, " ")) {
+			c = append(c, command)
 		}
 	}
 	return

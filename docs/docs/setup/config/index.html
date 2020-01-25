@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Config"><meta property="og:title" content="" />
 <meta property="og:description" content="系统配置  .xsh/config.yaml
- timeout:action_timeout_s: 3600command_timeout_s: 300copy_timeout_s: 600dial_timeout_s: 10command:port: 22ciphers:- aes128-ctr- aes192-ctr- aes256-ctr- aes128-gcm@openssh.com- arcfour256- arcfour128- aes128-cbc- 3des-cbc- aes192-cbc- aes256-cbcpty:term: width: 80height: 60ispeed: 14400ospeed: 14400interval_ms: 100copy:sftp_max_package_size: 32768override: falseskip: falsecache:expiration_s: 900cleanup_interval_s: 10ticker_interval_s: 10crypt:type: key: output:type: textprogress: falseconcurrency: 20common_commands:- cat- cd- cp- df- awk- date- du- chown- chmod- curl- dos2unix- echo- find- free- grep- hostname- ifconfig- kill- ln- ls- man- mkdir- mount- mv- openssl- ping- ps- pwd- rpm- sed- scp- tar- umask- uname- unzip- zip- uptime- wget- which- who- whoamiblack_command_regexps:- ^\s*(vi|vim)\s&#43;- ^\s*top\s*$- ^\s*expect\s*$- ^\s*more\s*$- ^\s*less\s*$- ^\s*tailf\s*$- ^\s*tail\s*\-f\s*$command_sep: ; 示例中字段值代表默认值" />
+ timeout:action_timeout_s: 3600command_timeout_s: 300copy_timeout_s: 600dial_timeout_s: 10command:port: 22ciphers:- aes128-ctr- aes192-ctr- aes256-ctr- aes128-gcm@openssh.com- arcfour256- arcfour128- aes128-cbc- 3des-cbc- aes192-cbc- aes256-cbcpty:term: width: 80height: 60ispeed: 14400ospeed: 14400interval_ms: 100copy:sftp_max_package_size: 32768override: falsecache:expiration_s: 900cleanup_interval_s: 10ticker_interval_s: 10crypt:type: key: output:type: textprogress: falseconcurrency: 20common_commands:- cat- cd- cp- df- awk- date- du- chown- chmod- curl- dos2unix- echo- find- free- grep- hostname- ifconfig- kill- ln- ls- man- mkdir- mount- mv- openssl- ping- ps- pwd- rpm- sed- scp- tar- umask- uname- unzip- zip- uptime- wget- which- who- whoamiblack_command_regexps:- ^\s*(vi|vim)\s&#43;- ^\s*top\s*$- ^\s*expect\s*$- ^\s*more\s*$- ^\s*less\s*$- ^\s*tailf\s*$- ^\s*tail\s*\-f\s*$command_sep: ; 示例中字段值代表默认值" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/setup/config/" />
 
@@ -203,7 +203,6 @@ command:
 copy:
   sftp_max_package_size: 32768
   override: false
-  skip: false
 cache:
   expiration_s: 900
   cleanup_interval_s: 10
@@ -313,7 +312,6 @@ command_sep: ;
 <pre><code>copy:                            
   sftp_max_package_size: 32768   # sftp传输时默认数据包大小，单位：字节
   override: false                # 目标存在时是否强制覆盖
-  skip: false                    # 目标存在时是否跳过
 </code></pre><h2 id="cachessh连接缓存配置">cache，ssh连接缓存配置</h2>
 <pre><code>cache:
   expiration_s: 900              # 连接保持时间

@@ -1,12 +1,12 @@
 hosts:
   - name: alpha01
-    auth: alpha
+    auth: alpha-root
     addresses:
       - 192.168.162.65
       - 192.168.173.132
 
   - name: alpha02
-    auth: alpha
+    auth: alpha-key
     addresses:
       - 192.168.170.109
       - 192.168.165.37

@@ -32,7 +32,6 @@ type config struct {
 	Copy struct {
 		SftpMaxPacketSize int  `yaml:"sftp_max_package_size,omitempty"`
 		Override          bool `yaml:"override,omitempty"`
-		Skip              bool `yaml:"skip,omitempty"`
 	} `yaml:"copy,omitempty"`
 
 	Cache struct {

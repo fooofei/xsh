@@ -8,4 +8,11 @@ auths:
     passphrase: ""
   - name: alpha-root
     username: root
-    password: XXXXXX
+    password: CdBmLlZd@0126
+  - name: alpha-key
+    username: abc
+    password: ""
+    sutype: "sudo -S su -"
+    supass: XXXXXX
+    privatekey: id_rsa
+    passphrase: Key@2wsx

@@ -5,6 +5,7 @@ import (
 	. "github.com/xied5531/xsh/base"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -40,8 +41,14 @@ func checkCommands(commands []string) error {
 
 func GetLocalPath(direction string, path string) (string, error) {
 	path = strings.Trim(path, " ")
-	if filepath.VolumeName(path) == "" {
-		return "", fmt.Errorf("local path must be full path")
+	if runtime.GOOS == "windows" {
+		if !strings.HasSuffix(filepath.VolumeName(path), ":") {
+			return "", fmt.Errorf("local path must be full path")
+		}
+	} else {
+		if !strings.HasPrefix(path, "/") {
+			return "", fmt.Errorf("local path must be full path")
+		}
 	}
 
 	p, e := filepath.Abs(path)

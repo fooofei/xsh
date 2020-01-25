@@ -49,7 +49,6 @@ type config struct {
 
 	Output struct {
 		Type     string `yaml:"type,omitempty"`
-		Ordered  bool   `yaml:"ordered,omitempty"`
 		Progress bool   `yaml:"progress,omitempty"`
 	} `yaml:"output,omitempty"`
 

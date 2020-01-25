@@ -7,7 +7,7 @@
   </url>
   
   <url>
-    <loc>https://xied5531.github.io/xsh/docs/</loc>
+    <loc>https://xied5531.github.io/xsh/docs/example/</loc>
   </url>
   
   <url>
@@ -47,18 +47,6 @@
   </url>
   
   <url>
-    <loc>https://xied5531.github.io/xsh/docs/overview/build/</loc>
-  </url>
-  
-  <url>
-    <loc>https://xied5531.github.io/xsh/docs/overview/features/</loc>
-  </url>
-  
-  <url>
-    <loc>https://xied5531.github.io/xsh/docs/overview/start/</loc>
-  </url>
-  
-  <url>
     <loc>https://xied5531.github.io/xsh/docs/setup/auth/</loc>
   </url>
   
@@ -71,7 +59,15 @@
   </url>
   
   <url>
+    <loc>https://xied5531.github.io/xsh/docs/start/</loc>
+  </url>
+  
+  <url>
     <loc>https://xied5531.github.io/xsh/categories/</loc>
+  </url>
+  
+  <url>
+    <loc>https://xied5531.github.io/xsh/docs/</loc>
   </url>
   
   <url>

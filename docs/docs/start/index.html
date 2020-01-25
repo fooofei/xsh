@@ -4,12 +4,12 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Crypt"><meta property="og:title" content="" />
-<meta property="og:description" content="" />
+<meta name="description" content="Start"><meta property="og:title" content="" />
+<meta property="og:description" content="快速开始 构建 git clone https://github.com/xied5531/xsh.gitcd xshgo build帮助 $ xsh.exe -h准备  配置认证信息 配置主机组信息  开始  临时在主机组上执行命令 临时往主机组上传输文件 通过任务脚本化在主机组上执行组合动作 需要常驻在主机组上长时间执行命令或传输文件  " />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/crypt/" />
+<meta property="og:url" content="https://xied5531.github.io/xsh/docs/start/" />
 
-<title>Crypt | xsh</title>
+<title>Start | xsh</title>
 <link rel="icon" href="/xsh/favicon.png" type="image/x-icon">
 
 
@@ -58,14 +58,8 @@ https://github.com/alex-shpak/hugo-book
 
 
   <hr/>
+<p><a href="/xsh/docs/start/"class=active>快速开始</a></p>
 <ul>
-<li>概述
-<ul>
-<li><a href="/xsh/docs/overview/features/">特性</a></li>
-<li><a href="/xsh/docs/overview/build/">构建</a></li>
-<li><a href="/xsh/docs/overview/start/">快速开始</a></li>
-</ul>
-</li>
 <li>配置
 <ul>
 <li><a href="/xsh/docs/setup/config/">系统配置</a></li>
@@ -75,19 +69,20 @@ https://github.com/alex-shpak/hugo-book
 </li>
 <li>示例
 <ul>
-<li>交互式操作
+<li><a href="/xsh/docs/example/">交互式操作</a>
 <ul>
 <li><a href="/xsh/docs/example/env/">切换环境</a></li>
 <li><a href="/xsh/docs/example/command/">执行命令</a></li>
 <li><a href="/xsh/docs/example/copy/">上传下载</a></li>
-<li><a href="/xsh/docs/example/crypt/"class=active>加解密</a></li>
 </ul>
 </li>
 <li>命令行操作
 <ul>
-<li><a href="/xsh/docs/example/cli/cmd/">命令行动作</a></li>
-<li><a href="/xsh/docs/example/cli/task/">脚本任务编排</a></li>
-<li><a href="/xsh/docs/example/cli/value/">带变量的脚本任务</a></li>
+<li><a href="/xsh/docs/example/cli/crypt/">加解密</a></li>
+<li><a href="/xsh/docs/example/cli/command/">执行命令</a></li>
+<li><a href="/xsh/docs/example/cli/copy/">上传下载</a></li>
+<li><a href="/xsh/docs/example/cli/task/">任务编排</a></li>
+<li><a href="/xsh/docs/example/cli/value/">带变量的任务</a></li>
 </ul>
 </li>
 </ul>
@@ -136,7 +131,7 @@ https://github.com/alex-shpak/hugo-book
     <img src="/xsh/svg/menu.svg" class="book-icon" alt="Menu" />
   </label>
 
-  <strong>Crypt</strong>
+  <strong>Start</strong>
 
   <label for="toc-control">
     <img src="/xsh/svg/toc.svg" class="book-icon" alt="Table of Contents" />
@@ -148,7 +143,18 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" class="hidden" id="toc-control" />
     <aside class="hidden clearfix">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#快速开始">快速开始</a>
+      <ul>
+        <li><a href="#构建">构建</a></li>
+        <li><a href="#帮助">帮助</a></li>
+        <li><a href="#准备">准备</a></li>
+        <li><a href="#开始">开始</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
 
     </aside>
@@ -158,7 +164,26 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-<article class="markdown"></article>
+<article class="markdown"><h1 id="快速开始">快速开始</h1>
+<h2 id="构建">构建</h2>
+<pre><code>git clone https://github.com/xied5531/xsh.git
+cd xsh
+go build
+</code></pre><h2 id="帮助">帮助</h2>
+<pre><code>$ xsh.exe -h
+</code></pre><h2 id="准备">准备</h2>
+<ul>
+<li><a href="/xsh/docs/setup/auth/">配置认证信息</a></li>
+<li><a href="/xsh/docs/setup/host/">配置主机组信息</a></li>
+</ul>
+<h2 id="开始">开始</h2>
+<ul>
+<li><a href="/xsh/docs/example/cli/command/">临时在主机组上执行命令</a></li>
+<li><a href="/xsh/docs/example/cli/copy/">临时往主机组上传输文件</a></li>
+<li><a href="/xsh/docs/example/cli/task/">通过任务脚本化在主机组上执行组合动作</a></li>
+<li><a href="/xsh/docs/example/">需要常驻在主机组上长时间执行命令或传输文件</a></li>
+</ul>
+</article>
  
       
 
@@ -179,7 +204,18 @@ https://github.com/alex-shpak/hugo-book
     
     <aside class="book-toc">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#快速开始">快速开始</a>
+      <ul>
+        <li><a href="#构建">构建</a></li>
+        <li><a href="#帮助">帮助</a></li>
+        <li><a href="#准备">准备</a></li>
+        <li><a href="#开始">开始</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
  
     </aside>

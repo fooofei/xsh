@@ -60,14 +60,8 @@ https://github.com/alex-shpak/hugo-book
 
 
   <hr/>
+<p><a href="/xsh/docs/start/">快速开始</a></p>
 <ul>
-<li>概述
-<ul>
-<li><a href="/xsh/docs/overview/features/">特性</a></li>
-<li><a href="/xsh/docs/overview/build/">构建</a></li>
-<li><a href="/xsh/docs/overview/start/">快速开始</a></li>
-</ul>
-</li>
 <li>配置
 <ul>
 <li><a href="/xsh/docs/setup/config/">系统配置</a></li>
@@ -77,7 +71,7 @@ https://github.com/alex-shpak/hugo-book
 </li>
 <li>示例
 <ul>
-<li>交互式操作
+<li><a href="/xsh/docs/example/">交互式操作</a>
 <ul>
 <li><a href="/xsh/docs/example/env/">切换环境</a></li>
 <li><a href="/xsh/docs/example/command/">执行命令</a></li>
@@ -151,7 +145,13 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" class="hidden" id="toc-control" />
     <aside class="hidden clearfix">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#概述">概述</a></li>
+    <li><a href="#原理">原理</a></li>
+    <li><a href="#核心特性">核心特性</a></li>
+  </ul>
+</nav>
 
 
     </aside>
@@ -161,8 +161,37 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-<article class="markdown"><p><img src="/xsh/images/home.png" alt="alt" />
-</p>
+<article class="markdown"><h1 id="概述">概述</h1>
+<blockquote>
+<p>基于ssh的能够在远程主机组上批量执行命令或上传下载文件的命令行工具（跨平台、无依赖、免安装）。</p>
+</blockquote>
+<h1 id="原理">原理</h1>
+<pre><code>                     ----------                          ----------    
+                     | config |  &lt;--------|        ---&gt;  | group1 |    
+                     ----------           |        |     ----------    
+                                          |        |                    ---&gt; command
+   ----------        ----------        -------     |     ----------     |
+   | auth   |  &lt;---  | host   |  &lt;---  | xsh |  ------&gt;  | group2 |  ---|
+   ----------        ----------        -------     |     ----------     |
+                                                   |                    ---&gt; copy
+                                                   |     ----------        
+                                                   ---&gt;  | group3 |
+                                                         ----------           
+</code></pre><ul>
+<li>config，控制xsh行为</li>
+<li>auth，定义认证信息</li>
+<li>host，定义主机组信息并关联auth信息</li>
+<li>xsh，根据指定的group主机组，建立ssh连接，执行命令或传输文件</li>
+</ul>
+<h1 id="核心特性">核心特性</h1>
+<ul>
+<li>运行模式：支持单命令行、任务编排、交互式常驻操作</li>
+<li>执行命令：支持单命令，多命令；支持普通用户执行、切换其他用户执行</li>
+<li>传输文件：支持文件和文件夹；支持上传和下载</li>
+<li>任务编排：支持行为组合；支持自定义变量</li>
+<li>结果输出：支持text、json、yaml</li>
+<li>安全性：支持配置命令黑名单、密码加密保存、密码和私钥认证、超时控制</li>
+</ul>
 </article>
  
       
@@ -184,7 +213,13 @@ https://github.com/alex-shpak/hugo-book
     
     <aside class="book-toc">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#概述">概述</a></li>
+    <li><a href="#原理">原理</a></li>
+    <li><a href="#核心特性">核心特性</a></li>
+  </ul>
+</nav>
 
  
     </aside>

@@ -5,7 +5,9 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Host"><meta property="og:title" content="" />
-<meta property="og:description" content="" />
+<meta property="og:description" content="主机组配置  .xsh/host.yaml
+ hosts:- name: alpha-123auth: alphaport: 22addresses:- 192.168.187.117groups:- alpha01- alpha02details:- address: 192.168.184.236port: 22username: rootpassword: XXXXXXsutype: &quot;sudo -S su -&quot;supass: XXXXXXprivatekey: &quot;&quot;passphrase: &quot;&quot; 无默认值，hosts为列表类型
+ 配置说明  - name: alpha-123 # 名称auth: alpha # 认证名称，需要和auth.yaml中名称配置项一致port: 22 # 端口，可选，默认：22addresses: # 地址列表- 192.168.187.117groups: # 主机组列表，名称需要和host.yaml中名称配置项一致- alpha01- alpha02details: # 特殊配置项的主机列表信息，配置项和auth含义保持一致- address: 192." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/setup/host/" />
 
@@ -58,14 +60,8 @@ https://github.com/alex-shpak/hugo-book
 
 
   <hr/>
+<p><a href="/xsh/docs/start/">快速开始</a></p>
 <ul>
-<li>概述
-<ul>
-<li><a href="/xsh/docs/overview/features/">特性</a></li>
-<li><a href="/xsh/docs/overview/build/">构建</a></li>
-<li><a href="/xsh/docs/overview/start/">快速开始</a></li>
-</ul>
-</li>
 <li>配置
 <ul>
 <li><a href="/xsh/docs/setup/config/">系统配置</a></li>
@@ -75,7 +71,7 @@ https://github.com/alex-shpak/hugo-book
 </li>
 <li>示例
 <ul>
-<li>交互式操作
+<li><a href="/xsh/docs/example/">交互式操作</a>
 <ul>
 <li><a href="/xsh/docs/example/env/">切换环境</a></li>
 <li><a href="/xsh/docs/example/command/">执行命令</a></li>
@@ -149,7 +145,15 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" class="hidden" id="toc-control" />
     <aside class="hidden clearfix">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#主机组配置">主机组配置</a>
+      <ul>
+        <li><a href="#配置说明">配置说明</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
 
     </aside>
@@ -159,7 +163,53 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-<article class="markdown"></article>
+<article class="markdown"><h1 id="主机组配置">主机组配置</h1>
+<blockquote>
+<p>.xsh/host.yaml</p>
+</blockquote>
+<pre><code>hosts:
+  - name: alpha-123
+    auth: alpha
+    port: 22
+    addresses:
+      - 192.168.187.117
+    groups:
+      - alpha01
+      - alpha02
+    details:
+      - address: 192.168.184.236
+        port: 22
+        username: root
+        password: XXXXXX
+        sutype: &quot;sudo -S su -&quot;
+        supass: XXXXXX
+        privatekey: &quot;&quot;
+        passphrase: &quot;&quot;
+</code></pre><blockquote>
+<p>无默认值，hosts为列表类型</p>
+</blockquote>
+<h2 id="配置说明">配置说明</h2>
+<pre><code>  - name: alpha-123                       # 名称
+    auth: alpha                           # 认证名称，需要和auth.yaml中名称配置项一致
+    port: 22                              # 端口，可选，默认：22
+    addresses:                            # 地址列表
+      - 192.168.187.117
+    groups:                               # 主机组列表，名称需要和host.yaml中名称配置项一致
+      - alpha01
+      - alpha02
+    details:                              # 特殊配置项的主机列表信息，配置项和auth含义保持一致
+      - address: 192.168.184.236          # 地址
+        port: 22                          # 端口，可选，默认：22
+        username: root
+        password: XXXXXX
+        sutype: &quot;sudo -S su -&quot;
+        supass: XXXXXX
+        privatekey: &quot;&quot;
+        passphrase: &quot;&quot;
+</code></pre><blockquote>
+<p>addresses地址列表支持IPv4地址段：<code>192.168.187.120-192.168.187.150</code>，包含两端的IP地址，仅支持最后16位变化。</p>
+</blockquote>
+</article>
  
       
 
@@ -180,7 +230,15 @@ https://github.com/alex-shpak/hugo-book
     
     <aside class="book-toc">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#主机组配置">主机组配置</a>
+      <ul>
+        <li><a href="#配置说明">配置说明</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
  
     </aside>

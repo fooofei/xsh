@@ -10,7 +10,6 @@ import (
 
 type config struct {
 	Timeout struct {
-		TaskTimeoutS    int `yaml:"task_timeout_s,omitempty"`
 		ActionTimeoutS  int `yaml:"action_timeout_s,omitempty"`
 		CommandTimeoutS int `yaml:"command_timeout_s,omitempty"`
 		CopyTimeoutS    int `yaml:"copy_timeout_s,omitempty"`
@@ -83,9 +82,6 @@ var XBlackCommandRegexps = make([]*regexp.Regexp, 0)
 var XCommonCommandSet = make(map[string]bool)
 
 func setupXConfigDefault() {
-	if XConfig.Timeout.TaskTimeoutS <= 0 {
-		XConfig.Timeout.TaskTimeoutS = 21600
-	}
 	if XConfig.Timeout.ActionTimeoutS <= 0 {
 		XConfig.Timeout.ActionTimeoutS = 3600
 	}
@@ -172,9 +168,6 @@ func setupXConfigDefault() {
 }
 
 func checkXConfig() {
-	if !(XConfig.Timeout.TaskTimeoutS > XConfig.Timeout.ActionTimeoutS) {
-		log.Fatalf("condition check failed: timeout.task_timeout_s > timeout.action_timeout_s")
-	}
 	if !(XConfig.Timeout.ActionTimeoutS > XConfig.Timeout.CommandTimeoutS && XConfig.Timeout.ActionTimeoutS > XConfig.Timeout.CopyTimeoutS) {
 		log.Fatalf("condition check failed: timeout.action_timeout_s > timeout.command_timeout_s && timeout.action_timeout_s > timeout.copy_timeout_s")
 	}

@@ -5,6 +5,7 @@ import "errors"
 var (
 	TimeoutErr       = errors.New("timeout")
 	ActionTimeoutErr = errors.New("do action timeout")
+	ActionEmptyErr   = errors.New("action empty")
 	CommandEmptyErr  = errors.New("command can not empty")
 	CommandSuErr     = errors.New("command su info illegal")
 	CryptTypeUnknown = errors.New("crypt type unknown")

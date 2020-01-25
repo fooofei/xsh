@@ -24,18 +24,23 @@ func printText(v interface{}) {
 			fmt.Printf("%s\n", ar.Err.Error())
 			return
 		}
-		for _, c := range ar.Result {
-			fmt.Printf("[%-18s] ---------------------------------------------------------\n", c.Address)
-			if c.Stdout != "" {
-				fmt.Printf("%s\n", c.Stdout)
+		for address, response := range ar.Result {
+			fmt.Printf("[%-18s] ---------------------------------------------------------\n", address)
+			for _, r := range response {
+				if r.Stdout != "" {
+					fmt.Printf("%s\n", r.Stdout)
+				}
+				if r.Stderr != "" {
+					fmt.Printf("%s\n", "Warn =>")
+					fmt.Printf("%s\n", r.Stderr)
+				}
+				if r.Err != nil {
+					fmt.Printf("%s\n", "Error =>")
+					fmt.Printf("%s\n", r.Err.Error())
+				}
 			}
-			if c.Stderr != "" {
-				fmt.Printf("%s\n", "Warn =>")
-				fmt.Printf("%s\n", c.Stderr)
-			}
-			if c.Err != nil {
-				fmt.Printf("%s\n", "Error =>")
-				fmt.Printf("%s\n", c.Err.Error())
+			if len(response) > 1 {
+				fmt.Printf("%s\n", "------")
 			}
 		}
 	} else {

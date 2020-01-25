@@ -90,19 +90,12 @@ func runCommand(line string) bool {
 		return false
 	}
 
-	cmds := strings.Split(line, XConfig.CommandSep)
-	if len(cmds) == 0 {
-		return false
-	}
-
 	sshAction := newSshAction()
-	sshAction.Commands = cmds
-
 	switch CurEnv.ActionType {
 	case ":do":
-		do(sshAction)
+		do(sshAction, line, false)
 	case ":sudo":
-		sudo(sshAction)
+		do(sshAction, line, true)
 	}
 
 	return false
@@ -112,11 +105,11 @@ func newSshAction() SshAction {
 	result := SshAction{
 		Name:       "Default",
 		TargetType: CurEnv.TargetType,
+		SubActions: make([]SubAction, 1),
 	}
 
 	if result.TargetType == "group" {
 		result.HostGroup = CurEnv.HostGroup
-
 	} else {
 		authentication := XAuthMap[CurEnv.Authentication]
 		result.HostDetail = HostDetail{

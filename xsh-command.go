@@ -67,12 +67,16 @@ func set(line string) {
 	}
 }
 
-func do(action SshAction) {
-	Print(action.Do())
-}
+func do(action SshAction, line string, su bool) {
+	cmds := strings.Split(line, XConfig.CommandSep)
+	if len(cmds) == 0 {
+		return
+	}
 
-func sudo(action SshAction) {
-	action.Su = true
+	action.SubActions[0].ActionType = "ssh"
+	action.SubActions[0].Commands = cmds
+	action.SubActions[0].Su = su
+
 	Print(action.Do())
 }
 

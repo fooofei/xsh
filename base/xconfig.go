@@ -41,8 +41,9 @@ type config struct {
 	} `yaml:"crypt,omitempty"`
 
 	Output struct {
-		Type    string `yaml:"type,omitempty"`
-		Ordered bool   `yaml:"ordered,omitempty"`
+		Type     string `yaml:"type,omitempty"`
+		Ordered  bool   `yaml:"ordered,omitempty"`
+		Progress bool   `yaml:"progress,omitempty"`
 	} `yaml:"output,omitempty"`
 
 	Concurrency         int      `yaml:"concurrency,omitempty"`

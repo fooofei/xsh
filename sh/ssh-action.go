@@ -2,6 +2,7 @@ package sh
 
 import (
 	"context"
+	"fmt"
 	. "github.com/xied5531/xsh/base"
 	"time"
 )
@@ -163,7 +164,9 @@ func (s *SshAction) do4group(ctx context.Context, resultCh chan map[string][]ssh
 	for i := 0; i < size; i++ {
 		response := <-responseCh
 		result[response[0].Address] = response
+		printProgress(false)
 	}
+	printProgress(true)
 
 	resultCh <- result
 }
@@ -185,5 +188,15 @@ func (s *SshAction) doCommands(ctx context.Context, resultCh chan sshResponse, s
 		resultCh <- r
 	case <-ctx.Done():
 		resultCh <- sshResponse{Address: sc.Session.Client.Host, Err: ActionTimeoutErr}
+	}
+}
+
+func printProgress(end bool) {
+	if XConfig.Output.Type == "text" && XConfig.Output.Progress {
+		if end {
+			fmt.Println()
+		} else {
+			fmt.Print(".")
+		}
 	}
 }

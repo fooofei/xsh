@@ -14,7 +14,7 @@ const (
 )
 
 var (
-	Keywords = []string{":help", ":show", ":set", ":do", ":sudo", ":encrypt", ":decrypt"}
+	Keywords = []string{":help", ":show", ":set", ":reload", ":do", ":sudo", ":encrypt", ":decrypt"}
 	setopts  = []string{"group=", "address="}
 	showopts = []string{"address", "env"}
 )

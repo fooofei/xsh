@@ -39,13 +39,13 @@ func (s *sshSession) run(arg interface{}) sshResponse {
 
 	session, err := s.newSession()
 	if err != nil {
-		return sshResponse{Address: s.Client.Host, Err: err}
+		return sshResponse{Err: err}
 	}
 	defer session.Close()
 
 	stdout, stderr, err := session.OutputStdoutStderr(command)
 	if err != nil {
-		return sshResponse{Address: s.Client.Host, Err: err}
+		return sshResponse{Err: err}
 	}
 
 	return sshResponse{
@@ -63,13 +63,13 @@ func (s *sshSession) shell(arg interface{}) sshResponse {
 
 	session, err := s.newSession()
 	if err != nil {
-		return sshResponse{Address: s.Client.Host, Err: err}
+		return sshResponse{Err: err}
 	}
 	defer session.Close()
 
 	stdin, err := session.StdinPipe()
 	if err != nil {
-		return sshResponse{Address: s.Client.Host, Err: err}
+		return sshResponse{Err: err}
 	}
 
 	var stdoutBuf bytes.Buffer
@@ -80,16 +80,16 @@ func (s *sshSession) shell(arg interface{}) sshResponse {
 
 	err = session.Shell()
 	if err != nil {
-		return sshResponse{Address: s.Client.Host, Err: err}
+		return sshResponse{Err: err}
 	}
 
 	if err = callback(stdin); err != nil {
-		return sshResponse{Address: s.Client.Host, Err: err}
+		return sshResponse{Err: err}
 	}
 
 	err = session.Wait()
 	if err != nil {
-		return sshResponse{Address: s.Client.Host, Err: err}
+		return sshResponse{Err: err}
 	}
 
 	return sshResponse{

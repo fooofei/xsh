@@ -1,12 +1,10 @@
 package base
 
 import (
-	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"path"
-	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -109,7 +107,7 @@ func postProcessHostGroup() {
 
 		if len(xHost.HostAddresses) != 0 {
 			for _, address := range xHost.HostAddresses {
-				if isUseRange(address) {
+				if strings.Contains(address, "-") {
 					if ips, err := processIpRange(address); err != nil {
 						log.Fatalf("Hostgroup[%s] HostAddresses[%s] illegal, err: %v", name, address, err)
 					} else {
@@ -162,49 +160,56 @@ func postProcessHostGroup() {
 	}
 }
 
-func isUseRange(name string) bool {
-	if ok, _ := regexp.MatchString("^[0-9.]+-[0-9.]+$", name); !ok {
-		return false
-	}
-	return true
-}
-
 //64.233.196.0-64.233.196.25
 func processIpRange(ip string) ([]string, error) {
 	fields := strings.Split(ip, "-")
-	if !CheckIp(fields[0]) || !CheckIp(fields[1]) {
-		log.Fatalf("ip[%s] illegal", ip)
+	if !CheckIp4(fields[0]) || !CheckIp4(fields[1]) {
+		log.Fatalf("ip range[%s] format illegal", ip)
 	}
 
-	start := ip2num(fields[0])
-	end := ip2num(fields[1])
+	sFields := strings.Split(fields[0], ".")
+	eFields := strings.Split(fields[1], ".")
 
-	if start >= end {
-		log.Fatalf("ip[%s] illegal", ip)
+	s0 := sFields[0]
+	s1 := sFields[1]
+	s2 := sFields[2]
+	s3, _ := strconv.Atoi(sFields[3])
+
+	e0 := eFields[0]
+	e1 := eFields[1]
+	e2 := eFields[2]
+	e3, _ := strconv.Atoi(eFields[3])
+
+	if s0 != e0 || s1 != e1 || s2 > e2 {
+		log.Fatalf("ip range[%s] illegal", ip)
+	}
+
+	if s2 == e2 && s3 >= e3 {
+		log.Fatalf("ip range[%s] illegal", ip)
 	}
 
 	var ret []string
-	for i := start; i <= end; i++ {
-		if i&0xff > 0 {
-			ret = append(ret, num2ip(i))
+
+	if s2 == e2 {
+		for i := s3; i <= e3; i++ {
+			ret = append(ret, s0+"."+s1+"."+s2+"."+strconv.Itoa(i))
+		}
+	} else {
+		s2, _ := strconv.Atoi(sFields[2])
+		e2, _ := strconv.Atoi(eFields[2])
+
+		for i := s3; i <= 255; i++ {
+			ret = append(ret, s0+"."+s1+"."+strconv.Itoa(s2)+"."+strconv.Itoa(i))
+		}
+		for i := s2 + 1; i < e2; i++ {
+			for j := 0; j <= 255; j++ {
+				ret = append(ret, s0+"."+s1+"."+strconv.Itoa(i)+"."+strconv.Itoa(j))
+			}
+		}
+		for i := 0; i <= e3; i++ {
+			ret = append(ret, s0+"."+s1+"."+strconv.Itoa(e2)+"."+strconv.Itoa(i))
 		}
 	}
+
 	return ret, nil
-}
-
-func ip2num(ip string) int {
-	fields := strings.Split(ip, ".")
-	a, _ := strconv.Atoi(fields[0])
-	b, _ := strconv.Atoi(fields[1])
-	c, _ := strconv.Atoi(fields[2])
-	d, _ := strconv.Atoi(fields[3])
-	return a<<24 | b<<16 | c<<8 | d
-}
-
-func num2ip(num int) string {
-	a := (num >> 24) & 0xff
-	b := (num >> 16) & 0xff
-	c := (num >> 8) & 0xff
-	d := num & 0xff
-	return fmt.Sprintf("%d.%d.%d.%d", a, b, c, d)
 }

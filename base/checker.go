@@ -16,6 +16,15 @@ func CheckIp(ip string) bool {
 	return net.ParseIP(ip) != nil
 }
 
+func CheckIp4(ip string) bool {
+	p := net.ParseIP(ip)
+	if p != nil {
+		return p.To4() != nil
+	}
+
+	return false
+}
+
 func ContainsAddress(address string, hostDetails []HostDetail) bool {
 	for _, value := range hostDetails {
 		if value.Address == address {

@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	. "github.com/xied5531/xsh/base"
+	. "github.com/xied5531/xsh/out"
 	. "github.com/xied5531/xsh/sh"
 	"log"
+	"sort"
 	"strings"
 )
 
@@ -75,20 +77,20 @@ func runCommand(line string) bool {
 		if CurEnv.ActionType != ":do" {
 			CurEnv.ActionType = ":do"
 			SaveEnv()
-			return false
 		}
+		return false
 	case ":sudo":
 		if CurEnv.ActionType != ":sudo" {
 			CurEnv.ActionType = ":sudo"
 			SaveEnv()
-			return false
 		}
+		return false
 	case ":copy":
 		if CurEnv.ActionType != ":copy" {
 			CurEnv.ActionType = ":copy"
 			SaveEnv()
-			return false
 		}
+		return false
 	}
 
 	if strings.HasPrefix(line, ":") {
@@ -96,31 +98,87 @@ func runCommand(line string) bool {
 		return false
 	}
 
-	sshAction := newSshAction()
 	switch CurEnv.ActionType {
 	case ":do":
-		do(sshAction, line, false)
+		if action := newCommandAction(line, false); action != nil {
+			Out(action.Do())
+		}
 	case ":sudo":
-		do(sshAction, line, true)
+		if action := newCommandAction(line, true); action != nil {
+			Out(action.Do())
+		}
 	case ":copy":
-		copy(sshAction, line)
+		if action, err := newCopyAction(line); err != nil {
+			Out(action.Do())
+		} else {
+			Error.Println(err.Error())
+		}
 	}
 
 	return false
 }
 
-func newSshAction() SshAction {
-	result := SshAction{
-		Name:       "Default",
-		TargetType: CurEnv.TargetType,
-		SubActions: make([]SubAction, 1),
+func newCommandAction(line string, su bool) *SshAction {
+	cmds := strings.Split(line, XConfig.CommandSep)
+	if len(cmds) == 0 {
+		return nil
 	}
 
-	if result.TargetType == "group" {
-		result.HostGroup = CurEnv.HostGroup
+	action := &SshAction{
+		Name:       "Default",
+		TargetType: CurEnv.TargetType,
+		SubActions: []SubAction{{
+			ActionType: "command",
+			Commands:   cmds,
+			Su:         su,
+		}},
+	}
+	setupActionTaget(action)
+
+	return action
+}
+
+func newCopyAction(line string) (*SshAction, error) {
+	var direction string
+	var fields []string
+
+	if strings.Contains(line, "->") {
+		direction = "upload"
+		fields = strings.Split(line, "->")
+	} else if strings.Contains(line, "<-") {
+		direction = "download"
+		fields = strings.Split(line, "<-")
+	} else {
+		return nil, fmt.Errorf("line[%s] format illegal", line)
+	}
+
+	local, le := GetLocalPath(direction, fields[0])
+	remote, re := GetRemotePath(direction, fields[1])
+	if le != nil || re != nil {
+		return nil, fmt.Errorf("line[%s] path illegal, local: %v; remote: %v", line, le, re)
+	}
+
+	action := &SshAction{
+		Name:       "Default",
+		TargetType: CurEnv.TargetType,
+		SubActions: []SubAction{{
+			ActionType: "copy",
+			Direction:  direction,
+			Local:      local,
+			Remote:     remote,
+		}},
+	}
+	setupActionTaget(action)
+
+	return action, nil
+}
+
+func setupActionTaget(action *SshAction) {
+	if action.TargetType == "group" {
+		action.HostGroup = CurEnv.HostGroup
 	} else {
 		authentication := XAuthMap[CurEnv.Authentication]
-		result.HostDetail = HostDetail{
+		action.HostDetail = HostDetail{
 			Address:    CurEnv.HostAddress,
 			Username:   authentication.Username,
 			Password:   authentication.Password,
@@ -130,5 +188,90 @@ func newSshAction() SshAction {
 			SuPass:     authentication.SuPass,
 		}
 	}
-	return result
+}
+
+func show(line string) {
+	fields := strings.Fields(line)
+	if len(fields) > 1 {
+		switch fields[1] {
+		case "address":
+			group, _ := XHostMap[CurEnv.HostGroup]
+			addresses := make([]string, len(group.AllHost))
+			for i, v := range group.AllHost {
+				addresses[i] = v.Address
+			}
+			sort.Strings(addresses)
+			PrintYaml(addresses)
+		case "env":
+			PrintYaml(CurEnv)
+		}
+	} else {
+		fmt.Println(":show argument not enough, please :help first.")
+	}
+}
+
+func set(line string) {
+	fields := strings.Fields(line)
+	if len(fields) > 1 {
+		for _, v := range fields[1:] {
+			currFields := strings.Split(v, "=")
+			if len(currFields) != 2 {
+				fmt.Println(":set argument illegal, please :help first.")
+				return
+			}
+			switch currFields[0] {
+			case "group":
+				if group, ok := XHostMap[currFields[1]]; !ok {
+					fmt.Printf("group[%s] not found\n", currFields[1])
+					return
+				} else {
+					CurEnv.TargetType = currFields[0]
+					CurEnv.HostGroup = group.Name
+					CurEnv.Authentication = group.Authentication
+				}
+			case "address":
+				if !CheckIp(currFields[1]) {
+					fmt.Printf("address[%s] illegal\n", currFields[1])
+					return
+				}
+				if CurEnv.Authentication == "" {
+					fmt.Println("authentication empty, please :set group= first.")
+					return
+				}
+				if !ContainsAddress(currFields[1], XHostMap[CurEnv.HostGroup].AllHost) {
+					fmt.Printf("address[%s] not found in group [%s]\n", currFields[1], CurEnv.HostGroup)
+					return
+				}
+				CurEnv.TargetType = currFields[0]
+				CurEnv.HostAddress = currFields[1]
+			}
+		}
+		SaveEnv()
+	} else {
+		fmt.Println(":set argument not enough, please :help first.")
+	}
+}
+
+func encrypt(line string) {
+	fields := strings.Fields(line)
+	if len(fields) == 2 {
+		fmt.Println(GetMaskPassword(fields[1]))
+	} else {
+		Error.Printf("line[%s] illegal", line)
+	}
+}
+
+func decrypt(line string) {
+	fields := strings.Fields(line)
+	if len(fields) == 2 {
+		fmt.Println(GetPlainPassword(fields[1]))
+	} else {
+		Error.Printf("line[%s] illegal", line)
+	}
+}
+
+func reload() {
+	InitXConfig()
+	InitXAuth()
+	InitXHost()
 }

@@ -97,7 +97,12 @@ func (s SshTask) Do() SshTaskResult {
 	}
 
 	for _, action := range xTask.SshActions {
-		result.SshActionResults = append(result.SshActionResults, action.Do())
+		actionResult := action.Do()
+		result.SshActionResults = append(result.SshActionResults, actionResult)
+		if actionResult.Err != nil {
+			result.Err = fmt.Errorf("Interrupted due to an error: %s\n", actionResult.Err.Error())
+			break
+		}
 	}
 
 	return result

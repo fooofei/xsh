@@ -41,16 +41,17 @@ func printText(v interface{}) {
 }
 
 func printTaskResult(result SshTaskResult) {
+	fmt.Printf("[%-36s] +++++++++++++++++++++++++++++++++++++++\n", result)
 	if result.Err != nil {
-		fmt.Printf("task[%s] error: %s\n", result.Name, result.Err.Error())
+		fmt.Printf("error: %s\n", result.Err.Error())
 	}
 
-	for _, result := range result.SshActionResults {
-		fmt.Printf("[%-36s] =======================================\n", result.Target+": "+result.Name)
-		if result.Err != nil {
-			fmt.Printf("error: %s\n", result.Err.Error())
+	for _, actionResult := range result.SshActionResults {
+		fmt.Printf("[%-36s] =======================================\n", actionResult.Target+": "+actionResult.Name)
+		if actionResult.Err != nil {
+			fmt.Printf("error: %s\n", actionResult.Err.Error())
 		} else {
-			printActionResult(result)
+			printActionResult(actionResult)
 		}
 	}
 }

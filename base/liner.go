@@ -104,12 +104,20 @@ func wordCompleter(line string, pos int) (head string, completions []string, tai
 		}
 	}
 
-	i := strings.LastIndex(head, XConfig.CommandSep)
-	if i > 0 {
-		return head[:i] + XConfig.CommandSep, cmdCompleter(head[i+1:]), ""
-	} else {
-		return "", cmdCompleter(head), ""
+	if CurEnv.Group == "" {
+		return ":set group=", groupCompleter(""), ""
 	}
+
+	if CurEnv.Action == ":do" || CurEnv.Action == ":sudo" {
+		i := strings.LastIndex(head, XConfig.CommandSep)
+		if i > 0 {
+			return head[:i] + XConfig.CommandSep, cmdCompleter(head[i+1:]), ""
+		} else {
+			return "", cmdCompleter(head), ""
+		}
+	}
+
+	return head, nil, tail
 }
 
 func NewLiner() (*liner.State, error) {

@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Config"><meta property="og:title" content="" />
-<meta property="og:description" content="" />
+<meta property="og:description" content="系统配置  .xsh/config.yaml
+ timeout:action_timeout_s: 3600command_timeout_s: 300copy_timeout_s: 600dial_timeout_s: 10command:port: 22ciphers:- aes128-ctr- aes192-ctr- aes256-ctr- aes128-gcm@openssh.com- arcfour256- arcfour128- aes128-cbc- 3des-cbc- aes192-cbc- aes256-cbcpty:term: width: 80height: 60ispeed: 14400ospeed: 14400interval_ms: 100copy:sftp_max_package_size: 32768override: falseskip: falsecache:expiration_s: 900cleanup_interval_s: 10ticker_interval_s: 10crypt:type: key: output:type: textprogress: falseconcurrency: 20common_commands:- cat- cd- cp- df- awk- date- du- chown- chmod- curl- dos2unix- echo- find- free- grep- hostname- ifconfig- kill- ln- ls- man- mkdir- mount- mv- openssl- ping- ps- pwd- rpm- sed- scp- tar- umask- uname- unzip- zip- uptime- wget- which- who- whoamiblack_command_regexps:- ^\s*(vi|vim)\s&#43;- ^\s*top\s*$- ^\s*expect\s*$- ^\s*more\s*$- ^\s*less\s*$- ^\s*tailf\s*$- ^\s*tail\s*\-f\s*$command_sep: ; 示例中字段值代表默认值" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/setup/config/" />
 
@@ -58,14 +59,8 @@ https://github.com/alex-shpak/hugo-book
 
 
   <hr/>
+<p><a href="/xsh/docs/start/">快速开始</a></p>
 <ul>
-<li>概述
-<ul>
-<li><a href="/xsh/docs/overview/features/">特性</a></li>
-<li><a href="/xsh/docs/overview/build/">构建</a></li>
-<li><a href="/xsh/docs/overview/start/">快速开始</a></li>
-</ul>
-</li>
 <li>配置
 <ul>
 <li><a href="/xsh/docs/setup/config/"class=active>系统配置</a></li>
@@ -75,19 +70,20 @@ https://github.com/alex-shpak/hugo-book
 </li>
 <li>示例
 <ul>
-<li>交互式操作
+<li><a href="/xsh/docs/example/">交互式操作</a>
 <ul>
 <li><a href="/xsh/docs/example/env/">切换环境</a></li>
 <li><a href="/xsh/docs/example/command/">执行命令</a></li>
 <li><a href="/xsh/docs/example/copy/">上传下载</a></li>
-<li><a href="/xsh/docs/example/crypt/">加解密</a></li>
 </ul>
 </li>
 <li>命令行操作
 <ul>
-<li><a href="/xsh/docs/example/cli/cmd/">命令行动作</a></li>
-<li><a href="/xsh/docs/example/cli/task/">脚本任务编排</a></li>
-<li><a href="/xsh/docs/example/cli/value/">带变量的脚本任务</a></li>
+<li><a href="/xsh/docs/example/cli/crypt/">加解密</a></li>
+<li><a href="/xsh/docs/example/cli/command/">执行命令</a></li>
+<li><a href="/xsh/docs/example/cli/copy/">上传下载</a></li>
+<li><a href="/xsh/docs/example/cli/task/">任务编排</a></li>
+<li><a href="/xsh/docs/example/cli/value/">带变量的任务</a></li>
 </ul>
 </li>
 </ul>
@@ -148,7 +144,24 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" class="hidden" id="toc-control" />
     <aside class="hidden clearfix">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#系统配置">系统配置</a>
+      <ul>
+        <li><a href="#timeout超时设置">timeout，超时设置</a></li>
+        <li><a href="#command执行命令相关配置">command，执行命令相关配置</a></li>
+        <li><a href="#copy上传下载相关配置">copy，上传下载相关配置</a></li>
+        <li><a href="#cachessh连接缓存配置">cache，ssh连接缓存配置</a></li>
+        <li><a href="#crypt加解密配置">crypt，加解密配置</a></li>
+        <li><a href="#ouput输出配置">ouput，输出配置</a></li>
+        <li><a href="#concurrency并发">concurrency，并发</a></li>
+        <li><a href="#common_commands常用命令">common_commands，常用命令</a></li>
+        <li><a href="#black_command_regexps高危命令">black_command_regexps，高危命令</a></li>
+        <li><a href="#command_sep命令分割符">command_sep，命令分割符</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
 
     </aside>
@@ -158,7 +171,171 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-<article class="markdown"></article>
+<article class="markdown"><h1 id="系统配置">系统配置</h1>
+<blockquote>
+<p>.xsh/config.yaml</p>
+</blockquote>
+<pre><code>timeout:
+  action_timeout_s: 3600
+  command_timeout_s: 300
+  copy_timeout_s: 600
+  dial_timeout_s: 10
+command:
+  port: 22
+  ciphers:
+  - aes128-ctr
+  - aes192-ctr
+  - aes256-ctr
+  - aes128-gcm@openssh.com
+  - arcfour256
+  - arcfour128
+  - aes128-cbc
+  - 3des-cbc
+  - aes192-cbc
+  - aes256-cbc
+  pty:
+    term: 
+    width: 80
+    height: 60
+    ispeed: 14400
+    ospeed: 14400
+    interval_ms: 100
+copy:
+  sftp_max_package_size: 32768
+  override: false
+  skip: false
+cache:
+  expiration_s: 900
+  cleanup_interval_s: 10
+  ticker_interval_s: 10
+crypt:
+  type: 
+  key: 
+output:
+  type: text
+  progress: false
+concurrency: 20
+common_commands:
+- cat
+- cd
+- cp
+- df
+- awk
+- date
+- du
+- chown
+- chmod
+- curl
+- dos2unix
+- echo
+- find
+- free
+- grep
+- hostname
+- ifconfig
+- kill
+- ln
+- ls
+- man
+- mkdir
+- mount
+- mv
+- openssl
+- ping
+- ps
+- pwd
+- rpm
+- sed
+- scp
+- tar
+- umask
+- uname
+- unzip
+- zip
+- uptime
+- wget
+- which
+- who
+- whoami
+black_command_regexps:
+- ^\s*(vi|vim)\s+
+- ^\s*top\s*$
+- ^\s*expect\s*$
+- ^\s*more\s*$
+- ^\s*less\s*$
+- ^\s*tailf\s*$
+- ^\s*tail\s*\-f\s*$
+command_sep: ;
+
+</code></pre><blockquote>
+<p>示例中字段值代表默认值</p>
+</blockquote>
+<h2 id="timeout超时设置">timeout，超时设置</h2>
+<pre><code>timeout:
+  action_timeout_s: 3600
+  command_timeout_s: 300
+  copy_timeout_s: 600
+  dial_timeout_s: 10
+</code></pre><p>任务模型：</p>
+<pre><code>task.............................................
+    action1................................
+    action2................................
+           command1...................
+           command2...................
+           copy1......................
+           copy2......................
+                dial...
+</code></pre><blockquote>
+<p>timeout对应每个阶段的超时设置，单位：秒</p>
+</blockquote>
+<h2 id="command执行命令相关配置">command，执行命令相关配置</h2>
+<pre><code>command:                         # ssh协议配置
+  port: 22                       # 端口
+  ciphers:                       # 算法集
+  - aes128-ctr
+  - aes192-ctr
+  - aes256-ctr
+  - aes128-gcm@openssh.com
+  - arcfour256
+  - arcfour128
+  - aes128-cbc
+  - 3des-cbc
+  - aes192-cbc
+  - aes256-cbc
+  pty:                           # 伪终端配置
+    term:                        # 伪终端类型
+    width: 80                    # 宽
+    height: 60                   # 高
+    ispeed: 14400                # 输入速率
+    ospeed: 14400                # 输出速率
+    interval_ms: 100             # 每条输入间隔时间
+</code></pre><h2 id="copy上传下载相关配置">copy，上传下载相关配置</h2>
+<pre><code>copy:                            
+  sftp_max_package_size: 32768   # sftp传输时默认数据包大小，单位：字节
+  override: false                # 目标存在时是否强制覆盖
+  skip: false                    # 目标存在时是否跳过
+</code></pre><h2 id="cachessh连接缓存配置">cache，ssh连接缓存配置</h2>
+<pre><code>cache:
+  expiration_s: 900              # 连接保持时间
+  cleanup_interval_s: 10         # 过期清理时间间隔
+  ticker_interval_s: 10          # 保持活跃时间间隔
+</code></pre><h2 id="crypt加解密配置">crypt，加解密配置</h2>
+<pre><code>crypt:
+  type:                          # 加解密类型，取值范围：aes
+  key:                           # 算法所用key
+</code></pre><h2 id="ouput输出配置">ouput，输出配置</h2>
+<pre><code>output:
+  type: text                     # 输出类型，取值范围：text、json、yaml
+  progress: false                # 类型为text，是否输出进度提示
+</code></pre><h2 id="concurrency并发">concurrency，并发</h2>
+<pre><code>concurrency: 20                  # 主机并发数
+</code></pre><h2 id="common_commands常用命令">common_commands，常用命令</h2>
+<pre><code>common_commands:                 # 在交互式操作下，执行命令时，命令提示列表
+</code></pre><h2 id="black_command_regexps高危命令">black_command_regexps，高危命令</h2>
+<pre><code>black_command_regexps:           # 高危命令正则表达式列表，匹配上的命令将禁止执行
+</code></pre><h2 id="command_sep命令分割符">command_sep，命令分割符</h2>
+<pre><code>command_sep: ;                   # 在交互式操作下，执行多条命令时，命令间分隔符，默认：分号
+</code></pre></article>
  
       
 
@@ -179,7 +356,24 @@ https://github.com/alex-shpak/hugo-book
     
     <aside class="book-toc">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#系统配置">系统配置</a>
+      <ul>
+        <li><a href="#timeout超时设置">timeout，超时设置</a></li>
+        <li><a href="#command执行命令相关配置">command，执行命令相关配置</a></li>
+        <li><a href="#copy上传下载相关配置">copy，上传下载相关配置</a></li>
+        <li><a href="#cachessh连接缓存配置">cache，ssh连接缓存配置</a></li>
+        <li><a href="#crypt加解密配置">crypt，加解密配置</a></li>
+        <li><a href="#ouput输出配置">ouput，输出配置</a></li>
+        <li><a href="#concurrency并发">concurrency，并发</a></li>
+        <li><a href="#common_commands常用命令">common_commands，常用命令</a></li>
+        <li><a href="#black_command_regexps高危命令">black_command_regexps，高危命令</a></li>
+        <li><a href="#command_sep命令分割符">command_sep，命令分割符</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
  
     </aside>

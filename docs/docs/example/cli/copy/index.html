@@ -5,16 +5,12 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Copy"><meta property="og:title" content="" />
-<meta property="og:description" content="上传下载 前提  已设置好配置项：系统配置、认证配置、主机配置 已切换到目标主机组环境   以group=alpha02为例
- 切换上下文 命令：:copy
-[alpha02:do]# :copy[alpha02:copy]#上传  将本地节点上的内容上传至远端目标主机组的每个主机上
- 用法：local -&gt; remote
-约束：
- local和remote必须是全路径，例如：D:\tmp\LICENSE（Windows）或/tmp/abc（Linux） local可以是文件或文件夹，以\（Windows）或/（Linux）结尾代表文件夹 remote必须是文件夹，如果不存在将自动在远端新建文件夹  文件：
-[alpha02:copy]# D:\tmp\LICENSE -&gt; /tmp/abc..[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&gt; /tmp/abc/LICENSE :OK[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&gt; /tmp/abc/LICENSE :OK# find /tmp/abc/tmp/abc/tmp/abc/LICENSE文件夹：
-[alpha02:copy]# D:\tmp\ -&gt; /tmp/abc1..[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&gt; /tmp/abc1/LICENSE :OKD:\tmp\hello -&gt; /tmp/abc1/hello :OKD:\tmp\hello\README.md -&gt; /tmp/abc1/hello/README." />
+<meta property="og:description" content="上传下载 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  以\（Windows）或/（Linux）结尾代表文件夹 上传时，local可以是文件或文件夹，remote默认是文件夹 下载时，remote可以是文件或文件夹，local默认是文件夹  上传  将本地节点上的内容上传至远端目标主机组的每个主机上
+ 文件：
+$ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\LICENSE -remote /tmp/xyz[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&gt; /tmp/xyz/LICENSE :OK[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&gt; /tmp/xyz/LICENSE :OK文件夹：
+$ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\ -remote /tmp/xyz1[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&gt; /tmp/xyz1/LICENSE :OKD:\tmp\hello -&gt; /tmp/xyz1/hello :OKD:\tmp\hello\README.md -&gt; /tmp/xyz1/hello/README.md :OK[192." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/copy/" />
+<meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/cli/copy/" />
 
 <title>Copy | xsh</title>
 <link rel="icon" href="/xsh/favicon.png" type="image/x-icon">
@@ -80,14 +76,14 @@ https://github.com/alex-shpak/hugo-book
 <ul>
 <li><a href="/xsh/docs/example/env/">切换环境</a></li>
 <li><a href="/xsh/docs/example/command/">执行命令</a></li>
-<li><a href="/xsh/docs/example/copy/"class=active>上传下载</a></li>
+<li><a href="/xsh/docs/example/copy/">上传下载</a></li>
 </ul>
 </li>
 <li>命令行操作
 <ul>
 <li><a href="/xsh/docs/example/cli/crypt/">加解密</a></li>
 <li><a href="/xsh/docs/example/cli/command/">执行命令</a></li>
-<li><a href="/xsh/docs/example/cli/copy/">上传下载</a></li>
+<li><a href="/xsh/docs/example/cli/copy/"class=active>上传下载</a></li>
 <li><a href="/xsh/docs/example/cli/task/">任务编排</a></li>
 <li><a href="/xsh/docs/example/cli/value/">带变量的任务</a></li>
 </ul>
@@ -155,7 +151,7 @@ https://github.com/alex-shpak/hugo-book
     <li><a href="#上传下载">上传下载</a>
       <ul>
         <li><a href="#前提">前提</a></li>
-        <li><a href="#切换上下文">切换上下文</a></li>
+        <li><a href="#说明">说明</a></li>
         <li><a href="#上传">上传</a></li>
         <li><a href="#下载">下载</a></li>
       </ul>
@@ -175,90 +171,86 @@ https://github.com/alex-shpak/hugo-book
 <h2 id="前提">前提</h2>
 <ul>
 <li>已设置好配置项：系统配置、认证配置、主机配置</li>
-<li>已切换到目标主机组环境</li>
 </ul>
-<blockquote>
-<p>以group=alpha02为例</p>
-</blockquote>
-<h2 id="切换上下文">切换上下文</h2>
-<p>命令：<code>:copy</code></p>
-<pre><code>[alpha02:do]# :copy
-[alpha02:copy]#
-</code></pre><h2 id="上传">上传</h2>
+<h2 id="说明">说明</h2>
+<ul>
+<li>以<code>\</code>（Windows）或<code>/</code>（Linux）结尾代表文件夹</li>
+<li>上传时，local可以是文件或文件夹，remote默认是文件夹</li>
+<li>下载时，remote可以是文件或文件夹，local默认是文件夹</li>
+</ul>
+<h2 id="上传">上传</h2>
 <blockquote>
 <p>将本地节点上的内容上传至远端目标主机组的每个主机上</p>
 </blockquote>
-<p>用法：<code>local -&gt; remote</code></p>
-<p>约束：</p>
-<ul>
-<li>local和remote必须是全路径，例如：<code>D:\tmp\LICENSE</code>（Windows）或<code>/tmp/abc</code>（Linux）</li>
-<li>local可以是文件或文件夹，以<code>\</code>（Windows）或<code>/</code>（Linux）结尾代表文件夹</li>
-<li>remote必须是文件夹，如果不存在将自动在远端新建文件夹</li>
-</ul>
 <p>文件：</p>
-<pre><code>[alpha02:copy]# D:\tmp\LICENSE -&gt; /tmp/abc
-..
+<pre><code>$ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\LICENSE -remote /tmp/xyz
 [192.168.165.37    ] ---------------------------------------------------------
-D:\tmp\LICENSE -&gt; /tmp/abc/LICENSE :OK
+D:\tmp\LICENSE -&gt; /tmp/xyz/LICENSE :OK
 [192.168.170.109   ] ---------------------------------------------------------
-D:\tmp\LICENSE -&gt; /tmp/abc/LICENSE :OK
-</code></pre><pre><code># find /tmp/abc
-/tmp/abc
-/tmp/abc/LICENSE
+D:\tmp\LICENSE -&gt; /tmp/xyz/LICENSE :OK
+
 </code></pre><p>文件夹：</p>
-<pre><code>[alpha02:copy]# D:\tmp\ -&gt; /tmp/abc1
-..
+<pre><code>$ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\ -remote /tmp/xyz1
 [192.168.170.109   ] ---------------------------------------------------------
-D:\tmp\LICENSE -&gt; /tmp/abc1/LICENSE :OK
-D:\tmp\hello -&gt; /tmp/abc1/hello :OK
-D:\tmp\hello\README.md -&gt; /tmp/abc1/hello/README.md :OK
+D:\tmp\LICENSE -&gt; /tmp/xyz1/LICENSE :OK
+D:\tmp\hello -&gt; /tmp/xyz1/hello :OK
+D:\tmp\hello\README.md -&gt; /tmp/xyz1/hello/README.md :OK
 [192.168.165.37    ] ---------------------------------------------------------
-D:\tmp\LICENSE -&gt; /tmp/abc1/LICENSE :OK
-D:\tmp\hello -&gt; /tmp/abc1/hello :OK
-D:\tmp\hello\README.md -&gt; /tmp/abc1/hello/README.md :OK
-</code></pre><pre><code># find /tmp/abc1
-/tmp/abc1
-/tmp/abc1/hello
-/tmp/abc1/hello/README.md
-/tmp/abc1/LICENSE
+D:\tmp\LICENSE -&gt; /tmp/xyz1/LICENSE :OK
+D:\tmp\hello -&gt; /tmp/xyz1/hello :OK
+D:\tmp\hello\README.md -&gt; /tmp/xyz1/hello/README.md :OK
+
+</code></pre><p>检查结果：</p>
+<pre><code>$ xsh.exe -mode cmd -group alpha02 -cmd &quot;find /tmp/xyz*&quot;
+[192.168.165.37    ] ---------------------------------------------------------
+/tmp/xyz
+/tmp/xyz/LICENSE
+/tmp/xyz1
+/tmp/xyz1/LICENSE
+/tmp/xyz1/hello
+/tmp/xyz1/hello/README.md
+
+[192.168.170.109   ] ---------------------------------------------------------
+/tmp/xyz
+/tmp/xyz/LICENSE
+/tmp/xyz1
+/tmp/xyz1/hello
+/tmp/xyz1/hello/README.md
+/tmp/xyz1/LICENSE
+
+
 </code></pre><h2 id="下载">下载</h2>
 <blockquote>
 <p>将远端目标主机组的每个主机上的内容下载至本地节点，以目标IP进行文件夹分割</p>
 </blockquote>
-<p>用法：<code>local &lt;- remote</code></p>
-<p>约束：</p>
-<ul>
-<li>local和remote必须是全路径，例如：<code>D:\tmp\LICENSE</code>（Windows）或<code>/tmp/abc</code>（Linux）</li>
-<li>remote可以是文件或文件夹，以<code>\</code>（Windows）或<code>/</code>（Linux）结尾代表文件夹</li>
-<li>local必须是文件夹，如果不存在将自动在本地新建文件夹</li>
-</ul>
 <p>文件：</p>
-<pre><code>[alpha02:copy]# D:\hello &lt;- /tmp/abc1/LICENSE
-..
-[192.168.170.109   ] ---------------------------------------------------------
-D:\hello\192.168.170.109\LICENSE &lt;- /tmp/abc1/LICENSE :OK
+<pre><code>$ xsh.exe -mode copy -group alpha02 -direction download -local D:\xyz -remote /tmp/xyz/LICENSE
 [192.168.165.37    ] ---------------------------------------------------------
-D:\hello\192.168.165.37\LICENSE &lt;- /tmp/abc1/LICENSE :OK
-</code></pre><pre><code>$ tree /F D:\hello
-D:\HELLO
+D:\xyz\192.168.165.37\LICENSE &lt;- /tmp/xyz/LICENSE :OK
+[192.168.170.109   ] ---------------------------------------------------------
+D:\xyz\192.168.170.109\LICENSE &lt;- /tmp/xyz/LICENSE :OK
+
+</code></pre><pre><code>$ tree /F d:\xyz
+D:\XYZ
 ├─192.168.165.37
 │      LICENSE
 │
 └─192.168.170.109
         LICENSE
+
 </code></pre><p>文件夹：</p>
-<pre><code>[alpha02:copy]# D:\hello1 &lt;- /tmp/abc1/
-..
-[192.168.165.37    ] ---------------------------------------------------------
-D:\hello1\192.168.165.37\LICENSE &lt;- /tmp/abc1/LICENSE :OK
-D:\hello1\192.168.165.37\hello &lt;- /tmp/abc1/hello :OK
-D:\hello1\192.168.165.37\hello\README.md &lt;- /tmp/abc1/hello/README.md :OK
+<pre><code>$ xsh.exe -mode copy -group alpha02 -direction download -local D:\xyz1 -remote /tmp/xyz1/
 [192.168.170.109   ] ---------------------------------------------------------
-D:\hello1\192.168.170.109\hello &lt;- /tmp/abc1/hello :OK
-D:\hello1\192.168.170.109\hello\README.md &lt;- /tmp/abc1/hello/README.md :OK
-D:\hello1\192.168.170.109\LICENSE &lt;- /tmp/abc1/LICENSE :OK
-</code></pre><pre><code>$ tree /F D:\hello1
-D:\HELLO1
+D:\xyz1\192.168.170.109\hello &lt;- /tmp/xyz1/hello :OK
+D:\xyz1\192.168.170.109\hello\README.md &lt;- /tmp/xyz1/hello/README.md :OK
+D:\xyz1\192.168.170.109\LICENSE &lt;- /tmp/xyz1/LICENSE :OK
+[192.168.165.37    ] ---------------------------------------------------------
+D:\xyz1\192.168.165.37\LICENSE &lt;- /tmp/xyz1/LICENSE :OK
+D:\xyz1\192.168.165.37\hello &lt;- /tmp/xyz1/hello :OK
+D:\xyz1\192.168.165.37\hello\README.md &lt;- /tmp/xyz1/hello/README.md :OK
+
+</code></pre><pre><code>$ tree /F d:\xyz1
+D:\XYZ1
 ├─192.168.165.37
 │  │  LICENSE
 │  │
@@ -270,6 +262,7 @@ D:\HELLO1
     │
     └─hello
             README.md
+
 </code></pre></article>
  
       
@@ -296,7 +289,7 @@ D:\HELLO1
     <li><a href="#上传下载">上传下载</a>
       <ul>
         <li><a href="#前提">前提</a></li>
-        <li><a href="#切换上下文">切换上下文</a></li>
+        <li><a href="#说明">说明</a></li>
         <li><a href="#上传">上传</a></li>
         <li><a href="#下载">下载</a></li>
       </ul>

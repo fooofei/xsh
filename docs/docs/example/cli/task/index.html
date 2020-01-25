@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Task"><meta property="og:title" content="" />
-<meta property="og:description" content="" />
+<meta property="og:description" content="任务编排 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  example\show-info.yaml
+ name: show infoactions:- name: show mem and diskgroup: alpha02steps:- type: commandcommands:- free -h- df -h- name: show user infogroup: alpha03steps:- type: commandcommands:- id 在alpha02上查看内存和磁盘信息 在alpha03上查看用户信息  执行 $ xsh.exe -mode task -task example\show-info.yaml[show info ] &#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;[alpha02: show mem and disk ] =======================================[192.168.165.37 ] ---------------------------------------------------------total used free shared buff/cache availableMem: 7." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/cli/task/" />
 
@@ -58,14 +59,8 @@ https://github.com/alex-shpak/hugo-book
 
 
   <hr/>
+<p><a href="/xsh/docs/start/">快速开始</a></p>
 <ul>
-<li>概述
-<ul>
-<li><a href="/xsh/docs/overview/features/">特性</a></li>
-<li><a href="/xsh/docs/overview/build/">构建</a></li>
-<li><a href="/xsh/docs/overview/start/">快速开始</a></li>
-</ul>
-</li>
 <li>配置
 <ul>
 <li><a href="/xsh/docs/setup/config/">系统配置</a></li>
@@ -75,19 +70,20 @@ https://github.com/alex-shpak/hugo-book
 </li>
 <li>示例
 <ul>
-<li>交互式操作
+<li><a href="/xsh/docs/example/">交互式操作</a>
 <ul>
 <li><a href="/xsh/docs/example/env/">切换环境</a></li>
 <li><a href="/xsh/docs/example/command/">执行命令</a></li>
 <li><a href="/xsh/docs/example/copy/">上传下载</a></li>
-<li><a href="/xsh/docs/example/crypt/">加解密</a></li>
 </ul>
 </li>
 <li>命令行操作
 <ul>
-<li><a href="/xsh/docs/example/cli/cmd/">命令行动作</a></li>
-<li><a href="/xsh/docs/example/cli/task/"class=active>脚本任务编排</a></li>
-<li><a href="/xsh/docs/example/cli/value/">带变量的脚本任务</a></li>
+<li><a href="/xsh/docs/example/cli/crypt/">加解密</a></li>
+<li><a href="/xsh/docs/example/cli/command/">执行命令</a></li>
+<li><a href="/xsh/docs/example/cli/copy/">上传下载</a></li>
+<li><a href="/xsh/docs/example/cli/task/"class=active>任务编排</a></li>
+<li><a href="/xsh/docs/example/cli/value/">带变量的任务</a></li>
 </ul>
 </li>
 </ul>
@@ -148,7 +144,17 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" class="hidden" id="toc-control" />
     <aside class="hidden clearfix">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#任务编排">任务编排</a>
+      <ul>
+        <li><a href="#前提">前提</a></li>
+        <li><a href="#说明">说明</a></li>
+        <li><a href="#执行">执行</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
 
     </aside>
@@ -158,7 +164,84 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-<article class="markdown"></article>
+<article class="markdown"><h1 id="任务编排">任务编排</h1>
+<h2 id="前提">前提</h2>
+<ul>
+<li>已设置好配置项：系统配置、认证配置、主机配置</li>
+</ul>
+<h2 id="说明">说明</h2>
+<blockquote>
+<p>example\show-info.yaml</p>
+</blockquote>
+<pre><code>name: show info
+actions:
+  - name: show mem and disk
+    group: alpha02
+    steps:
+      - type: command
+        commands:
+          - free -h
+          - df -h
+  - name: show user info
+    group: alpha03
+    steps:
+      - type: command
+        commands:
+          - id
+
+</code></pre><ul>
+<li>在alpha02上查看内存和磁盘信息</li>
+<li>在alpha03上查看用户信息</li>
+</ul>
+<h2 id="执行">执行</h2>
+<pre><code>$ xsh.exe -mode task -task example\show-info.yaml
+[show info                           ] +++++++++++++++++++++++++++++++++++++++
+[alpha02: show mem and disk          ] =======================================
+[192.168.165.37    ] ---------------------------------------------------------
+              total        used        free      shared  buff/cache   available
+Mem:           7.6G        1.1G        950M        425M        5.5G        5.8G
+Swap:            0B          0B          0B
+Filesystem                    Size  Used Avail Use% Mounted on
+/dev/mapper/VolGroup-lv_root  8.8G  1.7G  6.7G  20% /
+devtmpfs                      3.9G     0  3.9G   0% /dev
+tmpfs                         3.9G     0  3.9G   0% /dev/shm
+tmpfs                         3.9G  426M  3.4G  11% /run
+tmpfs                         3.9G     0  3.9G   0% /sys/fs/cgroup
+/dev/vda1                     976M   59M  851M   7% /boot
+/dev/mapper/vg01-data          40G  824M   37G   3% /opt/cloud
+/dev/mapper/VolGroup-lv_log    20G  563M   18G   3% /var/log
+/dev/mapper/VolGroup-lv_tmp   9.8G   37M  9.2G   1% /tmp
+tmpfs                         781M     0  781M   0% /run/user/1001
+tmpfs                         781M     0  781M   0% /run/user/0
+tmpfs                         781M     0  781M   0% /run/user/1002
+
+[192.168.170.109   ] ---------------------------------------------------------
+              total        used        free      shared  buff/cache   available
+Mem:            15G        2.7G        2.7G         34M         10G         12G
+Swap:            0B          0B          0B
+Filesystem                    Size  Used Avail Use% Mounted on
+/dev/mapper/VolGroup-lv_root  9.3G  3.0G  5.9G  34% /
+devtmpfs                      7.8G     0  7.8G   0% /dev
+tmpfs                         7.8G     0  7.8G   0% /dev/shm
+tmpfs                         7.8G   35M  7.8G   1% /run
+tmpfs                         7.8G     0  7.8G   0% /sys/fs/cgroup
+/dev/vda1                     465M   76M  361M  18% /boot
+/dev/mapper/VolGroup-lv_tmp   9.8G   37M  9.2G   1% /tmp
+/dev/mapper/VolGroup-lv_log    20G  443M   19G   3% /var/log
+/dev/mapper/vg01-data          40G  792M   37G   3% /opt/cloud
+tmpfs                         1.6G     0  1.6G   0% /run/user/0
+tmpfs                         1.6G     0  1.6G   0% /run/user/1002
+tmpfs                         1.6G     0  1.6G   0% /run/user/1003
+
+[alpha03: show user info             ] =======================================
+[192.168.187.117   ] ---------------------------------------------------------
+uid=0(root) gid=0(root) groups=0(root)
+
+[192.168.184.236   ] ---------------------------------------------------------
+uid=0(root) gid=0(root) groups=0(root)
+
+
+</code></pre></article>
  
       
 
@@ -179,7 +262,17 @@ https://github.com/alex-shpak/hugo-book
     
     <aside class="book-toc">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#任务编排">任务编排</a>
+      <ul>
+        <li><a href="#前提">前提</a></li>
+        <li><a href="#说明">说明</a></li>
+        <li><a href="#执行">执行</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
  
     </aside>

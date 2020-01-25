@@ -5,7 +5,9 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Auth"><meta property="og:title" content="" />
-<meta property="og:description" content="" />
+<meta property="og:description" content="认证配置  .xsh/auth.yaml
+ auths:- name: alphausername: abcpassword: Test@1qazsutype: &quot;sudo -S su -&quot;supass: XXXXXXprivatekey: &quot;&quot;passphrase: &quot;&quot; 无默认值，auths为列表类型
+ 配置说明  - name: alpha # 名称username: abc # 用户名password: Test@1qaz # 密码sutype: &quot;sudo -S su -&quot; # 切换用户方法，可选supass: XXXXXX # 切换用户时需要的密码，可选privatekey: &quot;&quot; # 私钥地址，可选passphrase: &quot;&quot; # 私钥密码，可选" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/setup/auth/" />
 
@@ -58,14 +60,8 @@ https://github.com/alex-shpak/hugo-book
 
 
   <hr/>
+<p><a href="/xsh/docs/start/">快速开始</a></p>
 <ul>
-<li>概述
-<ul>
-<li><a href="/xsh/docs/overview/features/">特性</a></li>
-<li><a href="/xsh/docs/overview/build/">构建</a></li>
-<li><a href="/xsh/docs/overview/start/">快速开始</a></li>
-</ul>
-</li>
 <li>配置
 <ul>
 <li><a href="/xsh/docs/setup/config/">系统配置</a></li>
@@ -75,19 +71,20 @@ https://github.com/alex-shpak/hugo-book
 </li>
 <li>示例
 <ul>
-<li>交互式操作
+<li><a href="/xsh/docs/example/">交互式操作</a>
 <ul>
 <li><a href="/xsh/docs/example/env/">切换环境</a></li>
 <li><a href="/xsh/docs/example/command/">执行命令</a></li>
 <li><a href="/xsh/docs/example/copy/">上传下载</a></li>
-<li><a href="/xsh/docs/example/crypt/">加解密</a></li>
 </ul>
 </li>
 <li>命令行操作
 <ul>
-<li><a href="/xsh/docs/example/cli/cmd/">命令行动作</a></li>
-<li><a href="/xsh/docs/example/cli/task/">脚本任务编排</a></li>
-<li><a href="/xsh/docs/example/cli/value/">带变量的脚本任务</a></li>
+<li><a href="/xsh/docs/example/cli/crypt/">加解密</a></li>
+<li><a href="/xsh/docs/example/cli/command/">执行命令</a></li>
+<li><a href="/xsh/docs/example/cli/copy/">上传下载</a></li>
+<li><a href="/xsh/docs/example/cli/task/">任务编排</a></li>
+<li><a href="/xsh/docs/example/cli/value/">带变量的任务</a></li>
 </ul>
 </li>
 </ul>
@@ -148,7 +145,15 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" class="hidden" id="toc-control" />
     <aside class="hidden clearfix">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#认证配置">认证配置</a>
+      <ul>
+        <li><a href="#配置说明">配置说明</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
 
     </aside>
@@ -158,7 +163,30 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-<article class="markdown"></article>
+<article class="markdown"><h1 id="认证配置">认证配置</h1>
+<blockquote>
+<p>.xsh/auth.yaml</p>
+</blockquote>
+<pre><code>auths:
+  - name: alpha
+    username: abc
+    password: Test@1qaz
+    sutype: &quot;sudo -S su -&quot;
+    supass: XXXXXX
+    privatekey: &quot;&quot;
+    passphrase: &quot;&quot;
+</code></pre><blockquote>
+<p>无默认值，auths为列表类型</p>
+</blockquote>
+<h2 id="配置说明">配置说明</h2>
+<pre><code>  - name: alpha                # 名称
+    username: abc              # 用户名
+    password: Test@1qaz        # 密码
+    sutype: &quot;sudo -S su -&quot;     # 切换用户方法，可选
+    supass: XXXXXX             # 切换用户时需要的密码，可选
+    privatekey: &quot;&quot;             # 私钥地址，可选
+    passphrase: &quot;&quot;             # 私钥密码，可选
+</code></pre></article>
  
       
 
@@ -179,7 +207,15 @@ https://github.com/alex-shpak/hugo-book
     
     <aside class="book-toc">
       
-  <nav id="TableOfContents"></nav>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#认证配置">认证配置</a>
+      <ul>
+        <li><a href="#配置说明">配置说明</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
  
     </aside>

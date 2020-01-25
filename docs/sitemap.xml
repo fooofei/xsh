@@ -7,11 +7,19 @@
   </url>
   
   <url>
-    <loc>https://xied5531.github.io/xsh/docs/</loc>
+    <loc>https://xied5531.github.io/xsh/docs/example/</loc>
   </url>
   
   <url>
-    <loc>https://xied5531.github.io/xsh/docs/example/cli/cmd/</loc>
+    <loc>https://xied5531.github.io/xsh/docs/example/cli/command/</loc>
+  </url>
+  
+  <url>
+    <loc>https://xied5531.github.io/xsh/docs/example/cli/copy/</loc>
+  </url>
+  
+  <url>
+    <loc>https://xied5531.github.io/xsh/docs/example/cli/crypt/</loc>
   </url>
   
   <url>
@@ -31,27 +39,11 @@
   </url>
   
   <url>
-    <loc>https://xied5531.github.io/xsh/docs/example/crypt/</loc>
-  </url>
-  
-  <url>
     <loc>https://xied5531.github.io/xsh/docs/example/env/</loc>
   </url>
   
   <url>
     <loc>https://xied5531.github.io/xsh/docs/faq/</loc>
-  </url>
-  
-  <url>
-    <loc>https://xied5531.github.io/xsh/docs/overview/build/</loc>
-  </url>
-  
-  <url>
-    <loc>https://xied5531.github.io/xsh/docs/overview/features/</loc>
-  </url>
-  
-  <url>
-    <loc>https://xied5531.github.io/xsh/docs/overview/start/</loc>
   </url>
   
   <url>
@@ -67,7 +59,15 @@
   </url>
   
   <url>
+    <loc>https://xied5531.github.io/xsh/docs/start/</loc>
+  </url>
+  
+  <url>
     <loc>https://xied5531.github.io/xsh/categories/</loc>
+  </url>
+  
+  <url>
+    <loc>https://xied5531.github.io/xsh/docs/</loc>
   </url>
   
   <url>

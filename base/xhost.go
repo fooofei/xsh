@@ -39,7 +39,7 @@ var XHost = xHost{}
 var XHostMap = make(map[string]Host)
 
 func InitXHost() {
-	var filePath = path.Join(ConfigRootPath, HostFile)
+	var filePath = path.Join(RootPath, HostFile)
 
 	h, err := ioutil.ReadFile(filePath)
 	if err != nil {

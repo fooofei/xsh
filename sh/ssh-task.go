@@ -7,7 +7,6 @@ import (
 	"html/template"
 	"io/ioutil"
 	"os"
-	"path/filepath"
 )
 
 type SshTask struct {
@@ -54,28 +53,30 @@ func (s SshTask) applyValue() error {
 	} else {
 		tf, err := template.ParseFiles(*Task)
 		if err != nil {
-			return fmt.Errorf("parse template task file[%s] failed", *Task)
+			return fmt.Errorf("parse template task file[%s] error: %v", *Task, err)
 		}
 
 		tmp, err := ioutil.TempFile(TempPath, "xsh-task-*.yaml")
 		if err != nil {
-			return fmt.Errorf("create temp file in [%s] failed", TempPath)
+			return fmt.Errorf("create temp file in [%s] error: %v", TempPath, err)
 		}
-		defer os.Remove(filepath.Join(TempPath, tmp.Name()))
+		defer func() {
+			tmp.Close()
+			os.Remove(tmp.Name())
+		}()
 
 		if err := tf.Execute(tmp, values); err != nil {
-			return fmt.Errorf("execute template task file[%s] by value file[%s] task failed", *Task, *Value)
+			return fmt.Errorf("execute template task file[%s] by value file[%s] task error: %v", *Task, *Value, err)
 		}
 
-		realTaskFile := filepath.Join(TempPath, tmp.Name())
-		rtf, err := ioutil.ReadFile(realTaskFile)
+		rtf, err := ioutil.ReadFile(tmp.Name())
 		if err != nil {
-			return fmt.Errorf("can not read task file[%s], err: %v", realTaskFile, err)
+			return fmt.Errorf("can not read task file[%s], err: %v", tmp.Name(), err)
 		}
 
 		err = yaml.Unmarshal(rtf, &xTask)
 		if err != nil {
-			return fmt.Errorf("task file[%s] unmarshal error: %v", realTaskFile, err)
+			return fmt.Errorf("task file[%s] unmarshal error: %v", tmp.Name(), err)
 		}
 	}
 

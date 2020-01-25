@@ -3,6 +3,7 @@ package base
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -23,7 +24,15 @@ var (
 )
 
 func initFlag() {
-	os.Mkdir(ConfigRootPath, os.ModeDir|0755)
+	if err := os.Mkdir(RootPath, os.ModeDir|0755); err != nil && !os.IsExist(err) {
+		log.Fatalf("mkdir %s error: %v\n", RootPath, err)
+	}
+	if err := os.Mkdir(LogPath, os.ModeDir|0755); err != nil && !os.IsExist(err) {
+		log.Fatalf("mkdir %s error: %v\n", LogPath, err)
+	}
+	if err := os.Mkdir(TempPath, os.ModeDir|0755); err != nil && !os.IsExist(err) {
+		log.Fatalf("mkdir %s error: %v\n", TempPath, err)
+	}
 
 	cmd := os.Args[0]
 	flag.Usage = func() {

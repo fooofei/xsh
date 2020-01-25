@@ -25,7 +25,7 @@ var XAuth = xAuth{}
 var XAuthMap = make(map[string]Auth)
 
 func InitXAuth() {
-	var filePath = path.Join(ConfigRootPath, AuthFile)
+	var filePath = path.Join(RootPath, AuthFile)
 
 	a, err := ioutil.ReadFile(filePath)
 	if err != nil {

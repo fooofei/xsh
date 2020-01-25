@@ -1,0 +1,11 @@
+name: add new user
+actions:
+  - name: add user and set passwd
+    group: alpha02
+    steps:
+      - type: command
+        su: true
+        commands:
+          - useradd -m {{.alpha.test.username}}
+          - echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}
+          - id {{.alpha.test.username}}

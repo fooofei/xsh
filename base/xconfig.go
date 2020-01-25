@@ -65,7 +65,7 @@ var XConfig = config{}
 func InitXConfig() {
 	setupXConfigDefault()
 
-	var filePath = path.Join(ConfigRootPath, CfgFile)
+	var filePath = path.Join(RootPath, CfgFile)
 	c, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		Warn.Printf("Can not find configs file[%s].", filePath)

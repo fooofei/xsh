@@ -117,7 +117,7 @@ func NewLiner() (*liner.State, error) {
 	line.SetWordCompleter(wordCompleter)
 	line.SetTabCompletionStyle(liner.TabPrints)
 
-	if f, err := os.Open(path.Join(ConfigRootPath, HisFile)); err == nil {
+	if f, err := os.Open(path.Join(RootPath, HisFile)); err == nil {
 		line.ReadHistory(f)
 		f.Close()
 	}
@@ -135,7 +135,7 @@ func Prompt(l *liner.State) (string, error) {
 		return "", PromptAborted
 	}
 
-	if f, err := os.Create(path.Join(ConfigRootPath, HisFile)); err != nil {
+	if f, err := os.Create(path.Join(RootPath, HisFile)); err != nil {
 		Warn.Print("Error writing history file: ", err)
 		return name, PromptHisErr
 	} else {

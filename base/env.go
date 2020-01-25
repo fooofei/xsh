@@ -41,7 +41,7 @@ func SaveEnv() {
 			Warn.Printf("marshal env error: %v", err)
 		}
 
-		if err := ioutil.WriteFile(path.Join(ConfigRootPath, EnvFile), d, os.ModeAppend|0644); err != nil {
+		if err := ioutil.WriteFile(path.Join(RootPath, EnvFile), d, os.ModeAppend|0644); err != nil {
 			Warn.Printf("save env error: %v", err)
 		}
 	} else {
@@ -57,7 +57,7 @@ func initEnv() {
 	CurEnv.Action = ":do"
 	CurEnv.Output = XConfig.Output.Type
 
-	e, err := ioutil.ReadFile(path.Join(ConfigRootPath, EnvFile))
+	e, err := ioutil.ReadFile(path.Join(RootPath, EnvFile))
 	if err != nil {
 		Warn.Printf("read current env error: %v", err)
 		return

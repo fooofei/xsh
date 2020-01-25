@@ -6,8 +6,6 @@ actions:
       - type: command
         commands:
           - echo 123
-          - date
-          - pwd
   - name: echo date
     group: alpha02
     steps:

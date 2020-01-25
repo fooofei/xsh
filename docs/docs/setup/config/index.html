@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Config"><meta property="og:title" content="" />
-<meta property="og:description" content="系统配置 timeout:action_timeout_s: 3600command_timeout_s: 300copy_timeout_s: 600dial_timeout_s: 10command:port: 22ciphers:- aes128-ctr- aes192-ctr- aes256-ctr- aes128-gcm@openssh.com- arcfour256- arcfour128- aes128-cbc- 3des-cbc- aes192-cbc- aes256-cbcpty:term: width: 80height: 60ispeed: 14400ospeed: 14400interval_ms: 100copy:sftp_max_package_size: 32768override: falseskip: falsecache:expiration_s: 900cleanup_interval_s: 10ticker_interval_s: 10crypt:type: key: output:type: textprogress: falseconcurrency: 20common_commands:- cat- cd- cp- df- awk- date- du- chown- chmod- curl- dos2unix- echo- find- free- grep- hostname- ifconfig- kill- ln- ls- man- mkdir- mount- mv- openssl- ping- ps- pwd- rpm- sed- scp- tar- umask- uname- unzip- zip- uptime- wget- which- who- whoamiblack_command_regexps:- ^\s*(vi|vim)\s&#43;- ^\s*top\s*$- ^\s*expect\s*$- ^\s*more\s*$- ^\s*less\s*$- ^\s*tailf\s*$- ^\s*tail\s*\-f\s*$command_sep: ;issue_url: https://github." />
+<meta property="og:description" content="系统配置  .xsh/config.yaml
+ timeout:action_timeout_s: 3600command_timeout_s: 300copy_timeout_s: 600dial_timeout_s: 10command:port: 22ciphers:- aes128-ctr- aes192-ctr- aes256-ctr- aes128-gcm@openssh.com- arcfour256- arcfour128- aes128-cbc- 3des-cbc- aes192-cbc- aes256-cbcpty:term: width: 80height: 60ispeed: 14400ospeed: 14400interval_ms: 100copy:sftp_max_package_size: 32768override: falseskip: falsecache:expiration_s: 900cleanup_interval_s: 10ticker_interval_s: 10crypt:type: key: output:type: textprogress: falseconcurrency: 20common_commands:- cat- cd- cp- df- awk- date- du- chown- chmod- curl- dos2unix- echo- find- free- grep- hostname- ifconfig- kill- ln- ls- man- mkdir- mount- mv- openssl- ping- ps- pwd- rpm- sed- scp- tar- umask- uname- unzip- zip- uptime- wget- which- who- whoamiblack_command_regexps:- ^\s*(vi|vim)\s&#43;- ^\s*top\s*$- ^\s*expect\s*$- ^\s*more\s*$- ^\s*less\s*$- ^\s*tailf\s*$- ^\s*tail\s*\-f\s*$command_sep: ;issue_url: https://github." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/setup/config/" />
 
@@ -178,13 +179,16 @@ https://github.com/alex-shpak/hugo-book
       
       
 <article class="markdown"><h1 id="系统配置">系统配置</h1>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-.xsh/config.yaml" data-lang=".xsh/config.yaml">timeout:
-  <span style="color:#66d9ef">action_timeout_s</span>: <span style="color:#ae81ff">3600</span>
-  <span style="color:#66d9ef">command_timeout_s</span>: <span style="color:#ae81ff">300</span>
-  <span style="color:#66d9ef">copy_timeout_s</span>: <span style="color:#ae81ff">600</span>
-  <span style="color:#66d9ef">dial_timeout_s</span>: <span style="color:#ae81ff">10</span>
+<blockquote>
+<p>.xsh/config.yaml</p>
+</blockquote>
+<pre><code>timeout:
+  action_timeout_s: 3600
+  command_timeout_s: 300
+  copy_timeout_s: 600
+  dial_timeout_s: 10
 command:
-  <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">22</span>
+  port: 22
   ciphers:
   - aes128-ctr
   - aes192-ctr
@@ -197,27 +201,27 @@ command:
   - aes192-cbc
   - aes256-cbc
   pty:
-    <span style="color:#66d9ef">term</span>: 
-    <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">80</span>
-    <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">60</span>
-    <span style="color:#66d9ef">ispeed</span>: <span style="color:#ae81ff">14400</span>
-    <span style="color:#66d9ef">ospeed</span>: <span style="color:#ae81ff">14400</span>
-    <span style="color:#66d9ef">interval_ms</span>: <span style="color:#ae81ff">100</span>
+    term: 
+    width: 80
+    height: 60
+    ispeed: 14400
+    ospeed: 14400
+    interval_ms: 100
 copy:
-  <span style="color:#66d9ef">sftp_max_package_size</span>: <span style="color:#ae81ff">32768</span>
-  <span style="color:#66d9ef">override</span>: <span style="color:#66d9ef">false</span>
-  <span style="color:#66d9ef">skip</span>: <span style="color:#66d9ef">false</span>
+  sftp_max_package_size: 32768
+  override: false
+  skip: false
 cache:
-  <span style="color:#66d9ef">expiration_s</span>: <span style="color:#ae81ff">900</span>
-  <span style="color:#66d9ef">cleanup_interval_s</span>: <span style="color:#ae81ff">10</span>
-  <span style="color:#66d9ef">ticker_interval_s</span>: <span style="color:#ae81ff">10</span>
+  expiration_s: 900
+  cleanup_interval_s: 10
+  ticker_interval_s: 10
 crypt:
-  <span style="color:#66d9ef">type</span>: 
-  <span style="color:#66d9ef">key</span>: 
+  type: 
+  key: 
 output:
-  <span style="color:#66d9ef">type</span>: text
-  <span style="color:#66d9ef">progress</span>: <span style="color:#66d9ef">false</span>
-<span style="color:#66d9ef">concurrency</span>: <span style="color:#ae81ff">20</span>
+  type: text
+  progress: false
+concurrency: 20
 common_commands:
 - cat
 - cd
@@ -261,17 +265,17 @@ common_commands:
 - who
 - whoami
 black_command_regexps:
-- ^\s<span style="color:#75715e">*(vi|vim)\s+</span>
-- ^\s<span style="color:#75715e">*top\s*$</span>
-- ^\s<span style="color:#75715e">*expect\s*$</span>
-- ^\s<span style="color:#75715e">*more\s*$</span>
-- ^\s<span style="color:#75715e">*less\s*$</span>
-- ^\s<span style="color:#75715e">*tailf\s*$</span>
-- ^\s<span style="color:#75715e">*tail\s*\-f\s*$</span>
-<span style="color:#66d9ef">command_sep</span>: ;
-<span style="color:#66d9ef">issue_url</span>: https://github.com/xied5531/xsh/issues
+- ^\s*(vi|vim)\s+
+- ^\s*top\s*$
+- ^\s*expect\s*$
+- ^\s*more\s*$
+- ^\s*less\s*$
+- ^\s*tailf\s*$
+- ^\s*tail\s*\-f\s*$
+command_sep: ;
+issue_url: https://github.com/xied5531/xsh/issues
 
-</code></pre></div><blockquote>
+</code></pre><blockquote>
 <p>示例中字段值代表默认值</p>
 </blockquote>
 <h2 id="timeout超时设置">timeout，超时设置</h2>

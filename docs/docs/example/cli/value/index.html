@@ -5,7 +5,9 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Value"><meta property="og:title" content="" />
-<meta property="og:description" content="带变量的任务 前提  已设置好配置项：系统配置、认证配置、主机配置  说明 name: add new useractions:- name: add user and set passwdgroup: alpha03steps:- type: commandcommands:- useradd -m {{.alpha.test.username}}- echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}- id {{.alpha.test.username}} 变量采用text/template语法
+<meta property="og:description" content="带变量的任务 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  example\add-user\add-user.yaml
+ name: add new useractions:- name: add user and set passwdgroup: alpha03steps:- type: commandcommands:- useradd -m {{.alpha.test.username}}- echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}- id {{.alpha.test.username}} 变量采用text/template语法
+  example\add-user\user-info.yaml
  alpha:test:username: hello3passwd: Tst@1qaz 变量单独定义文件
  执行 $ xsh.exe -mode task -task example\add-user\add-user.yaml -value example\add-user\user-info.yaml[add new user ] &#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;[alpha03: add user and set passwd ] =======================================[192." />
 <meta property="og:type" content="article" />
@@ -180,26 +182,32 @@ https://github.com/alex-shpak/hugo-book
 <li>已设置好配置项：系统配置、认证配置、主机配置</li>
 </ul>
 <h1 id="说明">说明</h1>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-example\add-user\add-user.yaml" data-lang="example\add-user\add-user.yaml"><span style="color:#66d9ef">name</span>: add new user
+<blockquote>
+<p>example\add-user\add-user.yaml</p>
+</blockquote>
+<pre><code>name: add new user
 actions:
-  - <span style="color:#66d9ef">name</span>: add user and set passwd
-    <span style="color:#66d9ef">group</span>: alpha03
+  - name: add user and set passwd
+    group: alpha03
     steps:
-      - <span style="color:#66d9ef">type</span>: command
+      - type: command
         commands:
           - useradd -m {{.alpha.test.username}}
           - echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}
           - id {{.alpha.test.username}}
 
-</code></pre></div><blockquote>
+</code></pre><blockquote>
 <p>变量采用<code>text/template</code>语法</p>
 </blockquote>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-example\add-user\user-info.yaml" data-lang="example\add-user\user-info.yaml">alpha:
+<blockquote>
+<p>example\add-user\user-info.yaml</p>
+</blockquote>
+<pre><code>alpha:
   test:
-    <span style="color:#66d9ef">username</span>: hello3
-    <span style="color:#66d9ef">passwd</span>: Tst@1qaz
+    username: hello3
+    passwd: Tst@1qaz
 
-</code></pre></div><blockquote>
+</code></pre><blockquote>
 <p>变量单独定义文件</p>
 </blockquote>
 <h2 id="执行">执行</h2>

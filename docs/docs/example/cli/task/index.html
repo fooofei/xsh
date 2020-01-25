@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Task"><meta property="og:title" content="" />
-<meta property="og:description" content="任务编排 前提  已设置好配置项：系统配置、认证配置、主机配置  说明 name: show infoactions:- name: show mem and diskgroup: alpha02steps:- type: commandcommands:- free -h- df -h- name: show user infogroup: alpha03steps:- type: commandcommands:- id 在alpha02上查看内存和磁盘信息 在alpha03上查看用户信息  执行 $ xsh.exe -mode task -task example\show-info.yaml[show info ] &#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;[alpha02: show mem and disk ] =======================================[192.168.165.37 ] ---------------------------------------------------------total used free shared buff/cache availableMem: 7." />
+<meta property="og:description" content="任务编排 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  example\show-info.yaml
+ name: show infoactions:- name: show mem and diskgroup: alpha02steps:- type: commandcommands:- free -h- df -h- name: show user infogroup: alpha03steps:- type: commandcommands:- id 在alpha02上查看内存和磁盘信息 在alpha03上查看用户信息  执行 $ xsh.exe -mode task -task example\show-info.yaml[show info ] &#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;[alpha02: show mem and disk ] =======================================[192.168.165.37 ] ---------------------------------------------------------total used free shared buff/cache availableMem: 7." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/cli/task/" />
 
@@ -175,23 +176,26 @@ https://github.com/alex-shpak/hugo-book
 <li>已设置好配置项：系统配置、认证配置、主机配置</li>
 </ul>
 <h2 id="说明">说明</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-example\show-info.yaml" data-lang="example\show-info.yaml"><span style="color:#66d9ef">name</span>: show info
+<blockquote>
+<p>example\show-info.yaml</p>
+</blockquote>
+<pre><code>name: show info
 actions:
-  - <span style="color:#66d9ef">name</span>: show mem and disk
-    <span style="color:#66d9ef">group</span>: alpha02
+  - name: show mem and disk
+    group: alpha02
     steps:
-      - <span style="color:#66d9ef">type</span>: command
+      - type: command
         commands:
           - free -h
           - df -h
-  - <span style="color:#66d9ef">name</span>: show user info
-    <span style="color:#66d9ef">group</span>: alpha03
+  - name: show user info
+    group: alpha03
     steps:
-      - <span style="color:#66d9ef">type</span>: command
+      - type: command
         commands:
           - id
 
-</code></pre></div><ul>
+</code></pre><ul>
 <li>在alpha02上查看内存和磁盘信息</li>
 <li>在alpha03上查看用户信息</li>
 </ul>

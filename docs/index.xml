@@ -48,7 +48,8 @@ $ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\ -remote /tm
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/example/cli/task/</guid>
-      <description>任务编排 前提  已设置好配置项：系统配置、认证配置、主机配置  说明 name: show infoactions:- name: show mem and diskgroup: alpha02steps:- type: commandcommands:- free -h- df -h- name: show user infogroup: alpha03steps:- type: commandcommands:- id 在alpha02上查看内存和磁盘信息 在alpha03上查看用户信息  执行 $ xsh.exe -mode task -task example\show-info.yaml[show info ] +++++++++++++++++++++++++++++++++++++++[alpha02: show mem and disk ] =======================================[192.168.165.37 ] ---------------------------------------------------------total used free shared buff/cache availableMem: 7.</description>
+      <description>任务编排 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  example\show-info.yaml
+ name: show infoactions:- name: show mem and diskgroup: alpha02steps:- type: commandcommands:- free -h- df -h- name: show user infogroup: alpha03steps:- type: commandcommands:- id 在alpha02上查看内存和磁盘信息 在alpha03上查看用户信息  执行 $ xsh.exe -mode task -task example\show-info.yaml[show info ] +++++++++++++++++++++++++++++++++++++++[alpha02: show mem and disk ] =======================================[192.168.165.37 ] ---------------------------------------------------------total used free shared buff/cache availableMem: 7.</description>
     </item>
     
     <item>
@@ -57,7 +58,9 @@ $ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\ -remote /tm
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/example/cli/value/</guid>
-      <description>带变量的任务 前提  已设置好配置项：系统配置、认证配置、主机配置  说明 name: add new useractions:- name: add user and set passwdgroup: alpha03steps:- type: commandcommands:- useradd -m {{.alpha.test.username}}- echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}- id {{.alpha.test.username}} 变量采用text/template语法
+      <description>带变量的任务 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  example\add-user\add-user.yaml
+ name: add new useractions:- name: add user and set passwdgroup: alpha03steps:- type: commandcommands:- useradd -m {{.alpha.test.username}}- echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}- id {{.alpha.test.username}} 变量采用text/template语法
+  example\add-user\user-info.yaml
  alpha:test:username: hello3passwd: Tst@1qaz 变量单独定义文件
  执行 $ xsh.exe -mode task -task example\add-user\add-user.yaml -value example\add-user\user-info.yaml[add new user ] +++++++++++++++++++++++++++++++++++++++[alpha03: add user and set passwd ] =======================================[192.</description>
     </item>
@@ -161,7 +164,8 @@ $ xsh.exe -mode copy -group alpha02 -direction upload -local D:\tmp\ -remote /tm
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/setup/config/</guid>
-      <description>系统配置 timeout:action_timeout_s: 3600command_timeout_s: 300copy_timeout_s: 600dial_timeout_s: 10command:port: 22ciphers:- aes128-ctr- aes192-ctr- aes256-ctr- aes128-gcm@openssh.com- arcfour256- arcfour128- aes128-cbc- 3des-cbc- aes192-cbc- aes256-cbcpty:term: width: 80height: 60ispeed: 14400ospeed: 14400interval_ms: 100copy:sftp_max_package_size: 32768override: falseskip: falsecache:expiration_s: 900cleanup_interval_s: 10ticker_interval_s: 10crypt:type: key: output:type: textprogress: falseconcurrency: 20common_commands:- cat- cd- cp- df- awk- date- du- chown- chmod- curl- dos2unix- echo- find- free- grep- hostname- ifconfig- kill- ln- ls- man- mkdir- mount- mv- openssl- ping- ps- pwd- rpm- sed- scp- tar- umask- uname- unzip- zip- uptime- wget- which- who- whoamiblack_command_regexps:- ^\s*(vi|vim)\s+- ^\s*top\s*$- ^\s*expect\s*$- ^\s*more\s*$- ^\s*less\s*$- ^\s*tailf\s*$- ^\s*tail\s*\-f\s*$command_sep: ;issue_url: https://github.</description>
+      <description>系统配置  .xsh/config.yaml
+ timeout:action_timeout_s: 3600command_timeout_s: 300copy_timeout_s: 600dial_timeout_s: 10command:port: 22ciphers:- aes128-ctr- aes192-ctr- aes256-ctr- aes128-gcm@openssh.com- arcfour256- arcfour128- aes128-cbc- 3des-cbc- aes192-cbc- aes256-cbcpty:term: width: 80height: 60ispeed: 14400ospeed: 14400interval_ms: 100copy:sftp_max_package_size: 32768override: falseskip: falsecache:expiration_s: 900cleanup_interval_s: 10ticker_interval_s: 10crypt:type: key: output:type: textprogress: falseconcurrency: 20common_commands:- cat- cd- cp- df- awk- date- du- chown- chmod- curl- dos2unix- echo- find- free- grep- hostname- ifconfig- kill- ln- ls- man- mkdir- mount- mv- openssl- ping- ps- pwd- rpm- sed- scp- tar- umask- uname- unzip- zip- uptime- wget- which- who- whoamiblack_command_regexps:- ^\s*(vi|vim)\s+- ^\s*top\s*$- ^\s*expect\s*$- ^\s*more\s*$- ^\s*less\s*$- ^\s*tailf\s*$- ^\s*tail\s*\-f\s*$command_sep: ;issue_url: https://github.</description>
     </item>
     
     <item>

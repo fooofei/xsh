@@ -3,6 +3,9 @@ package sh
 import (
 	"fmt"
 	. "github.com/xied5531/xsh/base"
+	"os"
+	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -33,4 +36,35 @@ func checkCommands(commands []string) error {
 	}
 
 	return nil
+}
+
+func GetLocalPath(direction string, path string) (string, error) {
+	path = strings.Trim(path, " ")
+	if filepath.VolumeName(path) == "" {
+		return "", fmt.Errorf("local path must be full path")
+	}
+
+	p, e := filepath.Abs(path)
+	if e != nil {
+		return "", e
+	}
+
+	if direction == "download" && !strings.HasSuffix(path, string(os.PathSeparator)) {
+		p = p + string(os.PathSeparator)
+	}
+
+	return p, nil
+}
+
+func GetRemotePath(direction string, path string) (string, error) {
+	path = strings.Trim(path, " ")
+	if !strings.HasPrefix(path, "/") {
+		return "", fmt.Errorf("remote path must be full path")
+	}
+
+	if direction == "upload" && !strings.HasSuffix(path, "/") {
+		path = path + "/"
+	}
+
+	return path, nil
 }

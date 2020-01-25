@@ -81,45 +81,30 @@ func do(action SshAction, line string, su bool) {
 }
 
 func copy(action SshAction, line string) {
-	fields := strings.Fields(line)
-	if len(fields) == 0 {
-		return
-	}
-	if len(fields) != 3 {
-		Error.Printf("line[%s] illegal", line)
-		return
-	}
+	var direction string
+	var fields []string
 
-	if fields[0] == "upload" {
-		action.SubActions[0].Direction = "upload"
-	} else if fields[0] == "download" {
-		action.SubActions[0].Direction = "download"
+	if strings.Contains(line, "->") {
+		direction = "upload"
+		fields = strings.Split(line, "->")
+	} else if strings.Contains(line, "<-") {
+		direction = "download"
+		fields = strings.Split(line, "<-")
 	} else {
-		Error.Printf("line[%s] illegal", line)
+		Error.Printf("line[%s] format illegal", line)
 		return
 	}
 
-	for _, v := range fields[1:] {
-		subFields := strings.Split(v, "=")
-		if len(subFields) != 2 {
-			Error.Printf("line[%s] illegal", line)
-			return
-		}
-		if subFields[0] == "local" {
-			action.SubActions[0].Local = subFields[1]
-		} else if subFields[0] == "remote" {
-			action.SubActions[0].Remote = subFields[1]
-		} else {
-			Error.Printf("line[%s] illegal", line)
-			return
-		}
-	}
-
-	if action.SubActions[0].Local == "" || action.SubActions[0].Remote == "" {
-		Error.Printf("line[%s] illegal", line)
+	local, le := GetLocalPath(direction, fields[0])
+	remote, re := GetRemotePath(direction, fields[1])
+	if le != nil || re != nil {
+		Error.Printf("line[%s] path illegal, local: %v; remote: %v", line, le, re)
 		return
 	}
 
+	action.SubActions[0].Direction = direction
+	action.SubActions[0].Local = local
+	action.SubActions[0].Remote = remote
 	action.SubActions[0].ActionType = "copy"
 	Print(action.Do())
 }

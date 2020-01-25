@@ -34,6 +34,7 @@ func (s sshCopy) copy(arg interface{}) sshResponse {
 	}
 }
 
+//remote must be directory
 func (s sshCopy) upload() sshResponse {
 	response := sshResponse{
 		Status: make([]string, 0),
@@ -45,8 +46,9 @@ func (s sshCopy) upload() sshResponse {
 		return response
 	}
 
+	localRoot := s.Local
 	remote := s.Remote
-	if e := sftpMakeDir(session, "", remote); e != nil {
+	if e := session.MkdirAll(remote); e != nil {
 		response.Err = fmt.Errorf("make remote directory[%s] error: %v", remote, e)
 		return response
 	}
@@ -59,17 +61,19 @@ func (s sshCopy) upload() sshResponse {
 			s = s + " :ERROR: file info nil"
 		} else {
 			if info.IsDir() {
-				if local != "." && local != ".." {
-					if e := sftpMakeDir(session, local, remote); e != nil {
-						s = s + " :ERROR: " + e.Error()
-					} else {
-						s = s + " :OK"
-					}
+				if local == localRoot {
+					return nil
+				}
+				if e := session.MkdirAll(remote + strings.Replace(local, localRoot, "", 1)); e != nil {
+					s = s + " :ERROR: " + e.Error()
+				} else {
+					s = s + " :OK"
 				}
 			} else if info.Mode().IsRegular() {
-				if e := sftpMakeFile(session, local, remote); e != nil {
+				remoteName := remote + strings.Replace(strings.Replace(local, localRoot, "", 1), "\\", "/", -1)
+				if e := sftpUploadFile(session, local, remoteName); e != nil {
 					if XConfig.Copy.Skip && e == RemoteFileExistErr {
-						s = s + " :WARN:skip file: " + e.Error()
+						s = s + " :WARN: skip because exist"
 					} else {
 						s = s + " :ERROR: " + e.Error()
 					}
@@ -90,9 +94,19 @@ func (s sshCopy) upload() sshResponse {
 	return response
 }
 
+//local must be directory
 func (s sshCopy) download() sshResponse {
-	response := sshResponse{
-		Status: make([]string, 0),
+	response := sshResponse{}
+
+	if err := os.Mkdir(s.Local, os.ModeDir|0755); err != nil && !os.IsExist(err) {
+		response.Err = err
+		return response
+	}
+
+	local := s.Local + s.Session.Client.Host + string(os.PathSeparator)
+	if err := os.Mkdir(local, os.ModeDir|0755); err != nil && !os.IsExist(err) {
+		response.Err = err
+		return response
 	}
 
 	session, err := s.Session.newSftpSession()
@@ -101,55 +115,99 @@ func (s sshCopy) download() sshResponse {
 		return response
 	}
 
-	local := s.Local
-	if e := localMakeDir(local, "", ""); e != nil {
-		response.Err = fmt.Errorf("make local directory[%s] error: %v", local, e)
-		return response
+	if strings.HasSuffix(s.Remote, "/") {
+		status, e := s.downloadDir(session, local, s.Remote)
+		if e != nil {
+			response.Err = e
+			response.Status = status
+		} else {
+			response.Status = status
+		}
+	} else {
+		localName := local + filepath.Base(s.Remote)
+		e := s.downloadFile(session, localName, s.Remote)
+		if e != nil {
+			response.Status = []string{s.Remote + " :ERROR: " + e.Error()}
+		} else {
+			response.Status = []string{s.Remote + " :OK"}
+		}
 	}
 
-	local = local + string(os.PathSeparator) + s.Session.Client.Host
-	if e := localMakeDir(local, "", ""); e != nil {
-		response.Err = fmt.Errorf("make local directory[%s] error: %v", local, e)
-		return response
+	return response
+}
+
+func (s sshCopy) downloadFile(session *sftp.Client, local, remote string) error {
+	if _, err := os.Stat(local + remote); err == nil {
+		return LocalFileExistErr
 	}
+
+	stat, err := session.Stat(remote)
+	if err != nil || !stat.Mode().IsRegular() {
+		return fmt.Errorf("can only download regular file: %v", err)
+	}
+
+	rf, err := session.Open(remote)
+	if err != nil {
+		return err
+	}
+	defer rf.Close()
+
+	lf, err := os.Create(local)
+	if err != nil {
+		return err
+	}
+	defer lf.Close()
+
+	_, err = io.Copy(lf, rf)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s sshCopy) downloadDir(session *sftp.Client, local, remote string) ([]string, error) {
+	status := make([]string, 0)
+	status = append(status, "remote root: "+remote)
 
 	w := session.Walk(s.Remote)
 	if w == nil {
-		response.Err = RemoteWalkErr
-		return response
+		return status, RemoteWalkErr
 	}
 
 	for w.Step() {
 		stat := w.Stat()
-		remote := w.Path()
-		res := remote
-		if stat.IsDir() {
-			if remote == s.Remote {
-				continue
-			}
-			if e := localMakeDir(local, remote, s.Remote); e != nil {
-				res = res + " :ERROR: " + e.Error()
-			} else {
-				res = res + " :OK"
-			}
-		} else if stat.Mode().IsRegular() {
-			if e := localMakeFile(session, local, remote, s.Remote); e != nil {
-				if XConfig.Copy.Skip && e == LocalFileExistErr {
-					res = res + " :WARN:skip file: " + e.Error()
-				} else {
-					res = res + " :ERROR: " + e.Error()
-				}
-			} else {
-				res = res + " :OK"
-			}
-		} else {
-			res = res + " :ERROR: file type not support"
+		remoteName := w.Path()
+
+		if remoteName == remote {
+			continue
 		}
 
-		response.Status = append(response.Status, res)
+		if stat.Mode().IsRegular() {
+			localName := local + strings.Replace(remoteName, remote, "", 1)
+			if e := s.downloadFile(session, localName, remoteName); e != nil {
+				if !XConfig.Copy.Override && e == LocalFileExistErr {
+					status = append(status, remote+" :WARN: skip because exist")
+				} else {
+					status = append(status, remote+" :ERROR: "+e.Error())
+				}
+			} else {
+				status = append(status, remote+" :OK")
+			}
+		} else if stat.IsDir() {
+			e := os.Mkdir(strings.Replace(remoteName, remote, "", 1), os.ModeDir|0755)
+			if e != nil && !os.IsExist(e) {
+				status = append(status, remote+" :ERROR: "+e.Error())
+			} else {
+				status = append(status, remote+" :OK")
+			}
+		} else {
+			status = append(status, remote+" :ERROR: file type not support")
+		}
 	}
 
-	return response
+	return status, nil
+
 }
 
 type copySession struct {
@@ -170,88 +228,7 @@ func (s copySession) newSftpSession() (*sftp.Client, error) {
 	return session, nil
 }
 
-func localMakeDir(local string, remote string, prefix string) error {
-	if prefix != "" {
-		remote = strings.Replace(remote, prefix, "", 1)
-	}
-	if strings.HasPrefix(remote, "/") {
-		remote = strings.Replace(remote, "/", "", 1)
-	}
-
-	if GOOS == "windows" {
-		remote = strings.Replace(remote, "\\", "+", -1)
-		remote = strings.Replace(remote, "/", "\\", -1)
-	}
-
-	if !strings.HasSuffix(local, string(os.PathSeparator)) {
-		local = local + string(os.PathSeparator)
-	}
-
-	err := os.Mkdir(local+remote, os.ModeDir|0755)
-	if !os.IsExist(err) {
-		return err
-	}
-
-	return nil
-}
-
-func localMakeFile(client *sftp.Client, local string, remote string, prefix string) error {
-	oldRemote := remote
-	if prefix != "" {
-		remote = strings.Replace(remote, prefix, "", 1)
-	}
-	if strings.HasPrefix(remote, "/") {
-		remote = strings.Replace(remote, "/", "", 1)
-	}
-
-	if GOOS == "windows" {
-		remote = strings.Replace(remote, "\\", "+", -1)
-		remote = strings.Replace(remote, "/", "\\", -1)
-	}
-
-	if !strings.HasSuffix(local, string(os.PathSeparator)) {
-		local = local + string(os.PathSeparator)
-	}
-
-	if !XConfig.Copy.Override {
-		if _, err := os.Stat(local + remote); err == nil {
-			return LocalFileExistErr
-		}
-	}
-
-	rf, err := client.Open(oldRemote)
-	if err != nil {
-		return err
-	}
-	defer rf.Close()
-
-	lf, err := os.Create(local + remote)
-	if err != nil {
-		return err
-	}
-	defer lf.Close()
-
-	_, err = io.Copy(lf, rf)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func sftpMakeDir(client *sftp.Client, local string, remote string) error {
-	if GOOS == "windows" {
-		local = strings.Replace(local, "/", "+", -1)
-		local = strings.Replace(local, "\\", "/", -1)
-	}
-	if !strings.HasSuffix(remote, "/") {
-		remote = remote + "/"
-	}
-
-	return client.MkdirAll(remote + local)
-}
-
-func sftpMakeFile(client *sftp.Client, local string, remote string) error {
+func sftpUploadFile(client *sftp.Client, local string, remote string) error {
 	if GOOS == "windows" {
 		local = strings.Replace(local, "/", "+", -1)
 		local = strings.Replace(local, "\\", "/", -1)
@@ -264,6 +241,11 @@ func sftpMakeFile(client *sftp.Client, local string, remote string) error {
 		if _, err := client.Stat(remote + local); err == nil {
 			return RemoteFileExistErr
 		}
+	}
+
+	stat, err := os.Stat(local)
+	if err != nil || !stat.Mode().IsRegular() {
+		return fmt.Errorf("can only upload regular file: %v", err)
 	}
 
 	rf, err := client.Create(remote + local)

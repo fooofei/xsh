@@ -15,7 +15,10 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/example/command/</guid>
-      <description>执行命令 </description>
+      <description>执行命令 前提  已设置好配置项：系统配置、认证配置、主机配置 已切换到目标主机组环境   以group=alpha02为例
+ 执行方式：普通用户 切换上下文 命令：:do
+[alpha02:do]# :do[alpha02:do]#执行单条命令 [alpha02:do]# whoami..[192.168.170.109 ] ---------------------------------------------------------abc[192.168.165.37 ] ---------------------------------------------------------abc执行多条命令 [alpha02:do]# whoami;date;pwd..[192.168.165.37 ] ---------------------------------------------------------abcMon May 4 10:47:46 CST 2020/home/abc[192.168.170.109 ] ---------------------------------------------------------abcMon May 4 10:47:55 CST 2020/home/abc执行方式：从普通用户切换至其他用户 切换上下文 命令：:sudo
+[alpha02:do]# :sudo[alpha02:sudo]#执行单条命令 [alpha02:sudo]# whoami..[192.168.165.37 ] ---------------------------------------------------------rootWarn =&amp;gt;[sudo] password for root:[192.</description>
     </item>
     
     <item>

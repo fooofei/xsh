@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	. "github.com/xied5531/xsh/base"
 	. "github.com/xied5531/xsh/out"
 	. "github.com/xied5531/xsh/sh"
@@ -59,4 +60,14 @@ func runCopy() {
 	}
 
 	Out(action.Do())
+}
+
+func runCrypt() {
+	if *Plain != "" {
+		fmt.Printf("%s -> %s\n", *Plain, GetMaskPassword(*Plain))
+	} else if *Cipher != "" {
+		fmt.Printf("%s -> %s\n", *Cipher, GetPlainPassword(*Cipher))
+	} else {
+		Error.Println("crypt plain or cipher text not found")
+	}
 }

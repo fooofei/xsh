@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	Mode = flag.String("mode", "prompt", "The running mode. value ranges: task/cmd/copy/prompt")
+	Mode = flag.String("mode", "prompt", "The running mode. value ranges: task/cmd/copy/crypt/prompt")
 
 	Task  = flag.String("task", "", "The task yaml file in task mode")
 	Value = flag.String("value", "", "The value yaml file in task mode")
@@ -21,6 +21,9 @@ var (
 	Direction = flag.String("direction", "", "The direction upload/download in copy mode")
 	Local     = flag.String("local", "", "The local path in copy mode")
 	Remote    = flag.String("remote", "", "The remote path in copy mode")
+
+	Plain  = flag.String("plain", "", "The plain text to encrypt in crypt mode")
+	Cipher = flag.String("cipher", "", "The cipher text to decrypt in crypt mode")
 )
 
 func initFlag() {

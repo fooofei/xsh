@@ -12,6 +12,8 @@ func main() {
 		runCopy()
 	case "prompt":
 		runPrompt()
+	case "crypt":
+		runCrypt()
 	default:
 		Error.Printf("run mode[%s] not support", *Mode)
 	}

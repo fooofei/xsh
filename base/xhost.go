@@ -93,16 +93,23 @@ func checkHostDetail(hostDetail HostDetail) bool {
 }
 
 func postProcessHostGroup() {
+	var err error
 	for name, xHost := range XHostMap {
 		allHost := make([]HostDetail, 0)
-		for _, v := range xHost.Details {
-			if !checkHostDetail(v) {
-				log.Fatalf("Hostgroup[%s] Details[%s] illegal", name, v.Address)
+		for _, value := range xHost.Details {
+			if !checkHostDetail(value) {
+				log.Fatalf("Host[%s] detail[%s] illegal", name, value.Address)
 			}
-			v.Password = GetPlainPassword(v.Password)
-			v.SuPass = GetPlainPassword(v.SuPass)
-			v.Passphrase = GetPlainPassword(v.Passphrase)
-			allHost = append(allHost, v)
+			if value.Password, err = GetPlainPassword(value.Password); err != nil {
+				Error.Printf("host[%s] detail[%s] password decrypt error: %v", name, value.Address, err)
+			}
+			if value.Passphrase, err = GetPlainPassword(value.Passphrase); err != nil {
+				Error.Printf("host[%s] detail[%s] passphrase decrypt error: %v", name, value.Address, err)
+			}
+			if value.SuPass, err = GetPlainPassword(value.SuPass); err != nil {
+				Error.Printf("host[%s] detail[%s] suPass decrypt error: %v", name, value.Address, err)
+			}
+			allHost = append(allHost, value)
 		}
 
 		if len(xHost.Addresses) != 0 {

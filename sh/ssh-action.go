@@ -75,6 +75,17 @@ func (s *SshAction) checkAction() error {
 		}
 	}
 
+	var err error
+	if s.Detail.Password, err = GetPlainPassword(s.Detail.Password); err != nil {
+		Error.Printf("action[%s] detail[%s] password decrypt error: %v", s.Name, s.Detail.Address, err)
+	}
+	if s.Detail.Passphrase, err = GetPlainPassword(s.Detail.Passphrase); err != nil {
+		Error.Printf("action[%s] detail[%s] passphrase decrypt error: %v", s.Name, s.Detail.Address, err)
+	}
+	if s.Detail.SuPass, err = GetPlainPassword(s.Detail.SuPass); err != nil {
+		Error.Printf("action[%s] detail[%s] suPass decrypt error: %v", s.Name, s.Detail.Address, err)
+	}
+
 	return nil
 }
 

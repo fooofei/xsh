@@ -73,9 +73,17 @@ func runCrypt() {
 	}
 
 	if *Plain != "" {
-		fmt.Printf("%s -> %s\n", *Plain, GetMaskPassword(*Plain))
+		if c, e := GetMaskPassword(*Plain); e != nil {
+			fmt.Printf("%s -> error: %s\n", *Plain, e.Error())
+		} else {
+			fmt.Printf("%s -> %s\n", *Plain, c)
+		}
 	} else if *Cipher != "" {
-		fmt.Printf("%s -> %s\n", *Cipher, GetPlainPassword(*Cipher))
+		if p, e := GetPlainPassword(*Cipher); e != nil {
+			fmt.Printf("%s -> error: %s\n", *Cipher, e.Error())
+		} else {
+			fmt.Printf("%s -> %s\n", *Cipher, p)
+		}
 	} else {
 		Error.Println("crypt plain or cipher text not found")
 	}

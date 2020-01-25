@@ -44,9 +44,15 @@ func InitXAuth() {
 		if !CheckName(value.Name) {
 			log.Fatalf("Auth name [%s] illegal", value.Name)
 		}
-		value.Password = GetPlainPassword(value.Password)
-		value.Passphrase = GetPlainPassword(value.Passphrase)
-		value.SuPass = GetPlainPassword(value.SuPass)
+		if value.Password, err = GetPlainPassword(value.Password); err != nil {
+			Error.Printf("auth[%s] password decrypt error: %v", value.Name, err)
+		}
+		if value.Passphrase, err = GetPlainPassword(value.Passphrase); err != nil {
+			Error.Printf("auth[%s] passphrase decrypt error: %v", value.Name, err)
+		}
+		if value.SuPass, err = GetPlainPassword(value.SuPass); err != nil {
+			Error.Printf("auth[%s] suPass decrypt error: %v", value.Name, err)
+		}
 		XAuthMap[value.Name] = value
 	}
 

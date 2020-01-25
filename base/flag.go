@@ -8,19 +8,19 @@ import (
 )
 
 var (
-	Mode = flag.String("mode", "interaction", "The run mode. value ranges: task/cmd/copy/interaction")
+	Mode = flag.String("mode", "interaction", "The running mode. value ranges: task/cmd/copy/interaction")
 
-	Task  = flag.String("task", "", "The task yaml when run task")
-	Value = flag.String("value", "", "The value yaml when run task")
+	Task  = flag.String("task", "", "The task yaml file in task mode")
+	Value = flag.String("value", "", "The value yaml file in task mode")
 
-	Group = flag.String("group", "", "The group name when run cmd or copy")
+	Group = flag.String("group", "", "The group name in cmd or copy mode")
 
-	Cmd = flag.String("cmd", "", "The command line when run cmd")
-	Su  = flag.Bool("su", false, "Su or not when run cmd")
+	Cmd = flag.String("cmd", "", "The command line in cmd mode")
+	Su  = flag.Bool("su", false, "Su or not in cmd mode")
 
-	Direction = flag.String("direction", "", "The direction upload/download when run copy")
-	Local     = flag.String("local", "", "The local path when run copy")
-	Remote    = flag.String("remote", "", "The remote path when run copy")
+	Direction = flag.String("direction", "", "The direction upload/download in copy mode")
+	Local     = flag.String("local", "", "The local path in copy mode")
+	Remote    = flag.String("remote", "", "The remote path in copy mode")
 )
 
 func initFlag() {

@@ -24,12 +24,12 @@ type SshTaskResult struct {
 var xTask SshTask
 
 func (s SshTask) applyValue() error {
-	if TaskFile == nil {
+	if *TaskFile == "" {
 		return fmt.Errorf("task file not found")
 	}
 
 	var values map[string]interface{}
-	if ValueFile != nil {
+	if *ValueFile != "" {
 		vf, err := ioutil.ReadFile(*ValueFile)
 		if err != nil {
 			return fmt.Errorf("can not read value file[%s], err: %v", *ValueFile, err)

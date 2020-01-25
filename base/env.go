@@ -7,9 +7,9 @@ import (
 	"path"
 )
 
-//Target: group/address
+//Single: group/address
 type CurrentEnv struct {
-	Target  string `yaml:"target,omitempty"`
+	Single  bool   `yaml:"single,omitempty"`
 	Group   string `yaml:"group,omitempty"`
 	Address string `yaml:"address,omitempty"`
 	Auth    string `yaml:"auth,omitempty"`
@@ -21,11 +21,7 @@ type CurrentEnv struct {
 var CurEnv CurrentEnv
 
 func CheckEnv() bool {
-	if CurEnv.Target == "" {
-		return false
-	}
-
-	if CurEnv.Target == "group" {
+	if !CurEnv.Single {
 		return CurEnv.Group != ""
 	}
 
@@ -34,7 +30,7 @@ func CheckEnv() bool {
 
 func SaveEnv() {
 	if CheckEnv() {
-		if CurEnv.Target == "group" {
+		if !CurEnv.Single {
 			CurEnv.Prompt = "[" + CurEnv.Group + CurEnv.Action + "]# "
 		} else {
 			CurEnv.Prompt = "[" + CurEnv.Auth + "@" + CurEnv.Address + CurEnv.Action + "]# "
@@ -56,7 +52,7 @@ func SaveEnv() {
 }
 
 func initEnv() {
-	CurEnv.Target = ""
+	CurEnv.Single = false
 	CurEnv.Prompt = PromptStr
 	CurEnv.Action = ":do"
 	CurEnv.Output = XConfig.Output.Type
@@ -73,7 +69,7 @@ func initEnv() {
 	}
 
 	if CheckEnv() {
-		if CurEnv.Target == "group" {
+		if !CurEnv.Single {
 			CurEnv.Prompt = "[" + CurEnv.Group + CurEnv.Action + "]# "
 		} else {
 			CurEnv.Prompt = "[" + CurEnv.Auth + "@" + CurEnv.Address + CurEnv.Action + "]# "

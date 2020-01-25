@@ -125,11 +125,11 @@ func newCommandAction(line string, su bool) *SshAction {
 
 	action := &SshAction{
 		Name:   "Default",
-		Target: CurEnv.Target,
-		SubActions: []SubAction{{
-			ActionType: "command",
-			Commands:   cmds,
-			Su:         su,
+		Single: CurEnv.Single,
+		Steps: []Step{{
+			Type:     "command",
+			Commands: cmds,
+			Su:       su,
 		}},
 	}
 	setupActionTaget(action)
@@ -159,12 +159,12 @@ func newCopyAction(line string) (*SshAction, error) {
 
 	action := &SshAction{
 		Name:   "Default",
-		Target: CurEnv.Target,
-		SubActions: []SubAction{{
-			ActionType: "copy",
-			Direction:  direction,
-			Local:      local,
-			Remote:     remote,
+		Single: CurEnv.Single,
+		Steps: []Step{{
+			Type:      "copy",
+			Direction: direction,
+			Local:     local,
+			Remote:    remote,
 		}},
 	}
 	setupActionTaget(action)
@@ -173,7 +173,7 @@ func newCopyAction(line string) (*SshAction, error) {
 }
 
 func setupActionTaget(action *SshAction) {
-	if action.Target == "group" {
+	if !action.Single {
 		action.Group = CurEnv.Group
 	} else {
 		authentication := XAuthMap[CurEnv.Auth]
@@ -235,7 +235,7 @@ func set(line string) {
 					fmt.Printf("group[%s] not found\n", currFields[1])
 					return
 				} else {
-					CurEnv.Target = currFields[0]
+					CurEnv.Single = false
 					CurEnv.Group = group.Name
 					CurEnv.Auth = group.Auth
 				}
@@ -252,7 +252,7 @@ func set(line string) {
 					fmt.Printf("address[%s] not found in group [%s]\n", currFields[1], CurEnv.Group)
 					return
 				}
-				CurEnv.Target = currFields[0]
+				CurEnv.Single = true
 				CurEnv.Address = currFields[1]
 			}
 		}

@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-type SubAction struct {
-	ActionType string `yaml:"action_type"` // command/copy
+type Step struct {
+	Type string `yaml:"type"` // command/copy
 
 	// for command
 	Commands []string `yaml:"commands"`
@@ -21,11 +21,11 @@ type SubAction struct {
 }
 
 type SshAction struct {
-	Name       string      `yaml:"name"`
-	Target     string      `yaml:"target"` // group/Address
-	Group      string      `yaml:"group"`
-	Detail     HostDetail  `yaml:"detail"`
-	SubActions []SubAction `yaml:"sub_actions"`
+	Name   string     `yaml:"name"`
+	Single bool       `yaml:"single,omitempty"`
+	Group  string     `yaml:"group,omitempty"`
+	Detail HostDetail `yaml:"detail,omitempty"`
+	Steps  []Step     `yaml:"steps"`
 }
 
 type SshActionResult struct {
@@ -36,13 +36,13 @@ type SshActionResult struct {
 }
 
 func (s *SshAction) checkAction() error {
-	if len(s.SubActions) == 0 {
+	if len(s.Steps) == 0 {
 		return ActionEmptyErr
 	}
 
 	su := false
-	for _, action := range s.SubActions {
-		if action.ActionType == "command" {
+	for _, action := range s.Steps {
+		if action.Type == "command" {
 			if len(action.Commands) == 0 {
 				return CommandEmptyErr
 			}
@@ -63,7 +63,7 @@ func (s *SshAction) checkAction() error {
 	}
 
 	if su {
-		if s.Target == "group" {
+		if !s.Single {
 			a := XAuthMap[XHostMap[s.Group].Auth]
 			if a.SuType == "" {
 				return CommandSuErr
@@ -90,7 +90,7 @@ func (s *SshAction) Do() SshActionResult {
 
 	ctx, _ := context.WithTimeout(context.Background(), time.Duration(XConfig.Timeout.ActionTimeoutS)*time.Second)
 
-	if s.Target == "group" {
+	if !s.Single {
 		sshActionResult.Target = s.Group
 
 		responseCh := make(chan map[string][]sshResponse, 1)
@@ -161,8 +161,8 @@ func (s *SshAction) do4host(ctx context.Context, hostDetail HostDetail, resultCh
 
 	result := make([]sshResponse, 0)
 
-	for _, action := range s.SubActions {
-		switch action.ActionType {
+	for _, action := range s.Steps {
+		switch action.Type {
 		case "command":
 			sc := s.newSshCommand(hostDetail)
 			sc.Commands = action.Commands

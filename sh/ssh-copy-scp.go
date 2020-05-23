@@ -2,6 +2,7 @@ package sh
 
 import (
 	"github.com/hnakamur/go-scp"
+	. "github.com/xied5531/xsh/base"
 	"os"
 	"path/filepath"
 	"strings"
@@ -22,8 +23,12 @@ func (s scpCopy) newSession() (*scp.SCP, error) {
 
 func (s scpCopy) Download(local, remote string) ([]string, error) {
 	local = local + s.SshClient.Host + string(os.PathSeparator)
-	if err := os.Mkdir(local, os.ModeDir|0755); err != nil && !os.IsExist(err) {
+	if err := os.MkdirAll(local, os.ModeDir|0755); err != nil && !os.IsExist(err) {
 		return nil, err
+	}
+
+	if !IsLocalDirEmpty(local) && XConfig.Copy.DirEmptyCheck {
+		return nil, LocalDirNotEmptyErr
 	}
 
 	if strings.HasSuffix(remote, "/") {

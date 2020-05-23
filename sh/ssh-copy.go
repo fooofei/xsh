@@ -69,11 +69,6 @@ func (s sshCopy) upload() SshResponse {
 func (s sshCopy) download() SshResponse {
 	response := SshResponse{}
 
-	if !IsLocalDirEmpty(s.Local) && XConfig.Copy.DirEmptyCheck {
-		response.Err = LocalDirNotEmptyErr
-		return response
-	}
-
 	if !strings.HasSuffix(s.Local, string(os.PathSeparator)) {
 		s.Local = s.Local + string(os.PathSeparator)
 	}

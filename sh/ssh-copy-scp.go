@@ -44,7 +44,7 @@ func (s scpCopy) downloadFile(local, remote string) ([]string, error) {
 	if err := session.ReceiveFile(remote, local); err != nil {
 		return nil, err
 	} else {
-		return []string{local + " <- " + remote + " :OK"}, nil
+		return []string{local + " <- " + remote + " :FILE:OK"}, nil
 	}
 }
 
@@ -59,7 +59,7 @@ func (s scpCopy) downloadDir(local, remote string) ([]string, error) {
 	if err := session.ReceiveDir(remote, local, nil); err != nil {
 		return nil, err
 	} else {
-		return []string{local + " <- " + remote + " :OK"}, nil
+		return []string{local + " <- " + remote + " :DIR:OK"}, nil
 	}
 }
 
@@ -82,7 +82,7 @@ func (s scpCopy) uploadFile(local, remote string) ([]string, error) {
 	if err := session.SendFile(local, remote); err != nil {
 		return nil, err
 	} else {
-		return []string{local + " -> " + remote + " :OK"}, nil
+		return []string{local + " -> " + remote + " :FILE:OK"}, nil
 	}
 }
 
@@ -97,6 +97,6 @@ func (s scpCopy) uploadDir(local, remote string) ([]string, error) {
 	if err := session.SendDir(local, remote, nil); err != nil {
 		return nil, err
 	} else {
-		return []string{local + " -> " + remote + " :OK"}, nil
+		return []string{local + " -> " + remote + " :DIR:OK"}, nil
 	}
 }

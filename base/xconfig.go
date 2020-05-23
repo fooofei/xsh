@@ -30,9 +30,7 @@ type config struct {
 	} `yaml:"command,omitempty"`
 
 	Copy struct {
-		Protocol          string `yaml:"protocol,omitempty"`
-		SftpMaxPacketSize int    `yaml:"sftp_max_package_size,omitempty"`
-		DirEmptyCheck     bool   `yaml:"dir_empty_check,omitempty"`
+		DirEmptyCheck bool `yaml:"dir_empty_check,omitempty"`
 	} `yaml:"copy,omitempty"`
 
 	Cache struct {
@@ -118,12 +116,6 @@ func setupXConfigDefault() {
 		XConfig.Command.Pty.IntervalMS = 100
 	}
 
-	if XConfig.Copy.Protocol == "" {
-		XConfig.Copy.Protocol = "sftp"
-	}
-	if XConfig.Copy.SftpMaxPacketSize <= 0 {
-		XConfig.Copy.SftpMaxPacketSize = 32768
-	}
 	if !XConfig.Copy.DirEmptyCheck {
 		XConfig.Copy.DirEmptyCheck = true
 	}

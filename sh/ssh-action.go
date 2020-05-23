@@ -139,12 +139,8 @@ func (s *SshAction) newSshCopy(hostDetail HostDetail) sshCopy {
 		resut.SshClient.Port = XConfig.Command.Port
 	}
 
-	if XConfig.Copy.Protocol == "sftp" {
-		resut.Copy = sftpCopy{
-			SshClient: resut.SshClient,
-		}
-	} else {
-		//
+	resut.Copy = scpCopy{
+		SshClient: resut.SshClient,
 	}
 
 	return resut

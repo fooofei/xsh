@@ -56,16 +56,11 @@ func GetLocalDir(direction string, path string) (string, error) {
 		}
 	}
 
-	p, e := filepath.Abs(path)
-	if e != nil {
-		return "", e
-	}
-
 	if direction == "download" && !strings.HasSuffix(path, string(os.PathSeparator)) {
-		p = p + string(os.PathSeparator)
+		path = path + string(os.PathSeparator)
 	}
 
-	return p, nil
+	return path, nil
 }
 
 func GetRemoteDir(direction string, path string) (string, error) {
@@ -101,18 +96,4 @@ func IsLocalDirEmpty(path string) bool {
 func IsRemoteDirEmpty(session *xSshSession, path string) bool {
 	stdout, _, _ := session.OutputStdoutStderr(fmt.Sprintf("mkdir -p \"%s\" ;ls -A \"%s\"", path, path))
 	return stdout == ""
-}
-
-func CleanPath4Upload(path string) string {
-	if runtime.GOOS == "windows" {
-		return strings.Replace(path, "/", "+", -1)
-	} else {
-		return path
-	}
-}
-
-func CleanPath4Download(path string) string {
-	path = strings.Replace(path, "\\", "+", -1)
-	path = strings.Replace(path, ":", "=", -1)
-	return path
 }

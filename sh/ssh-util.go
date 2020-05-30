@@ -41,7 +41,7 @@ func checkCommands(commands []string) error {
 }
 
 func checkFullPath(local string, remote string) error {
-	remote = strings.Trim(remote, " ")
+	remote = strings.TrimSpace(remote)
 	if strings.Contains(remote, "\\") {
 		return RemoteDirFormatIllegal
 	}
@@ -49,7 +49,7 @@ func checkFullPath(local string, remote string) error {
 		return RemoteDirTypeIllegal
 	}
 
-	local = strings.Trim(local, " ")
+	local = strings.TrimSpace(local)
 	if runtime.GOOS == "windows" {
 		if strings.Contains(local, "/") {
 			return LocalDirFormatIllegal

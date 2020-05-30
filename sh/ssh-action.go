@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	. "github.com/xied5531/xsh/base"
+	"strings"
 	"time"
 )
 
@@ -190,8 +191,8 @@ func (s *SshAction) do4host(ctx context.Context, hostDetail HostDetail, resultCh
 		case "copy":
 			sc := s.newSshCopy(hostDetail)
 			sc.Direction = action.Direction
-			sc.Local = action.Local
-			sc.Remote = action.Remote
+			sc.Local = strings.TrimSpace(action.Local)
+			sc.Remote = strings.TrimSpace(action.Remote)
 
 			s.doCopy(ctx, responseCh, sc)
 			result = append(result, <-responseCh)

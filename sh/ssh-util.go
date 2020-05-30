@@ -40,49 +40,35 @@ func checkCommands(commands []string) error {
 	return nil
 }
 
-func GetLocalDir(direction string, path string) (string, error) {
-	path = strings.Trim(path, " ")
+func checkFullPath(local string, remote string) error {
+	remote = strings.Trim(remote, " ")
+	if strings.Contains(remote, "\\") {
+		return RemoteDirFormatIllegal
+	}
+	if !strings.HasPrefix(remote, "/") {
+		return RemoteDirTypeIllegal
+	}
+
+	local = strings.Trim(local, " ")
 	if runtime.GOOS == "windows" {
-		if strings.Contains(path, "/") {
-			return "", LocalDirFormatIllegal
+		if strings.Contains(local, "/") {
+			return LocalDirFormatIllegal
 		}
 
-		if !strings.HasSuffix(filepath.VolumeName(path), ":") {
-			return "", LocalDirTypeIllegal
+		if !strings.HasSuffix(filepath.VolumeName(local), ":") {
+			return LocalDirTypeIllegal
 		}
 	} else {
-		if strings.Contains(path, "\\") {
-			return "", LocalDirFormatIllegal
+		if strings.Contains(local, "\\") {
+			return LocalDirFormatIllegal
 		}
 
-		if !strings.HasSuffix(path, "/") {
-			return "", LocalDirTypeIllegal
+		if !strings.HasSuffix(local, "/") {
+			return LocalDirTypeIllegal
 		}
 	}
 
-	if direction == "download" && !strings.HasSuffix(path, string(os.PathSeparator)) {
-		path = path + string(os.PathSeparator)
-	}
-
-	return path, nil
-}
-
-func GetRemoteDir(direction string, path string) (string, error) {
-	path = strings.Trim(path, " ")
-
-	if strings.Contains(path, "\\") {
-		return "", RemoteDirFormatIllegal
-	}
-
-	if !strings.HasPrefix(path, "/") {
-		return "", RemoteDirTypeIllegal
-	}
-
-	if direction == "upload" && !strings.HasSuffix(path, "/") {
-		path = path + "/"
-	}
-
-	return path, nil
+	return nil
 }
 
 func IsLocalDirEmpty(path string) bool {

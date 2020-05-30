@@ -54,10 +54,10 @@ func (s *SshAction) checkAction() error {
 			}
 		} else {
 			if action.Direction != "upload" && action.Direction != "download" {
-				return CopyInfoErr
+				return CopyDirectionErr
 			}
-			if action.Local == "" || action.Remote == "" {
-				return CopyInfoErr
+			if err := checkFullPath(action.Local, action.Remote); err != nil {
+				return err
 			}
 		}
 	}

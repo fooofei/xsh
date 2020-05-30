@@ -4,6 +4,7 @@ import (
 	"fmt"
 	. "github.com/xied5531/xsh/base"
 	. "github.com/xied5531/xsh/sh"
+	"os"
 	"strings"
 )
 
@@ -50,10 +51,20 @@ func runCopy() {
 		return
 	}
 
-	local, le := GetLocalDir(*Direction, *Local)
-	remote, re := GetRemoteDir(*Direction, *Remote)
-	if le != nil || re != nil {
-		Error.Printf("path illegal, local: %v; remote: %v", le, re)
+	var direction = *Direction
+	var local = *Local
+	var remote = *Remote
+
+	if direction == "upload" {
+		if !strings.HasSuffix(remote, "/") {
+			remote = remote + "/"
+		}
+	} else if direction == "download" {
+		if !strings.HasSuffix(local, string(os.PathSeparator)) {
+			local = local + string(os.PathSeparator)
+		}
+	} else {
+		Error.Printf("direction illegal")
 		return
 	}
 

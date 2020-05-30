@@ -91,6 +91,8 @@ func (s *SshAction) checkAction() error {
 }
 
 func (s *SshAction) Do() SshActionResult {
+	Info.Printf("action name:%s, steps:%+v", s.Name, s.Steps)
+
 	sshActionResult := SshActionResult{
 		Name:       s.Name,
 		StepResult: make(map[string][]SshResponse),

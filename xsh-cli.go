@@ -4,7 +4,6 @@ import (
 	"fmt"
 	. "github.com/xied5531/xsh/base"
 	. "github.com/xied5531/xsh/sh"
-	"os"
 	"strings"
 )
 
@@ -51,31 +50,14 @@ func runCopy() {
 		return
 	}
 
-	var direction = *Direction
-	var local = *Local
-	var remote = *Remote
-
-	if direction == "upload" {
-		if !strings.HasSuffix(remote, "/") {
-			remote = remote + "/"
-		}
-	} else if direction == "download" {
-		if !strings.HasSuffix(local, string(os.PathSeparator)) {
-			local = local + string(os.PathSeparator)
-		}
-	} else {
-		Error.Printf("direction illegal")
-		return
-	}
-
 	action := SshAction{
 		Name:  "Default",
 		Group: *Group,
 		Steps: []Step{{
 			Type:      "copy",
 			Direction: *Direction,
-			Local:     local,
-			Remote:    remote,
+			Local:     *Local,
+			Remote:    *Remote,
 		}},
 	}
 

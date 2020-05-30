@@ -5,7 +5,6 @@ import (
 	. "github.com/xied5531/xsh/base"
 	. "github.com/xied5531/xsh/sh"
 	"log"
-	"os"
 	"sort"
 	"strings"
 )
@@ -140,18 +139,11 @@ func newCopyAction(line string) (*SshAction, error) {
 		fields = strings.Split(line, "->")
 		local = fields[0]
 		remote = fields[1]
-		if !strings.HasSuffix(remote, "/") {
-			remote = remote + "/"
-		}
 	} else if strings.Contains(line, "<-") {
 		direction = "download"
 		fields = strings.Split(line, "<-")
 		local = fields[0]
 		remote = fields[1]
-
-		if !strings.HasSuffix(local, string(os.PathSeparator)) {
-			local = local + string(os.PathSeparator)
-		}
 	} else {
 		return nil, fmt.Errorf("line[%s] format illegal", line)
 	}

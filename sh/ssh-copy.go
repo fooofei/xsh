@@ -28,6 +28,9 @@ func (s sshCopy) run() SshResponse {
 }
 
 func (s sshCopy) copy(arg interface{}) SshResponse {
+	s.Local = strings.TrimSpace(s.Local)
+	s.Remote = strings.TrimSpace(s.Remote)
+
 	d := arg.(string)
 	if d == "upload" {
 		return s.upload()

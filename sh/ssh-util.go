@@ -54,6 +54,10 @@ func GetLocalDir(direction string, path string) (string, error) {
 		if strings.Contains(path, "\\") {
 			return "", LocalDirFormatIllegal
 		}
+
+		if !strings.HasSuffix(path, "/") {
+			return "", LocalDirTypeIllegal
+		}
 	}
 
 	if direction == "download" && !strings.HasSuffix(path, string(os.PathSeparator)) {

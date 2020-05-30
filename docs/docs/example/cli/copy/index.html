@@ -5,14 +5,15 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Copy"><meta property="og:title" content="" />
-<meta property="og:description" content="上传下载 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  上传时，local可以是文件或文件夹，remote默认是文件夹 下载时，remote可以是文件或文件夹，local默认是文件夹 仅支持以默认用户执行，不支持切换用户执行  上传  将本地节点上的内容上传至远端目标主机组的每个主机上
+<meta property="og:description" content="上传下载 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  件或文件夹必须是全路径，例如：D:\tmp\LICENSE（Windows）或/tmp/abc（Linux） 上传时，local可以是文件或文件夹，remote默认是文件夹 下载时，remote可以是文件或文件夹，local默认是文件夹 仅支持以默认用户执行，不支持切换用户执行   末尾带路径分隔符表示文件夹，否则表示文件
+ 上传  将本地节点上的内容上传至远端目标主机组的每个主机上
  文件：
-$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tmp\LICENSE -remote /home/abc/cli/copy[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&gt; /home/abc/cli/copy/LICENSE :OK[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&gt; /home/abc/cli/copy/LICENSE :OK文件夹：
-$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tmp -remote /home/abc/cli/copy/folder[192.168.165.37 ] ---------------------------------------------------------D:\tmp -&gt; /home/abc/cli/copy/folder/tmp :OKD:\tmp\LICENSE -&gt; /home/abc/cli/copy/folder/tmp/LICENSE :OKD:\tmp\hello -&gt; /home/abc/cli/copy/folder/tmp/hello :OKD:\tmp\hello\README." />
+$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tmp\LICENSE -remote /tmp/xsh/copy3/file[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&gt; /tmp/xsh/copy3/file/LICENSE :FILE:OK[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&gt; /tmp/xsh/copy3/file/LICENSE :FILE:OK文件夹：
+$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tmp\hello\ -remote /tmp/xsh/copy3/dir[192.168.170.109 ] ---------------------------------------------------------D:\tmp\hello\ -&gt; /tmp/xsh/copy3/dir/hello :DIR:OK[192.168.165.37 ] ---------------------------------------------------------D:\tmp\hello\ -&gt; /tmp/xsh/copy3/dir/hello :DIR:OK下载  将远端目标主机组的每个主机上的内容下载至本地节点，按目标IP新建文件夹进行隔离" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/cli/copy/" />
 
-<title>Copy | xsh</title>
+<title>Copy | xsh 1.0.1</title>
 <link rel="icon" href="/xsh/favicon.png" type="image/x-icon">
 
 
@@ -45,7 +46,7 @@ https://github.com/alex-shpak/hugo-book
       
   <nav>
 <h2 class="book-brand">
-  <a href="/xsh"><span>xsh</span>
+  <a href="/xsh"><span>xsh 1.0.1</span>
   </a>
 </h2>
 
@@ -174,116 +175,49 @@ https://github.com/alex-shpak/hugo-book
 </ul>
 <h2 id="说明">说明</h2>
 <ul>
+<li>件或文件夹必须是全路径，例如：<code>D:\tmp\LICENSE</code>（Windows）或<code>/tmp/abc</code>（Linux）</li>
 <li>上传时，local可以是文件或文件夹，remote默认是文件夹</li>
 <li>下载时，remote可以是文件或文件夹，local默认是文件夹</li>
 <li>仅支持以默认用户执行，不支持切换用户执行</li>
 </ul>
+<blockquote>
+<p>末尾带路径分隔符表示文件夹，否则表示文件</p>
+</blockquote>
 <h2 id="上传">上传</h2>
 <blockquote>
 <p>将本地节点上的内容上传至远端目标主机组的每个主机上</p>
 </blockquote>
 <p>文件：</p>
-<pre><code>$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tmp\LICENSE -remote /home/abc/cli/copy
+<pre><code>$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tmp\LICENSE -remote /tmp/xsh/copy3/file
 [192.168.170.109   ] ---------------------------------------------------------
-D:\tmp\LICENSE -&gt; /home/abc/cli/copy/LICENSE :OK
+D:\tmp\LICENSE -&gt; /tmp/xsh/copy3/file/LICENSE :FILE:OK
 [192.168.165.37    ] ---------------------------------------------------------
-D:\tmp\LICENSE -&gt; /home/abc/cli/copy/LICENSE :OK
+D:\tmp\LICENSE -&gt; /tmp/xsh/copy3/file/LICENSE :FILE:OK
 
 </code></pre><p>文件夹：</p>
-<pre><code>$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tmp -remote /home/abc/cli/copy/folder
-[192.168.165.37    ] ---------------------------------------------------------
-D:\tmp -&gt; /home/abc/cli/copy/folder/tmp :OK
-D:\tmp\LICENSE -&gt; /home/abc/cli/copy/folder/tmp/LICENSE :OK
-D:\tmp\hello -&gt; /home/abc/cli/copy/folder/tmp/hello :OK
-D:\tmp\hello\README.md -&gt; /home/abc/cli/copy/folder/tmp/hello/README.md :OK
+<pre><code>$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tmp\hello\ -remote /tmp/xsh/copy3/dir
 [192.168.170.109   ] ---------------------------------------------------------
-D:\tmp -&gt; /home/abc/cli/copy/folder/tmp :OK
-D:\tmp\LICENSE -&gt; /home/abc/cli/copy/folder/tmp/LICENSE :OK
-D:\tmp\hello -&gt; /home/abc/cli/copy/folder/tmp/hello :OK
-D:\tmp\hello\README.md -&gt; /home/abc/cli/copy/folder/tmp/hello/README.md :OK
-
-</code></pre><p>检查结果：</p>
-<pre><code>$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd &quot;find /home/abc/cli/copy&quot;
+D:\tmp\hello\ -&gt; /tmp/xsh/copy3/dir/hello :DIR:OK
 [192.168.165.37    ] ---------------------------------------------------------
-/home/abc/cli/copy
-/home/abc/cli/copy/LICENSE
-/home/abc/cli/copy/folder
-/home/abc/cli/copy/folder/tmp
-/home/abc/cli/copy/folder/tmp/hello
-/home/abc/cli/copy/folder/tmp/hello/README.md
-/home/abc/cli/copy/folder/tmp/LICENSE
-
-[192.168.170.109   ] ---------------------------------------------------------
-/home/abc/cli/copy
-/home/abc/cli/copy/LICENSE
-/home/abc/cli/copy/folder
-/home/abc/cli/copy/folder/tmp
-/home/abc/cli/copy/folder/tmp/hello
-/home/abc/cli/copy/folder/tmp/hello/README.md
-/home/abc/cli/copy/folder/tmp/LICENSE
-
+D:\tmp\hello\ -&gt; /tmp/xsh/copy3/dir/hello :DIR:OK
 
 </code></pre><h2 id="下载">下载</h2>
 <blockquote>
 <p>将远端目标主机组的每个主机上的内容下载至本地节点，按目标IP新建文件夹进行隔离</p>
 </blockquote>
 <p>文件：</p>
-<pre><code>$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction download -local D:\tmp\cli -remote /home/abc/cli/copy/LICENSE
+<pre><code>$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction download -local D:\tmp\copy3 -remote /tmp/xsh/copy3/file/LICENSE
 [192.168.170.109   ] ---------------------------------------------------------
-D:\tmp\cli\192.168.170.109\LICENSE &lt;- /home/abc/cli/copy/LICENSE :OK
+D:\tmp\copy3\192.168.170.109\LICENSE &lt;- /tmp/xsh/copy3/file/LICENSE :FILE:OK
 [192.168.165.37    ] ---------------------------------------------------------
-D:\tmp\cli\192.168.165.37\LICENSE &lt;- /home/abc/cli/copy/LICENSE :OK
+D:\tmp\copy3\192.168.165.37\LICENSE &lt;- /tmp/xsh/copy3/file/LICENSE :FILE:OK
 
 </code></pre><p>文件夹：</p>
-<pre><code>$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction download -local D:\tmp\cli\folder -remote /home/abc/cli/copy
-[192.168.165.37    ] ---------------------------------------------------------
-D:\tmp\cli\folder\192.168.165.37\copy &lt;- /home/abc/cli/copy :OK
-D:\tmp\cli\folder\192.168.165.37\copy\LICENSE &lt;- /home/abc/cli/copy/LICENSE :OK
-D:\tmp\cli\folder\192.168.165.37\copy\folder &lt;- /home/abc/cli/copy/folder :OK
-D:\tmp\cli\folder\192.168.165.37\copy\folder\tmp &lt;- /home/abc/cli/copy/folder/tmp :OK
-D:\tmp\cli\folder\192.168.165.37\copy\folder\tmp\hello &lt;- /home/abc/cli/copy/folder/tmp/hello :OK
-D:\tmp\cli\folder\192.168.165.37\copy\folder\tmp\hello\README.md &lt;- /home/abc/cli/copy/folder/tmp/hello/README.md :OK
-D:\tmp\cli\folder\192.168.165.37\copy\folder\tmp\LICENSE &lt;- /home/abc/cli/copy/folder/tmp/LICENSE :OK
+<pre><code>$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction download -local D:\tmp\copy5 -remote /tmp/xsh/copy3/dir/
 [192.168.170.109   ] ---------------------------------------------------------
-D:\tmp\cli\folder\192.168.170.109\copy &lt;- /home/abc/cli/copy :OK
-D:\tmp\cli\folder\192.168.170.109\copy\LICENSE &lt;- /home/abc/cli/copy/LICENSE :OK
-D:\tmp\cli\folder\192.168.170.109\copy\folder &lt;- /home/abc/cli/copy/folder :OK
-D:\tmp\cli\folder\192.168.170.109\copy\folder\tmp &lt;- /home/abc/cli/copy/folder/tmp :OK
-D:\tmp\cli\folder\192.168.170.109\copy\folder\tmp\hello &lt;- /home/abc/cli/copy/folder/tmp/hello :OK
-D:\tmp\cli\folder\192.168.170.109\copy\folder\tmp\hello\README.md &lt;- /home/abc/cli/copy/folder/tmp/hello/README.md :OK
-D:\tmp\cli\folder\192.168.170.109\copy\folder\tmp\LICENSE &lt;- /home/abc/cli/copy/folder/tmp/LICENSE :OK
-
-</code></pre><pre><code>$ tree /F d:\tmp\cli
-D:\TMP\CLI
-├─192.168.165.37
-│      LICENSE
-│
-├─192.168.170.109
-│      LICENSE
-│
-└─folder
-    ├─192.168.165.37
-    │  └─copy
-    │      │  LICENSE
-    │      │
-    │      └─folder
-    │          └─tmp
-    │              │  LICENSE
-    │              │
-    │              └─hello
-    │                      README.md
-    │
-    └─192.168.170.109
-        └─copy
-            │  LICENSE
-            │
-            └─folder
-                └─tmp
-                    │  LICENSE
-                    │
-                    └─hello
-                            README.md
-
+D:\tmp\copy5\192.168.170.109\dir &lt;- /tmp/xsh/copy3/dir/ :DIR:OK
+[192.168.165.37    ] ---------------------------------------------------------
+D:\tmp\copy5\192.168.165.37\dir &lt;- /tmp/xsh/copy3/dir/ :DIR:OK
 
 </code></pre></article>
  

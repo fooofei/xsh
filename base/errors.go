@@ -14,11 +14,11 @@ var (
 	CopyDirectionErr = errors.New("copy direction illegal")
 
 	LocalDirFormatIllegal = errors.New("local dir format illegal")
-	LocalDirTypeIllegal   = errors.New("local dir type illegal")
+	LocalDirTypeIllegal   = errors.New("local dir type illegal, must be full path")
 	LocalDirNotEmptyErr   = errors.New("local dir not empty")
 
 	RemoteDirFormatIllegal = errors.New("remote dir format illegal")
-	RemoteDirTypeIllegal   = errors.New("remote dir type illegal")
+	RemoteDirTypeIllegal   = errors.New("remote dir type illegal, must be full path")
 	RemoteDirNotEmptyErr   = errors.New("remote dir not empty")
 
 	CryptTypeUnknown = errors.New("crypt type unknown")

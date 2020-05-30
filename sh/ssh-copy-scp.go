@@ -92,16 +92,16 @@ func (s scpCopy) uploadFile(local, remote string) ([]string, error) {
 }
 
 func (s scpCopy) uploadDir(local, remote string) ([]string, error) {
-	remote = remote + filepath.Base(filepath.Dir(local))
-
 	session, err := s.newSession()
 	if err != nil {
 		return nil, err
 	}
 
-	if err := session.SendDir(local, remote, nil); err != nil {
+	if err := session.SendDir(local, remote, func(parentDir string, info os.FileInfo) (b bool, e error) {
+		return parentDir != local, nil
+	}); err != nil {
 		return nil, err
 	} else {
-		return []string{local + " -> " + remote + " :DIR:OK"}, nil
+		return []string{local + " -> " + remote + filepath.Base(filepath.Dir(local)) + " :DIR:OK"}, nil
 	}
 }

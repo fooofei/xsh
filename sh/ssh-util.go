@@ -63,7 +63,7 @@ func checkFullPath(local string, remote string) error {
 			return LocalDirFormatIllegal
 		}
 
-		if !strings.HasSuffix(local, "/") {
+		if !strings.HasPrefix(local, "/") {
 			return LocalDirTypeIllegal
 		}
 	}

@@ -95,7 +95,7 @@ func checkPath4Download(local string) error {
 	}
 
 	makeLocalDir(local)
-	if !XConfig.Copy.DirEmptyCheck && isLocalDirEmpty(local) {
+	if XConfig.Copy.DirEmptyCheck && isLocalDirEmpty(local) {
 		return LocalDirNotEmptyErr
 	}
 
@@ -116,7 +116,7 @@ func checkPath4Upload(session *xSshSession, local, remote string) error {
 	}
 
 	makeRemoteDir(session, remote+target)
-	if !XConfig.Copy.DirEmptyCheck && isRemoteDirEmpty(session, remote+target) {
+	if XConfig.Copy.DirEmptyCheck && isRemoteDirEmpty(session, remote+target) {
 		return RemoteDirNotEmptyErr
 	}
 

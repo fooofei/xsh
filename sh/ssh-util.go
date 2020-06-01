@@ -72,7 +72,11 @@ func checkFullPath(local string, remote string) error {
 }
 
 func isLocalFileExist(file string) bool {
-	if f, err := os.Stat(file); err != nil {
+	target := file
+	if strings.HasSuffix(file, string(os.PathSeparator)) {
+		target = filepath.Dir(target)
+	}
+	if f, err := os.Stat(target); err != nil {
 		return false
 	} else {
 		return !f.IsDir()
@@ -80,7 +84,11 @@ func isLocalFileExist(file string) bool {
 }
 
 func isLocalDirExist(path string) bool {
-	if f, err := os.Stat(path); err != nil {
+	target := path
+	if strings.HasSuffix(path, string(os.PathSeparator)) {
+		target = filepath.Dir(target)
+	}
+	if f, err := os.Stat(target); err != nil {
 		return false
 	} else {
 		return f.IsDir()

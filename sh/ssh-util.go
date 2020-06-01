@@ -108,21 +108,21 @@ func isLocalDirEmpty(path string) bool {
 	return true
 }
 
-func isRemoteFileExist(session *xSshSession, file string) bool {
-	stdout, _, _ := session.OutputStdoutStderr(fmt.Sprintf("ls -F \"%s\"", file))
-	return stdout != "" && strings.HasSuffix(stdout, "*")
+func isRemoteFileExist(session sshSession, file string) bool {
+	res := session.run(fmt.Sprintf("ls -F '%s'", file))
+	return res.Stdout != "" && strings.HasSuffix(res.Stdout, "*")
 }
 
-func isRemoteDirExist(session *xSshSession, path string) bool {
-	stdout, _, _ := session.OutputStdoutStderr(fmt.Sprintf("ls -F \"%s\"", path))
-	return stdout != "" && strings.HasSuffix(stdout, "/")
+func isRemoteDirExist(session sshSession, path string) bool {
+	res := session.run(fmt.Sprintf("ls -F '%s'", path))
+	return res.Stdout != "" && strings.HasSuffix(res.Stdout, "/")
 }
 
-func makeRemoteDir(session *xSshSession, path string) {
-	_, _, _ = session.OutputStdoutStderr(fmt.Sprintf("mkdir -p \"%s\"", path))
+func makeRemoteDir(session sshSession, path string) {
+	_ = session.run(fmt.Sprintf("mkdir -p '%s'", path))
 }
 
-func isRemoteDirEmpty(session *xSshSession, path string) bool {
-	stdout, _, _ := session.OutputStdoutStderr(fmt.Sprintf("mkdir -p \"%s\" ;ls -A \"%s\"", path, path))
-	return stdout == ""
+func isRemoteDirEmpty(session sshSession, path string) bool {
+	res := session.run(fmt.Sprintf("ls -A '%s'", path))
+	return res.Stdout == ""
 }

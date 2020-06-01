@@ -44,19 +44,13 @@ func (s sshCopy) copy(arg interface{}) SshResponse {
 func (s sshCopy) upload() SshResponse {
 	response := SshResponse{}
 
-	xs, err := sshSession{
-		Client: s.SshClient,
-	}.newSession()
-	if err != nil {
-		response.Err = err
-		return response
-	}
-	defer xs.Close()
-
 	if !strings.HasSuffix(s.Remote, "/") {
 		s.Remote = s.Remote + "/"
 	}
 
+	xs := sshSession{
+		Client: s.SshClient,
+	}
 	if err := checkPath4Upload(xs, s.Local, s.Remote); err != nil {
 		response.Err = err
 		return response
@@ -102,7 +96,7 @@ func checkPath4Download(local string) error {
 	return nil
 }
 
-func checkPath4Upload(session *xSshSession, local, remote string) error {
+func checkPath4Upload(session sshSession, local, remote string) error {
 	target := filepath.Base(local)
 
 	if strings.HasSuffix(local, string(os.PathSeparator)) {

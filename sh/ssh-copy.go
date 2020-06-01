@@ -103,7 +103,7 @@ func checkPath4Download(session sshSession, local, remote string) error {
 	}
 
 	makeLocalDir(local)
-	if XConfig.Copy.DirEmptyCheck && !isLocalDirEmpty(local) {
+	if XConfig.Copy.OverrideCheck && !isLocalDirEmpty(local) {
 		return fmt.Errorf("local dir not empty: %s", local)
 	}
 
@@ -121,6 +121,11 @@ func checkPath4Upload(session sshSession, local, remote string) error {
 		if isRemoteFileExist(session, remote+target) {
 			return fmt.Errorf("remote file exist: %s", remote+target)
 		}
+
+		makeRemoteDir(session, remote+target)
+		if XConfig.Copy.OverrideCheck && !isRemoteDirEmpty(session, remote+target) {
+			return fmt.Errorf("remote dir not empty: %s", remote+target)
+		}
 	} else {
 		if !isLocalFileExist(local) {
 			return fmt.Errorf("local file not exist: %s", local)
@@ -129,11 +134,10 @@ func checkPath4Upload(session sshSession, local, remote string) error {
 		if isRemoteDirExist(session, remote+target) {
 			return fmt.Errorf("remote dir exist: %s", remote+target)
 		}
-	}
 
-	makeRemoteDir(session, remote+target)
-	if XConfig.Copy.DirEmptyCheck && !isRemoteDirEmpty(session, remote+target) {
-		return fmt.Errorf("remote dir not empty: %s", remote+target)
+		if XConfig.Copy.OverrideCheck && isRemoteFileExist(session, remote+target) {
+			return fmt.Errorf("remote file exist: %s", remote+target)
+		}
 	}
 
 	return nil

@@ -57,7 +57,7 @@ func (s sshCopy) upload() SshResponse {
 		s.Remote = s.Remote + "/"
 	}
 
-	if err := checkPath4Upload(xs, s.Remote); err != nil {
+	if err := checkPath4Upload(xs, s.Local, s.Remote); err != nil {
 		response.Err = err
 		return response
 	}
@@ -77,7 +77,7 @@ func (s sshCopy) download() SshResponse {
 		s.Local = s.Local + string(os.PathSeparator)
 	}
 
-	if err := checkPath4Download(s.Remote); err != nil {
+	if err := checkPath4Download(s.Local); err != nil {
 		response.Err = err
 		return response
 	}
@@ -89,42 +89,34 @@ func (s sshCopy) download() SshResponse {
 	return response
 }
 
-func checkPath4Download(remote string) error {
-	target := filepath.Base(remote)
-
-	if strings.HasSuffix(remote, "/") {
-		if isLocalFileExist(target) {
-			return LocalFileExistErr
-		}
-	} else {
-		if isLocalDirExist(target) {
-			return LocalDirExistErr
-		}
+func checkPath4Download(local string) error {
+	if isLocalFileExist(local) {
+		return LocalFileExistErr
 	}
 
-	makeLocalDir(target)
-	if !XConfig.Copy.Override && isLocalDirEmpty(target) {
+	makeLocalDir(local)
+	if !XConfig.Copy.DirEmptyCheck && isLocalDirEmpty(local) {
 		return LocalDirNotEmptyErr
 	}
 
 	return nil
 }
 
-func checkPath4Upload(session *xSshSession, local string) error {
+func checkPath4Upload(session *xSshSession, local, remote string) error {
 	target := filepath.Base(local)
 
 	if strings.HasSuffix(local, string(os.PathSeparator)) {
-		if isRemoteFileExist(session, target) {
+		if isRemoteFileExist(session, remote+target) {
 			return RemoteFileExistErr
 		}
 	} else {
-		if isRemoteDirExist(session, target) {
+		if isRemoteDirExist(session, remote+target) {
 			return RemoteDirExistErr
 		}
 	}
 
-	makeRemoteDir(session, target)
-	if !XConfig.Copy.Override && isRemoteDirEmpty(session, target) {
+	makeRemoteDir(session, remote+target)
+	if !XConfig.Copy.DirEmptyCheck && isRemoteDirEmpty(session, remote+target) {
 		return RemoteDirNotEmptyErr
 	}
 

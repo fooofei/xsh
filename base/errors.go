@@ -13,13 +13,17 @@ var (
 
 	CopyDirectionErr = errors.New("copy direction illegal")
 
-	LocalDirFormatIllegal = errors.New("local dir format illegal")
-	LocalDirTypeIllegal   = errors.New("local dir type illegal, must be full path")
-	LocalDirNotEmptyErr   = errors.New("local dir not empty")
+	LocalFileExistErr   = errors.New("local file can not exist")
+	LocalDirExistErr    = errors.New("local dir can not exist")
+	LocalDirNotEmptyErr = errors.New("local dir not empty")
+	LocalPathNotFullErr = errors.New("local path must be full path")
+	LocalPathIllegalErr = errors.New("local path name illegal")
 
-	RemoteDirFormatIllegal = errors.New("remote dir format illegal")
-	RemoteDirTypeIllegal   = errors.New("remote dir type illegal, must be full path")
-	RemoteDirNotEmptyErr   = errors.New("remote dir not empty")
+	RemoteFileExistErr   = errors.New("remote file can not exist")
+	RemoteDirExistErr    = errors.New("remote dir can not exist")
+	RemoteDirNotEmptyErr = errors.New("remote dir not empty")
+	RemotePathNotFullErr = errors.New("remote path must be full path")
+	RemotePathIllegalErr = errors.New("remote path name illegal")
 
 	CryptTypeUnknown = errors.New("crypt type unknown")
 	CryptKeyIllegal  = errors.New("crypt key illegal")

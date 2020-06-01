@@ -30,7 +30,7 @@ type config struct {
 	} `yaml:"command,omitempty"`
 
 	Copy struct {
-		DirEmptyCheck bool `yaml:"dir_empty_check,omitempty"`
+		Override bool `yaml:"override,omitempty"`
 	} `yaml:"copy,omitempty"`
 
 	Cache struct {
@@ -114,10 +114,6 @@ func setupXConfigDefault() {
 	}
 	if XConfig.Command.Pty.IntervalMS <= 0 {
 		XConfig.Command.Pty.IntervalMS = 100
-	}
-
-	if !XConfig.Copy.DirEmptyCheck {
-		XConfig.Copy.DirEmptyCheck = true
 	}
 
 	if XConfig.Cache.ExpirationS <= 0 {

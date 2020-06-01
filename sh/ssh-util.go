@@ -43,47 +43,86 @@ func checkCommands(commands []string) error {
 func checkFullPath(local string, remote string) error {
 	remote = strings.TrimSpace(remote)
 	if strings.Contains(remote, "\\") {
-		return RemoteDirFormatIllegal
+		return RemotePathIllegalErr
 	}
 	if !strings.HasPrefix(remote, "/") {
-		return RemoteDirTypeIllegal
+		return RemotePathNotFullErr
 	}
 
 	local = strings.TrimSpace(local)
 	if runtime.GOOS == "windows" {
 		if strings.Contains(local, "/") {
-			return LocalDirFormatIllegal
+			return LocalPathIllegalErr
 		}
 
 		if !strings.HasSuffix(filepath.VolumeName(local), ":") {
-			return LocalDirTypeIllegal
+			return LocalPathNotFullErr
 		}
 	} else {
 		if strings.Contains(local, "\\") {
-			return LocalDirFormatIllegal
+			return LocalPathIllegalErr
 		}
 
 		if !strings.HasPrefix(local, "/") {
-			return LocalDirTypeIllegal
+			return LocalPathNotFullErr
 		}
 	}
 
 	return nil
 }
 
-func IsLocalDirEmpty(path string) bool {
-	me := os.MkdirAll(path, 0755)
+func isLocalFileExist(file string) bool {
+	if f, err := os.Stat(file); err != nil {
+		return os.IsExist(err) && !f.IsDir()
+	}
+
+	return false
+}
+
+func isLocalDirExist(path string) bool {
+	if f, err := os.Stat(path); err != nil {
+		return os.IsExist(err) && f.IsDir()
+	}
+
+	return false
+}
+
+func makeLocalDir(path string) {
+	if err := os.MkdirAll(path, 0755); err != nil {
+		Warn.Printf("make local dir error: %s", err.Error())
+	}
+}
+
+func isLocalDirEmpty(path string) bool {
 	f, err := os.Open(path)
-	if err != nil || me != nil {
+	if err != nil {
+		Warn.Printf("open local dir error: %s", err.Error())
 		return false
 	}
 	defer f.Close()
 
-	_, err = f.Readdirnames(1)
-	return err == io.EOF
+	if _, err = f.Readdirnames(1); err != io.EOF {
+		return false
+	}
+
+	return true
 }
 
-func IsRemoteDirEmpty(session *xSshSession, path string) bool {
+func isRemoteFileExist(session *xSshSession, file string) bool {
+	stdout, _, _ := session.OutputStdoutStderr(fmt.Sprintf("ls -F \"%s\"", file))
+	return stdout != "" && strings.HasSuffix(stdout, "*")
+}
+
+func isRemoteDirExist(session *xSshSession, path string) bool {
+	stdout, _, _ := session.OutputStdoutStderr(fmt.Sprintf("ls -F \"%s\"", path))
+	return stdout != "" && strings.HasSuffix(stdout, "/")
+}
+
+func makeRemoteDir(session *xSshSession, path string) {
+	_, _, _ = session.OutputStdoutStderr(fmt.Sprintf("mkdir -p \"%s\"", path))
+}
+
+func isRemoteDirEmpty(session *xSshSession, path string) bool {
 	stdout, _, _ := session.OutputStdoutStderr(fmt.Sprintf("mkdir -p \"%s\" ;ls -A \"%s\"", path, path))
 	return stdout == ""
 }

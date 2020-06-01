@@ -73,18 +73,18 @@ func checkFullPath(local string, remote string) error {
 
 func isLocalFileExist(file string) bool {
 	if f, err := os.Stat(file); err != nil {
-		return os.IsExist(err) && !f.IsDir()
+		return false
+	} else {
+		return !f.IsDir()
 	}
-
-	return false
 }
 
 func isLocalDirExist(path string) bool {
 	if f, err := os.Stat(path); err != nil {
-		return os.IsExist(err) && f.IsDir()
+		return false
+	} else {
+		return f.IsDir()
 	}
-
-	return false
 }
 
 func makeLocalDir(path string) {
@@ -109,13 +109,13 @@ func isLocalDirEmpty(path string) bool {
 }
 
 func isRemoteFileExist(session sshSession, file string) bool {
-	res := session.run(fmt.Sprintf("ls -F '%s'", file))
-	return res.Stdout != "" && strings.HasSuffix(res.Stdout, "*")
+	res := session.run(fmt.Sprintf("test -f '%s'", file))
+	return res.Err == nil
 }
 
 func isRemoteDirExist(session sshSession, path string) bool {
-	res := session.run(fmt.Sprintf("ls -F '%s'", path))
-	return res.Stdout != "" && strings.HasSuffix(res.Stdout, "/")
+	res := session.run(fmt.Sprintf("test -d '%s'", path))
+	return res.Err == nil
 }
 
 func makeRemoteDir(session sshSession, path string) {

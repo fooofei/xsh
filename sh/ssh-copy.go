@@ -1,6 +1,7 @@
 package sh
 
 import (
+	"fmt"
 	. "github.com/xied5531/xsh/base"
 	"os"
 	"path/filepath"
@@ -71,7 +72,10 @@ func (s sshCopy) download() SshResponse {
 		s.Local = s.Local + string(os.PathSeparator)
 	}
 
-	if err := checkPath4Download(s.Local); err != nil {
+	xs := sshSession{
+		Client: s.SshClient,
+	}
+	if err := checkPath4Download(xs, s.Local, s.Remote); err != nil {
 		response.Err = err
 		return response
 	}
@@ -83,14 +87,24 @@ func (s sshCopy) download() SshResponse {
 	return response
 }
 
-func checkPath4Download(local string) error {
+func checkPath4Download(session sshSession, local, remote string) error {
+	if strings.HasSuffix(remote, "/") {
+		if !isRemoteDirExist(session, remote) {
+			return fmt.Errorf("remote dir not exist: %s", remote)
+		}
+	} else {
+		if !isRemoteFileExist(session, remote) {
+			return fmt.Errorf("remote file not exist: %s", remote)
+		}
+	}
+
 	if isLocalFileExist(local) {
-		return LocalFileExistErr
+		return fmt.Errorf("local file exist: %s", local)
 	}
 
 	makeLocalDir(local)
 	if XConfig.Copy.DirEmptyCheck && !isLocalDirEmpty(local) {
-		return LocalDirNotEmptyErr
+		return fmt.Errorf("local dir not empty: %s", local)
 	}
 
 	return nil
@@ -100,18 +114,26 @@ func checkPath4Upload(session sshSession, local, remote string) error {
 	target := filepath.Base(local)
 
 	if strings.HasSuffix(local, string(os.PathSeparator)) {
+		if !isLocalDirExist(local) {
+			return fmt.Errorf("local dir not exist: %s", local)
+		}
+
 		if isRemoteFileExist(session, remote+target) {
-			return RemoteFileExistErr
+			return fmt.Errorf("remote file exist: %s", remote+target)
 		}
 	} else {
+		if !isLocalFileExist(local) {
+			return fmt.Errorf("local file not exist: %s", local)
+		}
+
 		if isRemoteDirExist(session, remote+target) {
-			return RemoteDirExistErr
+			return fmt.Errorf("remote dir exist: %s", remote+target)
 		}
 	}
 
 	makeRemoteDir(session, remote+target)
 	if XConfig.Copy.DirEmptyCheck && !isRemoteDirEmpty(session, remote+target) {
-		return RemoteDirNotEmptyErr
+		return fmt.Errorf("remote dir not empty: %s", remote+target)
 	}
 
 	return nil

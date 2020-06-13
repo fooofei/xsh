@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Task"><meta property="og:title" content="" />
-<meta property="og:description" content="任务编排 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  ..\example\show-info.yaml
- name: show infoactions:- name: show mem and systemgroup: alpha01steps:- type: commandcommands:- free -h- uptime- name: show user infogroup: alpha02steps:- type: commandcommands:- id 在alpha01上查看内存和系统信息 在alpha02上查看用户信息  执行 $ xsh-windows-amd64.exe -mode task -task ..\example\show-info.yaml[show info ] &#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;[alpha01: show mem and system ] =======================================[192.168.162.65 ] ---------------------------------------------------------total used free shared buff/cache availableMem: 15G 2." />
+<meta property="og:description" content="任务编排 前提  已设置好配置项：系统配置、认证配置、主机配置  任务  ..\example\show-info\show-info.yaml
+ name: show infoactions:- name: show current infogroup: alpha02steps:- type: cmdcommands:- pwd- whoami- name: upload test scriptgroup: alpha02steps:- type: copydirection: uploadlocal: {{.script.test.full_name}}remote: {{.script.test.remote_dir}}- name: check script infogroup: alpha02steps:- type: cmdsu: truecommands:- stat {{.script.test.remote_dir}}{{.script.test.base_name}}- whoami- name: download test scriptgroup: alpha02steps:- type: copydirection: downloadlocal: {{." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/cli/task/" />
 
@@ -83,7 +83,6 @@ https://github.com/alex-shpak/hugo-book
 <li><a href="/xsh/docs/example/cli/command/">执行命令</a></li>
 <li><a href="/xsh/docs/example/cli/copy/">上传下载</a></li>
 <li><a href="/xsh/docs/example/cli/task/"class=active>任务编排</a></li>
-<li><a href="/xsh/docs/example/cli/value/">带变量的任务编排</a></li>
 </ul>
 </li>
 </ul>
@@ -149,7 +148,8 @@ https://github.com/alex-shpak/hugo-book
     <li><a href="#任务编排">任务编排</a>
       <ul>
         <li><a href="#前提">前提</a></li>
-        <li><a href="#说明">说明</a></li>
+        <li><a href="#任务">任务</a></li>
+        <li><a href="#变量">变量</a></li>
         <li><a href="#执行">执行</a></li>
       </ul>
     </li>
@@ -169,47 +169,107 @@ https://github.com/alex-shpak/hugo-book
 <ul>
 <li>已设置好配置项：系统配置、认证配置、主机配置</li>
 </ul>
-<h2 id="说明">说明</h2>
+<h2 id="任务">任务</h2>
 <blockquote>
-<p>..\example\show-info.yaml</p>
+<p>..\example\show-info\show-info.yaml</p>
 </blockquote>
 <pre><code>name: show info
 actions:
-  - name: show mem and system
-    group: alpha01
-    steps:
-      - type: command
-        commands:
-          - free -h
-          - uptime
-  - name: show user info
+  - name: show current info
     group: alpha02
     steps:
-      - type: command
+      - type: cmd
         commands:
-          - id
+          - pwd
+          - whoami
 
-</code></pre><ul>
-<li>在alpha01上查看内存和系统信息</li>
-<li>在alpha02上查看用户信息</li>
-</ul>
+  - name: upload test script
+    group: alpha02
+    steps:
+      - type: copy
+        direction: upload
+        local: {{.script.test.full_name}}
+        remote: {{.script.test.remote_dir}}
+
+  - name: check script info
+    group: alpha02
+    steps:
+      - type: cmd
+        su: true
+        commands:
+          - stat {{.script.test.remote_dir}}{{.script.test.base_name}}
+          - whoami
+
+  - name: download test script
+    group: alpha02
+    steps:
+      - type: copy
+        direction: download
+        local: {{.script.test.local_dir}}
+        remote: {{.script.test.remote_dir}}
+
+</code></pre><h2 id="变量">变量</h2>
+<blockquote>
+<p>..\example\show-info\script-info.yaml</p>
+</blockquote>
+<pre><code>script:
+  test:
+    full_name: D:\tmp\hello\README.md
+    base_name: README.md
+    remote_dir: /home/hello22/xsh/task/test/
+    local_dir: D:\tmp\xsh\task\test\
+</code></pre><blockquote>
+<p>变量采用<code>text/template</code>语法</p>
+</blockquote>
 <h2 id="执行">执行</h2>
-<pre><code>$ xsh-windows-amd64.exe -mode task -task ..\example\show-info.yaml
+<pre><code>$ xsh-windows-amd64.exe -mode task -task ..\example\show-info\show-info.yaml -value ..\example\show-info\script-info.yaml
 [show info                           ] +++++++++++++++++++++++++++++++++++++++
-[alpha01: show mem and system        ] =======================================
-[192.168.162.65    ] ---------------------------------------------------------
-              total        used        free      shared  buff/cache   available
-Mem:            15G        2.7G        907M         34M         11G         12G
-Swap:            0B          0B          0B
- 15:42:11 up 430 days, 20:55,  1 user,  load average: 0.07, 0.03, 0.05
-
-[alpha02: show user info             ] =======================================
+[alpha02: show current info          ] =======================================
 [192.168.170.109   ] ---------------------------------------------------------
-uid=1003(abc) gid=1003(abc) groups=1003(abc)
+/home/hello22
+hello22
 
 [192.168.165.37    ] ---------------------------------------------------------
-uid=1002(abc) gid=1002(abc) groups=1002(abc)
+/home/hello22
+hello22
 
+[alpha02: upload test script         ] =======================================
+[192.168.170.109   ] ---------------------------------------------------------
+D:\tmp\hello\README.md -&gt; /home/hello22/xsh/task/test/README.md :FILE:OK
+[192.168.165.37    ] ---------------------------------------------------------
+D:\tmp\hello\README.md -&gt; /home/hello22/xsh/task/test/README.md :FILE:OK
+[alpha02: check script info          ] =======================================
+[192.168.165.37    ] ---------------------------------------------------------
+  File: ‘/home/hello22/xsh/task/test/README.md’
+  Size: 5               Blocks: 8          IO Block: 4096   regular file
+Device: fd00h/64768d    Inode: 398247      Links: 1
+Access: (0666/-rw-rw-rw-)  Uid: ( 1002/ hello22)   Gid: ( 1002/ hello22)
+Access: 2020-06-13 11:17:16.898136000 +0800
+Modify: 2020-04-29 19:51:13.842411000 +0800
+Change: 2020-06-13 11:14:07.642000000 +0800
+ Birth: -
+root
+
+Warn =&gt;
+[sudo] password for root:
+[192.168.170.109   ] ---------------------------------------------------------
+  File: ‘/home/hello22/xsh/task/test/README.md’
+  Size: 5               Blocks: 8          IO Block: 4096   regular file
+Device: fd00h/64768d    Inode: 3679        Links: 1
+Access: (0666/-rw-rw-rw-)  Uid: ( 1003/ hello22)   Gid: ( 1003/ hello22)
+Access: 2020-06-13 11:17:16.898136000 +0800
+Modify: 2020-04-29 19:51:13.842411000 +0800
+Change: 2020-06-13 11:14:17.201511719 +0800
+ Birth: -
+root
+
+Warn =&gt;
+[sudo] password for root:
+[alpha02: download test script       ] =======================================
+[192.168.165.37    ] ---------------------------------------------------------
+D:\tmp\xsh\task\test\192.168.165.37\ &lt;- /home/hello22/xsh/task/test/ :DIR:OK
+[192.168.170.109   ] ---------------------------------------------------------
+D:\tmp\xsh\task\test\192.168.170.109\ &lt;- /home/hello22/xsh/task/test/ :DIR:OK
 
 </code></pre></article>
  
@@ -237,7 +297,8 @@ uid=1002(abc) gid=1002(abc) groups=1002(abc)
     <li><a href="#任务编排">任务编排</a>
       <ul>
         <li><a href="#前提">前提</a></li>
-        <li><a href="#说明">说明</a></li>
+        <li><a href="#任务">任务</a></li>
+        <li><a href="#变量">变量</a></li>
         <li><a href="#执行">执行</a></li>
       </ul>
     </li>

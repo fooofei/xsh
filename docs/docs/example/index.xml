@@ -16,9 +16,9 @@
       
       <guid>https://xied5531.github.io/xsh/docs/example/cli/command/</guid>
       <description>执行命令 前提  已设置好配置项：系统配置、认证配置、主机配置  执行方式：普通用户 单条：
-$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd whoami[192.168.165.37 ] ---------------------------------------------------------abc[192.168.170.109 ] ---------------------------------------------------------abc多条：
-$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd &amp;quot;whoami; date -u; pwd&amp;quot;[192.168.165.37 ] ---------------------------------------------------------abcFri May 8 07:00:13 UTC 2020/home/abc[192.168.170.109 ] ---------------------------------------------------------abcFri May 8 07:00:22 UTC 2020/home/abc执行方式：从普通用户切换至其他用户 单条：
-$ xsh-windows-amd64.exe -mode cmd -group alpha02 -su -cmd whoami[192.168.170.109 ] ---------------------------------------------------------rootWarn =&amp;gt;[sudo] password for root:[192.</description>
+$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd whoami[192.168.165.37 ] ---------------------------------------------------------hello22[192.168.170.109 ] ---------------------------------------------------------hello22多条：
+$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd &amp;quot;whoami;pwd&amp;quot;[192.168.165.37 ] ---------------------------------------------------------hello22/home/hello22[192.168.170.109 ] ---------------------------------------------------------hello22/home/hello22执行方式：从普通用户切换至其他用户 单条：
+$ xsh-windows-amd64.exe -mode cmd -group alpha02 -su -cmd whoami[192.168.170.109 ] ---------------------------------------------------------rootWarn =&amp;gt;[sudo] password for root:[192.168.165.37 ] ---------------------------------------------------------rootWarn =&amp;gt;[sudo] password for root:多条：</description>
     </item>
     
     <item>
@@ -27,11 +27,11 @@ $ xsh-windows-amd64.exe -mode cmd -group alpha02 -su -cmd whoami[192.168.170.10
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/example/cli/copy/</guid>
-      <description>上传下载 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  件或文件夹必须是全路径，例如：D:\tmp\LICENSE（Windows）或/tmp/abc（Linux） 上传时，local可以是文件或文件夹，remote默认是文件夹 下载时，remote可以是文件或文件夹，local默认是文件夹 仅支持以默认用户执行，不支持切换用户执行   末尾带路径分隔符表示文件夹，否则表示文件
+      <description>上传下载 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  文件或文件夹必须是全路径，例如：D:\tmp\LICENSE（Windows）或/tmp/abc（Linux） 上传时，local可以是文件或文件夹，remote默认是文件夹 下载时，remote可以是文件或文件夹，local默认是文件夹 仅支持以默认用户执行，不支持切换用户执行   末尾带路径分隔符表示文件夹，否则表示文件
  上传  将本地节点上的内容上传至远端目标主机组的每个主机上
  文件：
-$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tmp\LICENSE -remote /tmp/xsh/copy3/file[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/xsh/copy3/file/LICENSE :FILE:OK[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/xsh/copy3/file/LICENSE :FILE:OK文件夹：
-$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tmp\hello\ -remote /tmp/xsh/copy3/dir[192.168.170.109 ] ---------------------------------------------------------D:\tmp\hello\ -&amp;gt; /tmp/xsh/copy3/dir/hello :DIR:OK[192.168.165.37 ] ---------------------------------------------------------D:\tmp\hello\ -&amp;gt; /tmp/xsh/copy3/dir/hello :DIR:OK下载  将远端目标主机组的每个主机上的内容下载至本地节点，按目标IP新建文件夹进行隔离</description>
+$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tmp\LICENSE -remote /home/hello22/xsh/copy2/file[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /home/hello22/xsh/copy2/file/LICENSE :FILE:OK[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /home/hello22/xsh/copy2/file/LICENSE :FILE:OK文件夹：
+$ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tmp\hello\ -remote /home/hello22/xsh/copy2/dir[192.168.170.109 ] ---------------------------------------------------------D:\tmp\hello\ -&amp;gt; /home/hello22/xsh/copy2/dir/ :DIR:OK[192.168.165.37 ] ---------------------------------------------------------D:\tmp\hello\ -&amp;gt; /home/hello22/xsh/copy2/dir/ :DIR:OK下载  将远端目标主机组的每个主机上的内容下载至本地节点，按目标IP新建文件夹进行隔离</description>
     </item>
     
     <item>
@@ -40,7 +40,7 @@ $ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tm
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/example/cli/crypt/</guid>
-      <description>加解密 前提  已设置好配置项：系统配置、认证配置、主机配置 已设置系统配置项crypt  加密 $ xsh-windows-amd64.exe -mode crypt -plain hellohello -&amp;gt; d436838303eab251c32d5622e92160ad40a4f64328解密 $ xsh-windows-amd64.exe -mode crypt -cipher d436838303eab251c32d5622e92160ad40a4f64328d436838303eab251c32d5622e92160ad40a4f64328 -&amp;gt; hello</description>
+      <description>加解密 前提  已设置好配置项：系统配置、认证配置、主机配置  加密 $ xsh-windows-amd64.exe -mode crypt -ckey abcdabcdabcdabcdabcdabcdabcdabcd -plain hellohello -&amp;gt; 7a8cfc58bc00cd4400a0a96969bb0d140c4e3ca2df解密 $ xsh-windows-amd64.exe -mode crypt -ckey abcdabcdabcdabcdabcdabcdabcdabcd -cipher 7a8cfc58bc00cd4400a0a96969bb0d140c4e3ca2df7a8cfc58bc00cd4400a0a96969bb0d140c4e3ca2df -&amp;gt; hello</description>
     </item>
     
     <item>
@@ -49,21 +49,8 @@ $ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tm
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://xied5531.github.io/xsh/docs/example/cli/task/</guid>
-      <description>任务编排 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  ..\example\show-info.yaml
- name: show infoactions:- name: show mem and systemgroup: alpha01steps:- type: commandcommands:- free -h- uptime- name: show user infogroup: alpha02steps:- type: commandcommands:- id 在alpha01上查看内存和系统信息 在alpha02上查看用户信息  执行 $ xsh-windows-amd64.exe -mode task -task ..\example\show-info.yaml[show info ] +++++++++++++++++++++++++++++++++++++++[alpha01: show mem and system ] =======================================[192.168.162.65 ] ---------------------------------------------------------total used free shared buff/cache availableMem: 15G 2.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://xied5531.github.io/xsh/docs/example/cli/value/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://xied5531.github.io/xsh/docs/example/cli/value/</guid>
-      <description>带变量的任务 前提  已设置好配置项：系统配置、认证配置、主机配置  说明  ..\example\add-user\add-user.yaml
- name: add new useractions:- name: add user and set passwdgroup: alpha02steps:- type: commandsu: truecommands:- useradd -m {{.alpha.test.username}}- echo {{.alpha.test.passwd}} | passwd --stdin {{.alpha.test.username}}- id {{.alpha.test.username}} 变量采用text/template语法
-  ..\example\add-user\user-info.yaml
- alpha:test:username: hello22passwd: Tst@1qaz 变量单独定义文件
- 执行 $ xsh-windows-amd64.exe -mode task -task ..\example\add-user\add-user.yaml -value ..\example\add-user\user-info.yaml[add new user ] +++++++++++++++++++++++++++++++++++++++[alpha02: add user and set passwd ] =======================================[192.</description>
+      <description>任务编排 前提  已设置好配置项：系统配置、认证配置、主机配置  任务  ..\example\show-info\show-info.yaml
+ name: show infoactions:- name: show current infogroup: alpha02steps:- type: cmdcommands:- pwd- whoami- name: upload test scriptgroup: alpha02steps:- type: copydirection: uploadlocal: {{.script.test.full_name}}remote: {{.script.test.remote_dir}}- name: check script infogroup: alpha02steps:- type: cmdsu: truecommands:- stat {{.script.test.remote_dir}}{{.script.test.base_name}}- whoami- name: download test scriptgroup: alpha02steps:- type: copydirection: downloadlocal: {{.</description>
     </item>
     
     <item>
@@ -74,8 +61,8 @@ $ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tm
       <guid>https://xied5531.github.io/xsh/docs/example/command/</guid>
       <description>执行命令 前提  已设置好配置项：系统配置、认证配置、主机配置 已切换到目标主机组环境   以group=alpha02为例
  执行方式：普通用户 切换上下文 命令：:do
-[alpha02:do]# :do[alpha02:do]#执行单条命令 [alpha02:do]# whoami[192.168.170.109 ] ---------------------------------------------------------abc[192.168.165.37 ] ---------------------------------------------------------abc执行多条命令 [alpha02:do]# whoami;date -u;pwd[192.168.170.109 ] ---------------------------------------------------------abcFri May 8 06:42:29 UTC 2020/home/abc[192.168.165.37 ] ---------------------------------------------------------abcFri May 8 06:42:20 UTC 2020/home/abc执行方式：从普通用户切换至其他用户 切换上下文 命令：:sudo
-[alpha02:do]# :sudo[alpha02:sudo]#执行单条命令 [alpha02:sudo]# whoami[192.168.165.37 ] ---------------------------------------------------------rootWarn =&amp;gt;[sudo] password for root:[192.</description>
+[alpha02:do]# :do[alpha02:do]#执行单条命令 [alpha02:do]# whoami[192.168.165.37 ] ---------------------------------------------------------hello22[192.168.170.109 ] ---------------------------------------------------------hello22执行多条命令 [alpha02:do]# whoami; pwd[192.168.170.109 ] ---------------------------------------------------------hello22/home/hello22[192.168.165.37 ] ---------------------------------------------------------hello22/home/hello22执行方式：从普通用户切换至其他用户 切换上下文 命令：:sudo
+[alpha02:do]# :sudo[alpha02:sudo]#执行单条命令 [alpha02:sudo]# whoami[192.168.165.37 ] ---------------------------------------------------------rootWarn =&amp;gt;[sudo] password for root:[192.168.170.109 ] ---------------------------------------------------------rootWarn =&amp;gt;[sudo] password for root:执行多条命令 [alpha02:sudo]# whoami;pwd[192.</description>
     </item>
     
     <item>
@@ -85,13 +72,13 @@ $ xsh-windows-amd64.exe -mode copy -group alpha02 -direction upload -local D:\tm
       
       <guid>https://xied5531.github.io/xsh/docs/example/copy/</guid>
       <description>上传下载 前提  已设置好配置项：系统配置、认证配置、主机配置 已切换到目标主机组环境   以group=alpha02为例
- 说明  件或文件夹必须是全路径，例如：D:\tmp\LICENSE（Windows）或/tmp/abc（Linux） 上传时，local可以是文件或文件夹，remote默认是文件夹 下载时，remote可以是文件或文件夹，local默认是文件夹 仅支持以默认用户执行，不支持切换用户执行   末尾带路径分隔符表示文件夹，否则表示文件
+ 说明  文件或文件夹必须是全路径，例如：D:\tmp\LICENSE（Windows）或/tmp/abc（Linux） 上传时，local可以是文件或文件夹，remote默认是文件夹 下载时，remote可以是文件或文件夹，local默认是文件夹 仅支持以默认用户执行，不支持切换用户执行   末尾带路径分隔符表示文件夹，否则表示文件
  切换上下文 命令：:copy
 [alpha02:do]# :copy[alpha02:copy]#上传  将本地节点上的内容上传至远端目标主机组的每个主机上
  用法：local -&amp;gt; remote
 文件：
-[alpha02:copy]# D:\tmp\LICENSE -&amp;gt; /tmp/xsh/copy/file[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/xsh/copy/file/LICENSE :FILE:OK[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /tmp/xsh/copy/file/LICENSE :FILE:OK文件夹：
-[alpha02:copy]# D:\tmp\hello\ -&amp;gt; /tmp/xsh/copy/dir[192.168.170.109 ] ---------------------------------------------------------D:\tmp\hello\ -&amp;gt; /tmp/xsh/copy/dir/hello :DIR:OK[192.168.165.37 ] ---------------------------------------------------------D:\tmp\hello\ -&amp;gt; /tmp/xsh/copy/dir/hello :DIR:OK下载  将远端目标主机组的每个主机上的内容下载至本地节点，按目标IP新建文件夹进行隔离</description>
+[alpha02:copy]# D:\tmp\LICENSE -&amp;gt; /home/hello22/xsh/copy/file[192.168.170.109 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /home/hello22/xsh/copy/file/LICENSE :FILE:OK[192.168.165.37 ] ---------------------------------------------------------D:\tmp\LICENSE -&amp;gt; /home/hello22/xsh/copy/file/LICENSE :FILE:OK文件夹：
+[alpha02:copy]# D:\tmp\hello\ -&amp;gt; /home/hello22/xsh/copy/dir[192.168.165.37 ] ---------------------------------------------------------D:\tmp\hello\ -&amp;gt; /home/hello22/xsh/copy/dir/ :DIR:OK[192.168.170.109 ] ---------------------------------------------------------D:\tmp\hello\ -&amp;gt; /home/hello22/xsh/copy/dir/ :DIR:OK下载  将远端目标主机组的每个主机上的内容下载至本地节点，按目标IP新建文件夹进行隔离</description>
     </item>
     
     <item>

@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Crypt"><meta property="og:title" content="" />
-<meta property="og:description" content="加解密 前提  已设置好配置项：系统配置、认证配置、主机配置 已设置系统配置项crypt  加密 $ xsh-windows-amd64.exe -mode crypt -plain hellohello -&gt; d436838303eab251c32d5622e92160ad40a4f64328解密 $ xsh-windows-amd64.exe -mode crypt -cipher d436838303eab251c32d5622e92160ad40a4f64328d436838303eab251c32d5622e92160ad40a4f64328 -&gt; hello" />
+<meta property="og:description" content="加解密 前提  已设置好配置项：系统配置、认证配置、主机配置  加密 $ xsh-windows-amd64.exe -mode crypt -ckey abcdabcdabcdabcdabcdabcdabcdabcd -plain hellohello -&gt; 7a8cfc58bc00cd4400a0a96969bb0d140c4e3ca2df解密 $ xsh-windows-amd64.exe -mode crypt -ckey abcdabcdabcdabcdabcdabcdabcdabcd -cipher 7a8cfc58bc00cd4400a0a96969bb0d140c4e3ca2df7a8cfc58bc00cd4400a0a96969bb0d140c4e3ca2df -&gt; hello" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/cli/crypt/" />
 
@@ -82,7 +82,6 @@ https://github.com/alex-shpak/hugo-book
 <li><a href="/xsh/docs/example/cli/command/">执行命令</a></li>
 <li><a href="/xsh/docs/example/cli/copy/">上传下载</a></li>
 <li><a href="/xsh/docs/example/cli/task/">任务编排</a></li>
-<li><a href="/xsh/docs/example/cli/value/">带变量的任务编排</a></li>
 </ul>
 </li>
 </ul>
@@ -167,15 +166,14 @@ https://github.com/alex-shpak/hugo-book
 <h2 id="前提">前提</h2>
 <ul>
 <li>已设置好配置项：系统配置、认证配置、主机配置</li>
-<li>已设置系统配置项<code>crypt</code></li>
 </ul>
 <h2 id="加密">加密</h2>
-<pre><code>$ xsh-windows-amd64.exe -mode crypt -plain hello
-hello -&gt; d436838303eab251c32d5622e92160ad40a4f64328
+<pre><code>$ xsh-windows-amd64.exe -mode crypt -ckey abcdabcdabcdabcdabcdabcdabcdabcd -plain hello
+hello -&gt; 7a8cfc58bc00cd4400a0a96969bb0d140c4e3ca2df
 
 </code></pre><h2 id="解密">解密</h2>
-<pre><code>$ xsh-windows-amd64.exe -mode crypt -cipher d436838303eab251c32d5622e92160ad40a4f64328
-d436838303eab251c32d5622e92160ad40a4f64328 -&gt; hello
+<pre><code>$ xsh-windows-amd64.exe -mode crypt -ckey abcdabcdabcdabcdabcdabcdabcdabcd -cipher 7a8cfc58bc00cd4400a0a96969bb0d140c4e3ca2df
+7a8cfc58bc00cd4400a0a96969bb0d140c4e3ca2df -&gt; hello
 
 </code></pre></article>
  

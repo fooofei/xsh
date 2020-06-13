@@ -6,9 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Command"><meta property="og:title" content="" />
 <meta property="og:description" content="执行命令 前提  已设置好配置项：系统配置、认证配置、主机配置  执行方式：普通用户 单条：
-$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd whoami[192.168.165.37 ] ---------------------------------------------------------abc[192.168.170.109 ] ---------------------------------------------------------abc多条：
-$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd &quot;whoami; date -u; pwd&quot;[192.168.165.37 ] ---------------------------------------------------------abcFri May 8 07:00:13 UTC 2020/home/abc[192.168.170.109 ] ---------------------------------------------------------abcFri May 8 07:00:22 UTC 2020/home/abc执行方式：从普通用户切换至其他用户 单条：
-$ xsh-windows-amd64.exe -mode cmd -group alpha02 -su -cmd whoami[192.168.170.109 ] ---------------------------------------------------------rootWarn =&gt;[sudo] password for root:[192." />
+$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd whoami[192.168.165.37 ] ---------------------------------------------------------hello22[192.168.170.109 ] ---------------------------------------------------------hello22多条：
+$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd &quot;whoami;pwd&quot;[192.168.165.37 ] ---------------------------------------------------------hello22/home/hello22[192.168.170.109 ] ---------------------------------------------------------hello22/home/hello22执行方式：从普通用户切换至其他用户 单条：
+$ xsh-windows-amd64.exe -mode cmd -group alpha02 -su -cmd whoami[192.168.170.109 ] ---------------------------------------------------------rootWarn =&gt;[sudo] password for root:[192.168.165.37 ] ---------------------------------------------------------rootWarn =&gt;[sudo] password for root:多条：" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://xied5531.github.io/xsh/docs/example/cli/command/" />
 
@@ -85,7 +85,6 @@ https://github.com/alex-shpak/hugo-book
 <li><a href="/xsh/docs/example/cli/command/"class=active>执行命令</a></li>
 <li><a href="/xsh/docs/example/cli/copy/">上传下载</a></li>
 <li><a href="/xsh/docs/example/cli/task/">任务编排</a></li>
-<li><a href="/xsh/docs/example/cli/value/">带变量的任务编排</a></li>
 </ul>
 </li>
 </ul>
@@ -175,23 +174,20 @@ https://github.com/alex-shpak/hugo-book
 <p>单条：</p>
 <pre><code>$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd whoami
 [192.168.165.37    ] ---------------------------------------------------------
-abc
+hello22
 
 [192.168.170.109   ] ---------------------------------------------------------
-abc
+hello22
 
 </code></pre><p>多条：</p>
-<pre><code>$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd &quot;whoami; date -u; pwd&quot;
+<pre><code>$ xsh-windows-amd64.exe -mode cmd -group alpha02 -cmd &quot;whoami;pwd&quot;
 [192.168.165.37    ] ---------------------------------------------------------
-abc
-Fri May  8 07:00:13 UTC 2020
-/home/abc
+hello22
+/home/hello22
 
 [192.168.170.109   ] ---------------------------------------------------------
-abc
-Fri May  8 07:00:22 UTC 2020
-/home/abc
-
+hello22
+/home/hello22
 
 </code></pre><h2 id="执行方式从普通用户切换至其他用户">执行方式：从普通用户切换至其他用户</h2>
 <p>单条：</p>
@@ -208,20 +204,16 @@ Warn =&gt;
 [sudo] password for root:
 
 </code></pre><p>多条：</p>
-<pre><code>$ xsh-windows-amd64.exe -mode cmd -group alpha02 -su -cmd &quot;whoami; date -u; pwd; whoami&quot;
+<pre><code>$ xsh-windows-amd64.exe -mode cmd -group alpha02 -su -cmd &quot;whoami;pwd&quot;
 [192.168.170.109   ] ---------------------------------------------------------
 root
-Fri May  8 07:01:24 UTC 2020
 /root
-root
 
 Warn =&gt;
 [sudo] password for root:
 [192.168.165.37    ] ---------------------------------------------------------
 root
-Fri May  8 07:01:15 UTC 2020
 /root
-root
 
 Warn =&gt;
 [sudo] password for root:

@@ -3,7 +3,7 @@ actions:
   - name: add user and set passwd
     group: alpha02
     steps:
-      - type: command
+      - type: cmd
         su: true
         commands:
           - useradd -m {{.alpha.test.username}}

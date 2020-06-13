@@ -1,7 +1,7 @@
 auths:
   - name: alpha
-    username: abc
-    password: Test@1qaz
+    username: hello22
+    password: Tst@1qaz
     sutype: "sudo -S su -"
     supass: XXXXXX
     privatekey: ""

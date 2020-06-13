@@ -105,10 +105,10 @@ func (s SshTask) checkTask() error {
 			return fmt.Errorf("action[%s] steps empty", action.Name)
 		}
 		for _, step := range action.Steps {
-			if step.Type != "command" && step.Type != "copy" {
+			if step.Type != "cmd" && step.Type != "copy" {
 				return fmt.Errorf("action[%s] step type illegal", action.Name)
 			}
-			if step.Type == "command" {
+			if step.Type == "cmd" {
 				if len(step.Commands) == 0 {
 					return fmt.Errorf("action[%s] step commands empty", action.Name)
 				}

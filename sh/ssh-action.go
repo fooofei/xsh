@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	. "github.com/xied5531/xsh/base"
+	"strings"
 	"time"
 )
 
@@ -42,7 +43,7 @@ func (s *SshAction) checkAction() error {
 
 	su := false
 	for _, action := range s.Steps {
-		if action.Type == "command" {
+		if action.Type == "cmd" {
 			if len(action.Commands) == 0 {
 				return CommandEmptyErr
 			}
@@ -54,10 +55,10 @@ func (s *SshAction) checkAction() error {
 			}
 		} else {
 			if action.Direction != "upload" && action.Direction != "download" {
-				return CopyInfoErr
+				return CopyDirectionErr
 			}
-			if action.Local == "" || action.Remote == "" {
-				return CopyInfoErr
+			if err := checkFullPath(action.Local, action.Remote); err != nil {
+				return err
 			}
 		}
 	}
@@ -90,6 +91,8 @@ func (s *SshAction) checkAction() error {
 }
 
 func (s *SshAction) Do() SshActionResult {
+	Info.Printf("action name:%s, steps:%+v", s.Name, s.Steps)
+
 	sshActionResult := SshActionResult{
 		Name:       s.Name,
 		StepResult: make(map[string][]SshResponse),
@@ -177,7 +180,7 @@ func (s *SshAction) do4host(ctx context.Context, hostDetail HostDetail, resultCh
 
 	for _, action := range s.Steps {
 		switch action.Type {
-		case "command":
+		case "cmd":
 			sc := s.newSshCommand(hostDetail)
 			sc.Commands = action.Commands
 			if !action.Su {
@@ -190,8 +193,8 @@ func (s *SshAction) do4host(ctx context.Context, hostDetail HostDetail, resultCh
 		case "copy":
 			sc := s.newSshCopy(hostDetail)
 			sc.Direction = action.Direction
-			sc.Local = action.Local
-			sc.Remote = action.Remote
+			sc.Local = strings.TrimSpace(action.Local)
+			sc.Remote = strings.TrimSpace(action.Remote)
 
 			s.doCopy(ctx, responseCh, sc)
 			result = append(result, <-responseCh)

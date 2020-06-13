@@ -118,7 +118,7 @@ func newCommandAction(line string, su bool) *SshAction {
 		Name:   "Default",
 		Single: CurEnv.Single,
 		Steps: []Step{{
-			Type:     "command",
+			Type:     "cmd",
 			Commands: cmds,
 			Su:       su,
 		}},
@@ -131,21 +131,21 @@ func newCommandAction(line string, su bool) *SshAction {
 func newCopyAction(line string) (*SshAction, error) {
 	var direction string
 	var fields []string
+	var local string
+	var remote string
 
 	if strings.Contains(line, "->") {
 		direction = "upload"
 		fields = strings.Split(line, "->")
+		local = fields[0]
+		remote = fields[1]
 	} else if strings.Contains(line, "<-") {
 		direction = "download"
 		fields = strings.Split(line, "<-")
+		local = fields[0]
+		remote = fields[1]
 	} else {
 		return nil, fmt.Errorf("line[%s] format illegal", line)
-	}
-
-	local, le := GetLocalDir(direction, fields[0])
-	remote, re := GetRemoteDir(direction, fields[1])
-	if le != nil || re != nil {
-		return nil, fmt.Errorf("line[%s] path illegal, local: %v; remote: %v", line, le, re)
 	}
 
 	action := &SshAction{

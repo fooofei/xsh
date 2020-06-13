@@ -118,7 +118,7 @@ func newCommandAction(line string, su bool) *SshAction {
 		Name:   "Default",
 		Single: CurEnv.Single,
 		Steps: []Step{{
-			Type:     "command",
+			Type:     "cmd",
 			Commands: cmds,
 			Su:       su,
 		}},

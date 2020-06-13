@@ -49,8 +49,6 @@ func (s scpCopy) downloadFile(local, remote string) ([]string, error) {
 }
 
 func (s scpCopy) downloadDir(local, remote string) ([]string, error) {
-	local = local + filepath.Base(filepath.Dir(remote))
-
 	session, err := s.newSession()
 	if err != nil {
 		return nil, err
@@ -92,11 +90,9 @@ func (s scpCopy) uploadDir(local, remote string) ([]string, error) {
 		return nil, err
 	}
 
-	if err := session.SendDir(local, remote, func(parentDir string, info os.FileInfo) (b bool, e error) {
-		return parentDir != local, nil
-	}); err != nil {
+	if err := session.SendDir(local, remote, nil); err != nil {
 		return nil, err
 	} else {
-		return []string{local + " -> " + remote + filepath.Base(filepath.Dir(local)) + " :DIR:OK"}, nil
+		return []string{local + " -> " + remote + " :DIR:OK"}, nil
 	}
 }

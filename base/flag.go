@@ -24,8 +24,10 @@ var (
 	Local     = flag.String("local", "", "local path in copy mode")
 	Remote    = flag.String("remote", "", "remote path in copy mode")
 
-	Plain  = flag.String("plain", "", "plain text to encrypt in crypt mode")
-	Cipher = flag.String("cipher", "", "cipher text to decrypt in crypt mode")
+	Plain     = flag.String("plain", "", "plain text to encrypt in crypt mode")
+	Cipher    = flag.String("cipher", "", "cipher text to decrypt in crypt mode")
+	CryptType = flag.String("ctype", "aes", "crypt or decrypt type in crypt mode")
+	CryptKey  = flag.String("ckey", "", "crypt or decrypt key in crypt mode, length must be 32")
 )
 
 func initFlag() {
@@ -68,5 +70,11 @@ func checkFlag() {
 
 	if *Direction != "" && *Direction != "upload" && *Direction != "download" {
 		log.Fatalf("direction[%s] illegal", *Direction)
+	}
+
+	if *Mode == "crypt" {
+		if (*Plain == "" && *Cipher == "") || *CryptKey == "" || len(*CryptKey) != 32 {
+			log.Fatal("plain or cipher or ckey illegal")
+		}
 	}
 }

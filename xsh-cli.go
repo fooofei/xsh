@@ -29,7 +29,7 @@ func runCmd() {
 		Name:  "Default",
 		Group: *Group,
 		Steps: []Step{{
-			Type:     "command",
+			Type:     "cmd",
 			Commands: strings.Split(*Cmd, XConfig.CommandSep),
 			Su:       *Su,
 		}},
@@ -66,15 +66,8 @@ func runCopy() {
 }
 
 func runCrypt() {
-	if XConfig.Crypt.Type == "" || XConfig.Crypt.Key == "" {
-		Error.Println("crypt type or key not found")
-		return
-	}
-
-	if *Plain == "" && *Cipher == "" {
-		Error.Println("crypt plain or cipher text not found")
-		return
-	}
+	XConfig.Crypt.Type = *CryptType
+	XConfig.Crypt.Key = *CryptKey
 
 	if *Plain != "" {
 		if c, e := GetMaskPassword(*Plain); e != nil {

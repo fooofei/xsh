@@ -1,0 +1,34 @@
+name: show info
+actions:
+  - name: show current info
+    group: alpha02
+    steps:
+      - type: cmd
+        commands:
+          - pwd
+          - whoami
+
+  - name: upload test script
+    group: alpha02
+    steps:
+      - type: copy
+        direction: upload
+        local: {{.script.test.full_name}}
+        remote: {{.script.test.remote_dir}}
+
+  - name: check script info
+    group: alpha02
+    steps:
+      - type: cmd
+        su: true
+        commands:
+          - stat {{.script.test.remote_dir}}{{.script.test.base_name}}
+          - whoami
+
+  - name: download test script
+    group: alpha02
+    steps:
+      - type: copy
+        direction: download
+        local: {{.script.test.local_dir}}
+        remote: {{.script.test.remote_dir}}

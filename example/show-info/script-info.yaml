@@ -1,0 +1,6 @@
+script:
+  test:
+    full_name: D:\tmp\hello\README.md
+    base_name: README.md
+    remote_dir: /home/hello22/xsh/task/test/
+    local_dir: D:\tmp\xsh\task\test\

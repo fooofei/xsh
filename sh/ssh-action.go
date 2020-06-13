@@ -43,7 +43,7 @@ func (s *SshAction) checkAction() error {
 
 	su := false
 	for _, action := range s.Steps {
-		if action.Type == "command" {
+		if action.Type == "cmd" {
 			if len(action.Commands) == 0 {
 				return CommandEmptyErr
 			}
@@ -180,7 +180,7 @@ func (s *SshAction) do4host(ctx context.Context, hostDetail HostDetail, resultCh
 
 	for _, action := range s.Steps {
 		switch action.Type {
-		case "command":
+		case "cmd":
 			sc := s.newSshCommand(hostDetail)
 			sc.Commands = action.Commands
 			if !action.Su {

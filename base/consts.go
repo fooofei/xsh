@@ -3,7 +3,7 @@ package base
 import "runtime"
 
 const (
-	Version    = "1.0.0"
+	Version    = "1.0.1"
 	RootPath   = ".xsh"
 	ConfigFile = "config.yaml"
 	AuthFile   = "auth.yaml"

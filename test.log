@@ -1,0 +1,181 @@
+
+## 交互式操作
+
+### 切换环境
+
+[alpha02:do]# :show group
+- alpha-123
+- alpha01
+- alpha02
+
+[alpha02:do]# :set group=alpha02
+[alpha02:do]#
+[alpha02:do]# :show address
+- 192.168.165.37
+- 192.168.170.109
+
+[alpha02:do]# :do
+[alpha02:do]# :sudo
+[alpha02:sudo]# :copy
+[alpha02:copy]# :do
+[alpha02:do]#
+
+### 执行命令
+
+[alpha02:do]# whoami
+[192.168.165.37    ] ---------------------------------------------------------
+hello22
+
+[192.168.170.109   ] ---------------------------------------------------------
+hello22
+
+[alpha02:do]# whoami;date -u;pwd
+[192.168.165.37    ] ---------------------------------------------------------
+hello22
+Sat Jun 13 01:14:50 UTC 2020
+/home/hello22
+
+[192.168.170.109   ] ---------------------------------------------------------
+hello22
+Sat Jun 13 01:15:00 UTC 2020
+/home/hello22
+
+[alpha02:do]# :sudo
+[alpha02:sudo]# whoami
+[192.168.165.37    ] ---------------------------------------------------------
+root
+
+Warn =>
+[sudo] password for root:
+[192.168.170.109   ] ---------------------------------------------------------
+root
+
+Warn =>
+[sudo] password for root:
+[alpha02:sudo]# whoami;date -u; pwd
+[192.168.170.109   ] ---------------------------------------------------------
+root
+Sat Jun 13 01:15:26 UTC 2020
+/root
+
+Warn =>
+[sudo] password for root:
+[192.168.165.37    ] ---------------------------------------------------------
+root
+Sat Jun 13 01:15:17 UTC 2020
+/root
+
+Warn =>
+[sudo] password for root:
+[alpha02:sudo]#
+
+### 上传下载
+
+[alpha02:sudo]# :copy
+[alpha02:copy]#
+[alpha02:copy]# /tmp/xsh/release/xsh-linux-amd64 -> /home/hello22/xsh/test
+[192.168.170.109   ] ---------------------------------------------------------
+/tmp/xsh/release/xsh-linux-amd64 -> /home/hello22/xsh/test/xsh-linux-amd64 :FILE:OK
+[192.168.165.37    ] ---------------------------------------------------------
+/tmp/xsh/release/xsh-linux-amd64 -> /home/hello22/xsh/test/xsh-linux-amd64 :FILE:OK
+[alpha02:copy]#
+[alpha02:copy]# /tmp/xsh/release/example/ -> /home/hello22/xsh/test
+[192.168.165.37    ] ---------------------------------------------------------
+/tmp/xsh/release/example/ -> /home/hello22/xsh/test/ :DIR:OK
+[192.168.170.109   ] ---------------------------------------------------------
+/tmp/xsh/release/example/ -> /home/hello22/xsh/test/ :DIR:OK
+
+[alpha02:copy]# /tmp/xsh/test <- /home/hello22/xsh/test/xsh-linux-amd64
+[192.168.165.37    ] ---------------------------------------------------------
+/tmp/xsh/test/192.168.165.37/xsh-linux-amd64 <- /home/hello22/xsh/test/xsh-linux-amd64 :FILE:OK
+[192.168.170.109   ] ---------------------------------------------------------
+/tmp/xsh/test/192.168.170.109/xsh-linux-amd64 <- /home/hello22/xsh/test/xsh-linux-amd64 :FILE:OK
+[alpha02:copy]# /tmp/xsh/test <- /home/hello22/xsh/test/example/
+[192.168.165.37    ] ---------------------------------------------------------
+/tmp/xsh/test/192.168.165.37/ <- /home/hello22/xsh/test/example/ :DIR:OK
+[192.168.170.109   ] ---------------------------------------------------------
+/tmp/xsh/test/192.168.170.109/ <- /home/hello22/xsh/test/example/ :DIR:OK
+
+## 命令行操作
+
+### 执行命令
+
+# ./xsh-linux-amd64 -group alpha02 -mode cmd -cmd "whoami"
+[192.168.165.37    ] ---------------------------------------------------------
+hello22
+
+[192.168.170.109   ] ---------------------------------------------------------
+hello22
+
+# ./xsh-linux-amd64 -group alpha02 -mode cmd -cmd "whoami; date -u; pwd"
+[192.168.165.37    ] ---------------------------------------------------------
+hello22
+Sat Jun 13 01:28:32 UTC 2020
+/home/hello22
+
+[192.168.170.109   ] ---------------------------------------------------------
+hello22
+Sat Jun 13 01:28:42 UTC 2020
+/home/hello22
+
+# ./xsh-linux-amd64 -group alpha02 -mode cmd -su -cmd "whoami"
+[192.168.165.37    ] ---------------------------------------------------------
+root
+
+Warn =>
+[sudo] password for root:
+[192.168.170.109   ] ---------------------------------------------------------
+root
+
+Warn =>
+[sudo] password for root:
+
+# ./xsh-linux-amd64 -group alpha02 -mode cmd -su -cmd "whoami; date -u; pwd"
+[192.168.165.37    ] ---------------------------------------------------------
+root
+Sat Jun 13 01:29:48 UTC 2020
+/root
+
+Warn =>
+[sudo] password for root:
+[192.168.170.109   ] ---------------------------------------------------------
+root
+Sat Jun 13 01:29:57 UTC 2020
+/root
+
+Warn =>
+[sudo] password for root:
+
+### 上传下载
+
+# ./xsh-linux-amd64 -group alpha02 -mode copy -direction upload -local /tmp/xsh/release/xsh-linux-amd64 -remote /home/hello22/xsh/cmd/test
+[192.168.165.37    ] ---------------------------------------------------------
+/tmp/xsh/release/xsh-linux-amd64 -> /home/hello22/xsh/cmd/test/xsh-linux-amd64 :FILE:OK
+[192.168.170.109   ] ---------------------------------------------------------
+/tmp/xsh/release/xsh-linux-amd64 -> /home/hello22/xsh/cmd/test/xsh-linux-amd64 :FILE:OK
+
+# ./xsh-linux-amd64 -group alpha02 -mode copy -direction upload -local /tmp/xsh/release/example/ -remote /home/hello22/xsh/cmd/test
+[192.168.170.109   ] ---------------------------------------------------------
+/tmp/xsh/release/example/ -> /home/hello22/xsh/cmd/test/ :DIR:OK
+[192.168.165.37    ] ---------------------------------------------------------
+/tmp/xsh/release/example/ -> /home/hello22/xsh/cmd/test/ :DIR:OK
+
+# ./xsh-linux-amd64 -group alpha02 -mode copy -direction download -local /tmp/xsh/cmd/test -remote /home/hello22/xsh/cmd/test/xsh-linux-amd64
+[192.168.170.109   ] ---------------------------------------------------------
+/tmp/xsh/cmd/test/192.168.170.109/xsh-linux-amd64 <- /home/hello22/xsh/cmd/test/xsh-linux-amd64 :FILE:OK
+[192.168.165.37    ] ---------------------------------------------------------
+/tmp/xsh/cmd/test/192.168.165.37/xsh-linux-amd64 <- /home/hello22/xsh/cmd/test/xsh-linux-amd64 :FILE:OK
+
+# ./xsh-linux-amd64 -group alpha02 -mode copy -direction download -local /tmp/xsh/cmd/test -remote /home/hello22/xsh/cmd/test/example/
+[192.168.165.37    ] ---------------------------------------------------------
+/tmp/xsh/cmd/test/192.168.165.37/ <- /home/hello22/xsh/cmd/test/example/ :DIR:OK
+[192.168.170.109   ] ---------------------------------------------------------
+/tmp/xsh/cmd/test/192.168.170.109/ <- /home/hello22/xsh/cmd/test/example/ :DIR:OK
+
+### 加解密
+
+# ./xsh-linux-amd64 -mode crypt -ckey abcdabcdabcdabcdabcdabcdabcdabcd -plain hello
+hello -> 74ea0f65b86c8e6dcacdd8f1ad5bc3658931eab6ce
+
+# ./xsh-linux-amd64 -mode crypt -ckey abcdabcdabcdabcdabcdabcdabcdabcd -cipher 74ea0f65b86c8e6dcacdd8f1ad5bc3658931eab6ce
+74ea0f65b86c8e6dcacdd8f1ad5bc3658931eab6ce -> hello

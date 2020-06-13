@@ -89,22 +89,27 @@ func (s sshCopy) download() SshResponse {
 
 func checkPath4Download(session sshSession, local, remote string) error {
 	if strings.HasSuffix(remote, "/") {
-		if !isRemoteDirExist(session, remote) {
-			return fmt.Errorf("remote dir not exist: %s", remote)
+		if ok, err := isRemoteDirExist(session, remote); !ok {
+			return fmt.Errorf("remote dir not exist: %s, error: %v", remote, err)
 		}
 	} else {
-		if !isRemoteFileExist(session, remote) {
-			return fmt.Errorf("remote file not exist: %s", remote)
+		if ok, err := isRemoteFileExist(session, remote); !ok {
+			return fmt.Errorf("remote file not exist: %s, error: %v", remote, err)
 		}
 	}
 
-	if isLocalFileExist(local) {
-		return fmt.Errorf("local file exist: %s", local)
+	if ok, err := isLocalFileExist(local); ok {
+		return fmt.Errorf("local file exist: %s, error: %v", local, err)
 	}
 
-	makeLocalDir(local)
-	if XConfig.Copy.OverrideCheck && !isLocalDirEmpty(local) {
-		return fmt.Errorf("local dir not empty: %s", local)
+	if ok, err := makeLocalDir(local); !ok {
+		return fmt.Errorf("make local dir error: %s, error: %v", local, err)
+	}
+
+	if XConfig.Copy.OverrideCheck {
+		if ok, err := isLocalDirEmpty(local); !ok {
+			return fmt.Errorf("local dir not empty: %s, error: %v", local, err)
+		}
 	}
 
 	return nil
@@ -114,29 +119,40 @@ func checkPath4Upload(session sshSession, local, remote string) error {
 	target := filepath.Base(local)
 
 	if strings.HasSuffix(local, string(os.PathSeparator)) {
-		if !isLocalDirExist(local) {
-			return fmt.Errorf("local dir not exist: %s", local)
+		if ok, err := isLocalDirExist(local); !ok {
+			return fmt.Errorf("local dir not exist: %s, error: %v", local, err)
 		}
 
-		if isRemoteFileExist(session, remote+target) {
-			return fmt.Errorf("remote file exist: %s", remote+target)
+		if ok, err := isRemoteFileExist(session, remote+target); ok {
+			return fmt.Errorf("remote file exist: %s, error: %v", remote+target, err)
 		}
 
-		makeRemoteDir(session, remote+target)
-		if XConfig.Copy.OverrideCheck && !isRemoteDirEmpty(session, remote+target) {
-			return fmt.Errorf("remote dir not empty: %s", remote+target)
+		if ok, err := makeRemoteDir(session, remote); !ok {
+			return fmt.Errorf("make remote dir error: %s, error: %v", remote, err)
+		}
+
+		if XConfig.Copy.OverrideCheck {
+			if ok, err := isRemoteDirEmpty(session, remote+target); !ok {
+				return fmt.Errorf("remote dir not empty: %s, error: %v", remote+target, err)
+			}
 		}
 	} else {
-		if !isLocalFileExist(local) {
-			return fmt.Errorf("local file not exist: %s", local)
+		if ok, err := isLocalFileExist(local); !ok {
+			return fmt.Errorf("local file not exist: %s, error: %v", local, err)
 		}
 
-		if isRemoteDirExist(session, remote+target) {
-			return fmt.Errorf("remote dir exist: %s", remote+target)
+		if ok, err := isRemoteDirExist(session, remote+target); ok {
+			return fmt.Errorf("remote dir exist: %s, error: %v", remote+target, err)
 		}
 
-		if XConfig.Copy.OverrideCheck && isRemoteFileExist(session, remote+target) {
-			return fmt.Errorf("remote file exist: %s", remote+target)
+		if ok, err := makeRemoteDir(session, remote); !ok {
+			return fmt.Errorf("make remote dir error: %s, error: %v", remote, err)
+		}
+
+		if XConfig.Copy.OverrideCheck {
+			if ok, err := isRemoteFileExist(session, remote+target); ok {
+				return fmt.Errorf("remote file exist: %s, error: %v", remote+target, err)
+			}
 		}
 	}
 
